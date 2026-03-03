@@ -25,7 +25,7 @@ function Input({ className, type, variant = "default", error, errorMessage, ...p
           ],
 
           variant === "auth" && [
-            "h-11 rounded-none border-0 border-b border-border bg-transparent px-0 pr-8 shadow-none",
+            "h-11 rounded-none border-0 border-b border-border bg-transparent shadow-none",
             "placeholder:text-muted-foreground",
             "focus-visible:ring-0 focus-visible:border-aqua",
             error && "border-red-500 focus-visible:border-red-500"

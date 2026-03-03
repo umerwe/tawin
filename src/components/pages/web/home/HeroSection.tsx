@@ -1,12 +1,26 @@
 "use client"
 
 import Image from "next/image"
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useTranslations } from "next-intl"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { LoginDialog } from "@/components/dialog/LoginDialog"
 
 const HeroSection = () => {
     const t = useTranslations("translation");
+    const router = useRouter();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const token = localStorage.getItem("token");
+
+    function handleClick() {
+        if (token) {
+            router.push("/my-account?tab=construction")
+            return
+        }
+        setIsDialogOpen(true)
+    }
 
     return (
         <section className="relative h-[600px] w-full overflow-hidden">
@@ -22,15 +36,20 @@ const HeroSection = () => {
                 <p className="mt-4 text-base text-gray-200 max-w-xl">
                     {t("heroDescription")}
                 </p>
-                <Link href="/my-account?tab=construction" className="mt-8">
-                    <Button
-                        variant="primary"
-                        size="sm"
-                    >
-                        {t("heroButton")} →
-                    </Button>
-                </Link>
+
+                <Button
+                    variant="primary"
+                    className="w-74 mt-8"
+                    onClick={handleClick}
+                >
+                    {t("heroButton")} →
+                </Button>
             </div>
+
+            <LoginDialog
+                open={isDialogOpen}
+                onOpenChange={setIsDialogOpen}
+            />
         </section>
     )
 }

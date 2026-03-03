@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useTranslations } from "next-intl";
 
 interface LogoutDialogProps {
   open: boolean;
@@ -21,13 +22,15 @@ export const LogoutDialog = ({
   onOpenChange,
   onConfirm,
 }: LogoutDialogProps) => {
+  const t = useTranslations("translation");
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[450px]">
-        <DialogHeader className="text-left">
-          <DialogTitle className="text-xl font-semibold">Confirm Logout</DialogTitle>
-          <DialogDescription className="text-gray-600">
-            Are you sure you want to log out? You will need to login again to access your account.
+        <DialogHeader>
+          <DialogTitle>{t("confirmLogout")}</DialogTitle>
+          <DialogDescription>
+            {t("confirmLogoutDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -37,14 +40,14 @@ export const LogoutDialog = ({
             onClick={() => onOpenChange(false)}
             className="w-full rounded-full border-gray-300"
           >
-            Cancel
+            {t("cancel")}
           </Button>
           <Button
             onClick={onConfirm}
             variant="primary"
             className="rounded-full"
           >
-            Logout
+            {t("logout")}
           </Button>
         </DialogFooter>
       </DialogContent>

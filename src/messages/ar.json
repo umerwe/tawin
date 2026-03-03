@@ -194,7 +194,13 @@
     "phone": "رقم الهاتف",
     "constructionBasket": "سلة البناء",
     "constructionBasketRegistration": "تسجيل سلة مواد البناء",
-    "construction": "تسجيل سلة مواد البناء"
+    "construction": "تسجيل سلة مواد البناء",
+    "signInRequired": "تسجيل الدخول مطلوب",
+    "signInRequiredDescription": "تحتاج إلى تسجيل الدخول قبل القيام بذلك.",
+    "cancel": "إلغاء",
+    "signIn": "تسجيل الدخول",
+    "confirmLogout": "تأكيد تسجيل الخروج",
+    "confirmLogoutDescription": "هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى حسابك."
   },
   "shop": {
     "breadcrumb": "الرئيسية، المتجر",

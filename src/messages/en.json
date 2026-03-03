@@ -195,7 +195,13 @@
     "phone": "Phone",
     "constructionBasket": "Construction Basket",
     "constructionBasketRegistration": "Construction Basket Registration",
-    "construction": "Construction Basket Registration"
+    "construction": "Construction Basket Registration",
+    "signInRequired": "Sign in Required",
+    "signInRequiredDescription": "You need to sign in before this.",
+    "cancel": "Cancel",
+    "signIn": "Sign in",
+    "confirmLogout": "Confirm Logout",
+    "confirmLogoutDescription": "Are you sure you want to log out? You will need to login again to access your account."
   },
   "shop": {
     "breadcrumb": "Home, Shop",
