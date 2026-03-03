@@ -1,39 +1,44 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-// Extend the interface to include our custom 'variant' prop
 export interface InputProps extends React.ComponentProps<"input"> {
   variant?: "default" | "auth"
+  error?: boolean
+  errorMessage?: string
 }
 
-function Input({ className, type, variant = "default", ...props }: InputProps) {
+function Input({ className, type, variant = "default", error, errorMessage, ...props }: InputProps) {
   return (
-    <input
-      type={type}
-      data-slot="input"
-      className={cn(
-        // SHARED BASE CLASSES (Logic that applies to both)
-        "flex w-full min-w-0 transition-all outline-none disabled:cursor-not-allowed disabled:opacity-50 text-sm",
-        "file:border-0 file:bg-transparent file:text-sm file:font-medium",
-        
-        // VARIANT: DEFAULT (Rounded/Pill style)
-        variant === "default" && [
-          "h-[52px] px-4 rounded-full bg-gray-50 border-transparent border",
-          "placeholder:text-gray-400 selection:bg-purple-100",
-          "focus-visible:ring-2 focus-visible:ring-purple-100 focus-visible:border-aqua"
-        ],
+    <div className="w-full">
+      <input
+        type={type}
+        data-slot="input"
+        className={cn(
+          "flex w-full min-w-0 transition-all outline-none disabled:cursor-not-allowed disabled:opacity-50 text-sm",
+          "file:border-0 file:bg-transparent file:text-sm file:font-medium",
 
-        // VARIANT: AUTH (Underline style)
-        variant === "auth" && [
-          "h-11 rounded-none border-0 border-b border-border bg-transparent px-0 pr-8 shadow-none",
-          "placeholder:text-muted-foreground",
-          "focus-visible:ring-0 focus-visible:border-aqua"
-        ],
+          variant === "default" && [
+            "h-[52px] px-4 rounded-full bg-gray-50 border-transparent border",
+            "placeholder:text-gray-400 selection:bg-purple-100",
+            "focus-visible:ring-2 focus-visible:ring-purple-100 focus-visible:border-aqua",
+            error && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-100"
+          ],
 
-        className // Allows for one-off overrides
+          variant === "auth" && [
+            "h-11 rounded-none border-0 border-b border-border bg-transparent px-0 pr-8 shadow-none",
+            "placeholder:text-muted-foreground",
+            "focus-visible:ring-0 focus-visible:border-aqua",
+            error && "border-red-500 focus-visible:border-red-500"
+          ],
+
+          className
+        )}
+        {...props}
+      />
+      {error && errorMessage && (
+        <p className="text-red-500 text-xs mt-1">{errorMessage}</p>
       )}
-      {...props}
-    />
+    </div>
   )
 }
 

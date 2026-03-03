@@ -8,24 +8,28 @@ import AddressBook from "./Step2"
 import OrderHistory from "./Step3"
 import FavoritesList from "./Step4"
 import { useTranslations } from "next-intl"
+import ConstructionBasketForm from "@/components/form/ConstructionBasketForm"
+import { LogoutDialog } from "@/components/dialog/LogoutDialog"
+import { useState } from "react"
+import { accountItems } from "@/constants/my-account"
 
 export default function MyAccount() {
   const t = useTranslations("translation");
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const currentTab = searchParams.get("tab") || "account"
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const navItems = [
-    { id: "account", label: t("account") },
-    { id: "address", label: t("address") },
-    { id: "orders", label: t("orders") },
-    { id: "favorites", label: t("favorites") },
-    { id: "logout", label: t("logout") },
-  ]
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const currentTab = searchParams.get("tab") || "account";
+
+  const handleLogout = () => {
+    localStorage.clear();
+    router.replace("/auth/signin");
+    setIsDialogOpen(false);
+  };
 
   const setTab = (tab: string) => {
     if (tab === "logout") {
-      router.push("/")
+      setIsDialogOpen(true)
       return
     }
 
@@ -40,6 +44,7 @@ export default function MyAccount() {
       case "address": return <AddressBook />
       case "orders": return <OrderHistory />
       case "favorites": return <FavoritesList />
+      case "construction": return <ConstructionBasketForm />
       default: return <AccountInfo />
     }
   }
@@ -56,9 +61,9 @@ export default function MyAccount() {
           <div className="bg-[#F3F5F7] rounded-2xl p-8 flex flex-col items-center">
             <div className="relative mb-4">
               <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white shadow-sm">
-                <Image 
-                  src="/profile.jpg" 
-                  alt="Profile" 
+                <Image
+                  src="/profile.jpg"
+                  alt="Profile"
                   width={96}
                   height={96}
                   className="w-full h-full object-cover"
@@ -71,17 +76,16 @@ export default function MyAccount() {
             <h3 className="font-semibold text-gray-900 mb-8">Maryam Ahmed</h3>
 
             <nav className="w-full space-y-1">
-              {navItems.map((item) => (
+              {accountItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => setTab(item.id)}
-                  className={`w-full text-left py-3 px-2 text-sm transition-all relative ${
-                    currentTab === item.id 
-                    ? "text-aqua font-semibold" 
+                  className={`w-full ltr:text-left rtl:text-right py-3 px-2 text-sm transition-all relative ${currentTab === item.id
+                    ? "text-aqua font-semibold"
                     : "text-gray-500 hover:text-gray-900"
-                  }`}
+                    }`}
                 >
-                  {item.label}
+                  {t(item.label)}
                   {currentTab === item.id && (
                     <div className="absolute left-0 bottom-0 w-full h-0.5 bg-aqua" />
                   )}
@@ -96,6 +100,12 @@ export default function MyAccount() {
           {renderContent()}
         </div>
       </div>
+
+      <LogoutDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        onConfirm={handleLogout}
+      />
     </div>
   )
 }

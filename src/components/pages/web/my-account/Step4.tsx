@@ -12,7 +12,7 @@ export default function FavoritesList() {
     { id: 2, name: "Wooden Door", color: "Black", price: 19.19, image: "https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?w=200" },
   ]
   return (
-    <div className="space-y-6 text-left animate-in fade-in duration-300">
+    <div className="space-y-6 animate-in fade-in duration-300">
       <h2 className="text-xl font-semibold text-gray-900">{t("favorites")}</h2>
       <div className="border-t border-gray-100">
         {favorites.map((item) => (

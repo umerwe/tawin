@@ -11,19 +11,21 @@ import {
 } from "@/components/ui/select"
 import { Paperclip } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { Button } from "../ui/button"
 
 const ConstructionBasketForm = () => {
     const t = useTranslations("translation");
-    const inputStyles = "border-gray-300 rounded-lg";
+
+    const inputStyles = "border-gray-300 rounded-lg h-[50px]";
     const selectTriggerStyles = "w-full py-[25px] border-gray-300 bg-gray-50 rounded-lg";
 
     return (
-        <div className="bg-white border border-gray-200 rounded-md p-8 shadow-sm space-y-10">
+        <div className="space-y-10 animate-in fade-in duration-300">
             <div className="border-b border-gray-100">
                 <h2 className="text-xl font-semibold text-gray-800">{t("personalInformation")}</h2>
             </div>
 
-            <form className="space-y-8">
+            <form className="space-y-6">
                 <div className="space-y-2">
                     <Label>{t("fullName")}</Label>
                     <Input placeholder={t("fullNamePlaceholder")} className={inputStyles} />
@@ -113,6 +115,10 @@ const ConstructionBasketForm = () => {
                     </div>
                 </div>
             </form>
+
+            <Button variant="primary" className="w-54">
+                {t("completeRegistration")}
+            </Button>
         </div>
     )
 }

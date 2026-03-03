@@ -7,7 +7,7 @@ export default function AddressBook() {
     { id: 2, name: "Maryam Ahmed", phone: "(+964) 711 111 1111", address: "Baghdad, Karrada, District 555, Alley 3, House 3" }
   ]
   return (
-    <div className="space-y-6 text-left animate-in fade-in duration-300">
+    <div className="space-y-6 animate-in fade-in duration-300">
       <h2 className="text-lg font-semibold text-gray-900">{t("address")}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {addresses.map((addr) => (

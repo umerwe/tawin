@@ -70,11 +70,8 @@ export default function PromotionSection() {
 
             {/* 2. App Download Section */}
             <section className="max-w-7xl mx-auto px-4 py-12">
-                {/* Fixed layout: md:flex-row is standard, md:flex-row-reverse for RTL handled by browser dir */}
                 <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-
-                    {/* Mockup: In RTL, this will naturally appear on the right side due to md:flex-row */}
-                    <div className="w-full md:w-1/2 flex justify-end">
+                    <div className="w-full md:w-1/2 hidden sm:flex justify-end">
                         <div className="relative w-64 h-[450px]">
                             <Image
                                 src="/mob.jpg"
@@ -85,14 +82,12 @@ export default function PromotionSection() {
                         </div>
                     </div>
 
-                    {/* App Content: text-left for LTR and text-right for RTL */}
-                    <div className="w-full md:w-1/2 space-y-6 text-center md:text-left rtl:md:text-right">
+                    <div className="w-full md:w-1/2 text-center md:text-left rtl:md:text-right">
                         <h3 className="text-3xl font-semibold text-gray-900 leading-tight">
                             {t("downloadAppTitle")}
                         </h3>
 
-                        {/* Buttons container: ltr:justify-start rtl:justify-end for desktop alignment */}
-                        <div className="flex flex-col sm:flex-row items-center gap-6 pt-4 justify-start">
+                        <div className="flex flex-col sm:flex-row items-center gap-6 pt-7 justify-start">
 
                             {/* Google Play Button */}
                             <div className="flex items-center gap-4 bg-black px-6 py-3 rounded-2xl border border-gray-200 shadow-sm cursor-pointer w-full sm:w-auto">
@@ -113,7 +108,7 @@ export default function PromotionSection() {
                             </div>
                         </div>
 
-                        <p className="text-sm text-gray-400 italic">
+                        <p className="text-sm text-gray-400 italic mt-4">
                             {t("appAvailability")}
                         </p>
                     </div>

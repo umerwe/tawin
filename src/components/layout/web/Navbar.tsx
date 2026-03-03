@@ -5,10 +5,12 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { navLinks } from "@/constants/navLinks"
 import { Menu, X } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import LanguageSwitcher from "../../LanguageSwitcher"
 import { useTranslations } from "next-intl"
+import { ShoppingCart } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function Navbar() {
   const t = useTranslations("translation");
@@ -16,7 +18,13 @@ export default function Navbar() {
 
   const normalizedPath = "/" + pathname.split("/").filter(Boolean).slice(1).join("/");
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    const token = localStorage.getItem("token")
+    setIsLoggedIn(!!token)
+  }, [])
 
   return (
     <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50">
@@ -49,16 +57,18 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Mobile Toggle & Desktop Auth Section */}
-        <div className="flex flex-1 justify-end items-center gap-4">
+        <div className="flex flex-1 justify-end items-center gap-1 md:gap-4">
           <LanguageSwitcher />
 
-          <Link
-            href="/auth/signin"
-            className="hidden md:block text-sm font-semibold text-gray-900 hover:text-aqua transition-colors"
-          >
-            {t("signin")}
-          </Link>
+          {
+            isLoggedIn &&
+            <Link
+              href="/cart"
+              className="hidden md:flex items-center justify-center text-gray-600 hover:text-aqua transition-colors relative"
+            >
+              <ShoppingCart className="w-5 h-5" />
+            </Link>
+          }
 
           {/* Hamburger Toggle */}
           <button
@@ -68,13 +78,29 @@ export default function Navbar() {
           >
             <Menu className="w-6 h-6" />
           </button>
+
+          {/* If Logged In → Show Avatar */}
+          {isLoggedIn ? (
+            <Link href="/my-account">
+              <Avatar className="h-8 w-8 cursor-pointer">
+                <AvatarImage src="/avatar.jpg" alt="User Avatar" />
+                <AvatarFallback>UF</AvatarFallback>
+              </Avatar>
+            </Link>
+          ) : (
+            <Link
+              href="/auth/signin"
+              className="hidden md:block text-sm font-semibold text-gray-900 hover:text-aqua transition-colors"
+            >
+              {t("signin")}
+            </Link>
+          )}
         </div>
       </div>
 
       {/* Mobile Drawer Overlay */}
       {isOpen && (
         <div className="fixed inset-0 z-100 md:hidden">
-          {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setIsOpen(false)}

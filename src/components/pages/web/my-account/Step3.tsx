@@ -8,7 +8,7 @@ export default function OrderHistory() {
     { id: "#3456_980", date: "October 11, 2023", status: t("received"), price: "$345.00" },
   ]
   return (
-    <div className="space-y-6 text-left animate-in fade-in duration-300">
+    <div className="space-y-6 animate-in fade-in duration-300">
       <h2 className="text-lg font-semibold text-gray-900">{t("orderHistory")}</h2>
       <div className="border border-gray-100 rounded-2xl overflow-hidden">
         <Table>

@@ -9,37 +9,67 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { AuthHeader } from "../auth/AuthHeader";
 import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Login, LoginSchema } from "@/validations/auth";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
     const t = useTranslations("translation");
+    const router = useRouter();
+
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<Login>({
+        resolver: zodResolver(LoginSchema),
+        defaultValues: {
+            identifier: "",
+            password: "",
+        },
+    });
+
+    const onSubmit = (data: Login) => {
+        const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+        localStorage.setItem("token", token);
+        router.push("/");
+    };
 
     return (
         <section className="flex w-full flex-col items-center justify-center px-8 lg:w-1/2 xl:px-24">
             <div className="w-full max-w-sm space-y-10">
-               <AuthHeader type="signin" />
+                <AuthHeader type="signin" />
 
-                {/* Form */}
-                <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     <Input
                         id="identifier"
                         type="text"
                         placeholder={t("loginIdentifierPlaceholder")}
-                        variant="auth" />
+                        variant="auth"
+                        error={!!errors.identifier}
+                        errorMessage={errors.identifier?.message}
+                        {...register("identifier")}
+                    />
 
-
+                    {/* Password */}
                     <div className="relative">
                         <Input
                             id="password"
                             variant="auth"
                             type={showPassword ? "text" : "password"}
                             placeholder={t("password")}
+                            error={!!errors.password}
+                            errorMessage={errors.password?.message}
+                            {...register("password")}
                         />
                         <Button
                             type="button"
                             onClick={() => setShowPassword((prev) => !prev)}
-                            className="absolute ltr:right-0 rtl:left-0 top-1/2 -translate-y-1/2 text-muted-foreground z-10 border-0"
+                            className="absolute ltr:right-0 rtl:left-0 top-[22px] -translate-y-1/2 text-muted-foreground z-10 border-0"
                             aria-label="Toggle password visibility"
                         >
                             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -48,7 +78,7 @@ const LoginForm = () => {
 
                     <div className="flex items-center justify-between">
                         <Link
-                            href="/forgot-password"
+                            href="#"
                             className="text-xs text-muted-foreground hover:text-aqua transition-colors"
                         >
                             {t("forgotPassword")}
@@ -69,17 +99,13 @@ const LoginForm = () => {
                         </div>
                     </div>
 
-                    <Button
-                        type="submit"
-                        variant="primary"
-                    >
+                    <Button type="submit" variant="primary">
                         {t("signin")}
                     </Button>
-
                 </form>
             </div>
         </section>
-    )
-}
+    );
+};
 
-export default LoginForm
+export default LoginForm;

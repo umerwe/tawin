@@ -22,7 +22,7 @@ const HeroSection = () => {
                 <p className="mt-4 text-base text-gray-200 max-w-xl">
                     {t("heroDescription")}
                 </p>
-                <Link href="/construction-basket" className="mt-8">
+                <Link href="/my-account?tab=construction" className="mt-8">
                     <Button
                         variant="primary"
                         size="sm"

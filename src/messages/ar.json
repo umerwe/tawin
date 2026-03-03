@@ -191,7 +191,10 @@
     "alreadyHaveAccount": "لديك حساب بالفعل؟",
     "register": "سجل الآن",
     "login": "تسجيل الدخول",
-    "phone": "رقم الهاتف"
+    "phone": "رقم الهاتف",
+    "constructionBasket": "سلة البناء",
+    "constructionBasketRegistration": "تسجيل سلة مواد البناء",
+    "construction": "تسجيل سلة مواد البناء"
   },
   "shop": {
     "breadcrumb": "الرئيسية، المتجر",

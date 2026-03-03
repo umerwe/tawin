@@ -192,7 +192,10 @@
     "alreadyHaveAccount": "Already have an account?",
     "register": "Register",
     "login": "Log in",
-    "phone" : "Phone"
+    "phone": "Phone",
+    "constructionBasket": "Construction Basket",
+    "constructionBasketRegistration": "Construction Basket Registration",
+    "construction": "Construction Basket Registration"
   },
   "shop": {
     "breadcrumb": "Home, Shop",

@@ -7,7 +7,7 @@ export default function AccountInfo() {
   const t = useTranslations("translation");
   return (
     <div className="space-y-12 animate-in fade-in duration-300">
-      <section className="space-y-6 text-left">
+      <section className="space-y-6">
         <h2 className="text-lg font-semibold text-gray-900">{t("accountInformation")}</h2>
         <div className="space-y-4">
           <div className="space-y-2"><Label>{t("firstName")}*</Label><Input placeholder={t("firstName")} className="border-gray-300 rounded-md h-[50px]" /></div>
@@ -21,7 +21,7 @@ export default function AccountInfo() {
         </div>
       </section>
 
-      <section className="space-y-6 text-left">
+      <section className="space-y-6">
         <h2 className="text-lg font-semibold text-gray-900">{t("password")}</h2>
         <div className="space-y-4">
           <div className="space-y-2"><Label>{t("currentPassword")}</Label><Input type="password" placeholder={t("currentPassword")} className="border-gray-300 rounded-md h-[50px]" /></div>
@@ -29,6 +29,7 @@ export default function AccountInfo() {
           <div className="space-y-2"><Label>{t("reEnterPassword")}</Label><Input type="password" placeholder={t("reEnterPassword")} className="border-gray-300 rounded-md h-[50px]" /></div>
         </div>
       </section>
+      
       <Button variant="primary" className="w-42">{t("saveChanges")}</Button>
     </div>
   )
