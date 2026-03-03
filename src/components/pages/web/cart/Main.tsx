@@ -1,0 +1,52 @@
+"use client"
+
+import { useRouter, useSearchParams } from "next/navigation"
+import { steps } from "@/constants/cart"
+import Step1 from "@/components/pages/web/cart/Step1"
+import Step2 from "@/components/pages/web/cart/Step2"
+import Step3 from "@/components/pages/web/cart/Step3"
+import { useTranslations } from "next-intl"
+
+export default function Cart() {
+    const t = useTranslations("translation");
+    const router = useRouter()
+    const searchParams = useSearchParams()
+    const currentStep = searchParams.get("step") || "1"
+
+    const setStep = (step: string) => {
+        const params = new URLSearchParams(searchParams)
+        params.set("step", step)
+        router.push(`?${params.toString()}`)
+    }
+
+    return (
+        <div className="max-w-7xl mx-auto px-4 py-10 font-sans text-gray-800">
+            <h1 className="text-3xl font-bold text-center mb-12">
+                {t("cart")}
+            </h1>
+
+            <div className="flex justify-center items-center space-x-12 mb-16">
+                {steps.map((step) => (
+                    <div key={step.id} onClick={() => setStep(step.id)} className="flex items-center space-x-3 cursor-pointer relative">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm transition-colors ${currentStep === step.id ? "bg-aqua" : "bg-gray-300"}`}>
+                            {step.id}
+                        </div>
+                        <span className={`text-sm font-medium ${currentStep === step.id ? "text-black" : "text-gray-400"}`}>
+                            {/* We map the label to a translation key: cartStep1, cartStep2, etc. */}
+                            {t(`cartStep${step.id}`)}
+                        </span>
+                        {step.id === "1" && currentStep === "1" && <div className="absolute -bottom-2 left-0 w-full h-0.5 bg-aqua" />}
+                    </div>
+                ))}
+            </div>
+
+            {currentStep === "1" ? (
+                <Step1 />
+            ) : currentStep === "2" ? (
+               <Step2 />
+            ) : (
+                <Step3 />
+            )}
+        </div>
+    )
+}

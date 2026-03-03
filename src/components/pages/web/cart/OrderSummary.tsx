@@ -1,0 +1,133 @@
+"use client"
+
+import { useState } from "react"
+import { Input } from "@/components/ui/input"
+import { X, Minus, Plus } from "lucide-react"
+import Image from "next/image"
+import { useTranslations } from "next-intl"
+
+type OrderSummaryProps = {
+    cartItems: any[]
+    discount: number
+}
+
+const OrderSummary = ({ cartItems: initialItems, discount }: OrderSummaryProps) => {
+    const t = useTranslations("translation");
+    const [items, setItems] = useState(initialItems)
+
+    const updateQty = (id: number, delta: number) => {
+        setItems(prev =>
+            prev.map(item =>
+                item.id === id ? { ...item, qty: Math.max(1, item.qty + delta) } : item
+            )
+        )
+    }
+
+    const removeItem = (id: number) => {
+        setItems(prev => prev.filter(item => item.id !== id))
+    }
+
+    const subtotal = items.reduce((acc, item) => acc + item.price * item.qty, 0)
+    const grandTotal = subtotal - discount
+
+    return (
+        <div className="lg:col-span-4">
+            <div className="border border-gray-200 rounded-md p-6 sticky top-6 space-y-6 bg-white shadow-sm">
+                <h2 className="text-xl font-semibold text-gray-900">{t("orderSummary")}</h2>
+
+                <div className="space-y-6 max-h-[400px] overflow-y-auto ltr:pr-2 rtl:pl-2 custom-scrollbar">
+                    {items.map((item) => (
+                        <div key={item.id} className="flex justify-between items-center border-b border-gray-50 pb-6 group">
+                            {/* Product Info Left */}
+                            <div className="space-y-2 text-left rtl:text-right">
+                                <span className="text-sm font-semibold text-gray-900">
+                                    ${(item.price * item.qty).toFixed(2)}
+                                </span>
+                                <div className="text-[11px] leading-tight">
+                                    <p className="font-semibold text-gray-800 uppercase tracking-tight">{item.name}</p>
+                                    <p className="text-gray-400">{t("color")}: Black</p>
+                                </div>
+
+                                {/* Quantity Toggle */}
+                                <div className="flex items-center border border-gray-200 rounded-lg w-20 h-8 overflow-hidden bg-white">
+                                    <button
+                                        onClick={() => updateQty(item.id, -1)}
+                                        className="px-2 text-gray-400 hover:text-black transition-colors"
+                                    >
+                                        <Minus className="w-3 h-3" />
+                                    </button>
+                                    <span className="flex-1 text-center text-xs font-semibold text-gray-700">
+                                        {item.qty}
+                                    </span>
+                                    <button
+                                        onClick={() => updateQty(item.id, 1)}
+                                        className="px-2 text-gray-400 hover:text-black transition-colors"
+                                    >
+                                        <Plus className="w-3 h-3" />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Image Right */}
+                            <div className="flex items-center ltr:space-x-3 rtl:space-x-reverse">
+                                <button
+                                    onClick={() => removeItem(item.id)}
+                                    className="text-gray-300 hover:text-red-500 transition-colors"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
+                                <div className="w-20 h-20 bg-gray-100 rounded-xl overflow-hidden shadow-inner">
+                                    <Image
+                                        width={64}
+                                        height={80}
+                                        src={item.image}
+                                        alt={item.name}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Coupon Section */}
+                <div className="flex space-x-2 h-12">
+                    <Input
+                        placeholder={t("enterCode")}
+                        className="h-full rounded-xl border-gray-200 focus:border-aqua"
+                    />
+                    <button className="bg-gray-800 text-white text-xs px-5 rounded-xl font-semibold uppercase tracking-wider hover:bg-black transition-all">
+                        {t("apply")}
+                    </button>
+                </div>
+
+                {/* Summary Totals */}
+                <div className="space-y-4 pt-4 border-t border-gray-100">
+                    <div className="flex justify-between items-center text-aqua">
+                        <span className="text-base font-semibold">[${discount.toFixed(2)}] {t("discount")}</span>
+                        <span className="text-lg">JenkateMW</span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                        <span className="text-base font-semibold text-gray-400">{t("shipping")}</span>
+                        <span className="text-lg font-semibold text-gray-900">{t("free")}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                        <span className="text-base font-semibold text-gray-400">{t("subtotal")}</span>
+                        <span className="text-lg font-semibold text-gray-900">${subtotal.toFixed(2)}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center border-t border-gray-100 pt-5">
+                        <span className="text-base font-semibold text-gray-400">{t("grandTotal")}</span>
+                        <span className="text-lg font-semibold text-gray-900 tracking-tighter">
+                            ${grandTotal.toFixed(2)}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default OrderSummary

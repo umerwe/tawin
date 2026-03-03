@@ -1,0 +1,32 @@
+export const statsData = [
+  {
+    title: "Total Sales",
+    subtitle: "Last 7 days",
+    value: "$350K",
+    change: "10.4%",
+    changeLabel: "Sales",
+    changeType: "increase" as const,
+    footerValue: "($235)",
+    footerLabel: "Last 7 days",
+  },
+  {
+    title: "Total Orders",
+    subtitle: "Last 7 days",
+    value: "10.7K",
+    change: "14.4%",
+    changeLabel: "Order",
+    changeType: "increase" as const,
+    footerValue: "(7.6k)",
+    footerLabel: "Last 7 days",
+  },
+ {
+    title: "Total Sales",
+    subtitle: "Last 7 days",
+    value: "$350K",
+    change: "10.4%",
+    changeLabel: "Sales",
+    changeType: "increase" as const,
+    footerValue: "($235)",
+    footerLabel: "Last 7 days",
+  },
+];
