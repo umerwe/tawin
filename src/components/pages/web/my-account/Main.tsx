@@ -2,7 +2,6 @@
 
 import { useRouter, useSearchParams } from "next/navigation"
 import { Camera } from "lucide-react"
-import Image from "next/image"
 import AccountInfo from "./Step1"
 import AddressBook from "./Step2"
 import OrderHistory from "./Step3"
@@ -12,6 +11,7 @@ import ConstructionBasketForm from "@/components/form/ConstructionBasketForm"
 import { LogoutDialog } from "@/components/dialog/LogoutDialog"
 import { useState } from "react"
 import { accountItems } from "@/constants/my-account"
+import Image from "@/components/MyImage"
 
 export default function MyAccount() {
   const t = useTranslations("translation");
@@ -69,7 +69,7 @@ export default function MyAccount() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <button className="absolute bottom-0 right-0 bg-black text-white p-1.5 rounded-full border-2 border-white hover:bg-gray-800 transition-colors">
+              <button className="absolute z-40 bottom-0 right-0 bg-black text-white p-1.5 rounded-full border-2 border-white hover:bg-gray-800 transition-colors">
                 <Camera className="w-4 h-4" />
               </button>
             </div>

@@ -1,10 +1,10 @@
 "use client"
 
 import { MapPin, Phone, Mail, Truck, ShieldCheck, Lock, Headphones } from "lucide-react"
-import Image from "next/image"
 import ContactForm from "@/components/form/ContactForm"
 import { useTranslations } from "next-intl"
 import Link from "next/link"
+import Image from "@/components/MyImage"
 
 export default function ContactUsPage() {
   const t = useTranslations("translation");

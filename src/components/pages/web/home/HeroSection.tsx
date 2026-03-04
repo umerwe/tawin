@@ -1,11 +1,11 @@
 "use client"
 
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { LoginDialog } from "@/components/dialog/LoginDialog"
+import Image from "@/components/MyImage"
 
 const HeroSection = () => {
     const t = useTranslations("translation");
@@ -25,7 +25,9 @@ const HeroSection = () => {
         <section className="relative h-[600px] w-full overflow-hidden">
             <Image
                 src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1600"
-                alt="HeroSection" fill className="object-cover brightness-50" priority
+                alt="HeroSection"
+                fill
+                className="object-cover brightness-50"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
                 <h1 className="text-4xl font-semibold text-white max-w-4xl leading-tight">
@@ -36,13 +38,13 @@ const HeroSection = () => {
                     {t("heroDescription")}
                 </p>
 
-                <Button
+                {/* <Button
                     variant="primary"
                     className="w-74 mt-8"
                     onClick={handleClick}
                 >
                     {t("heroButton")} →
-                </Button>
+                </Button> */}
             </div>
 
             <LoginDialog

@@ -1,9 +1,9 @@
 "use client"
 
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { FaApple, FaGooglePlay } from "react-icons/fa";
 import { useTranslations } from "next-intl"
+import Image from "@/components/MyImage";
 
 export default function PromotionSection() {
     const t = useTranslations("translation");

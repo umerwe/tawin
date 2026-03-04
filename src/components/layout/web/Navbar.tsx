@@ -11,6 +11,7 @@ import LanguageSwitcher from "../../LanguageSwitcher"
 import { useTranslations } from "next-intl"
 import { ShoppingCart } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function Navbar() {
   const t = useTranslations("translation");
@@ -84,7 +85,9 @@ export default function Navbar() {
             <Link href="/my-account">
               <Avatar className="h-8 w-8 cursor-pointer">
                 <AvatarImage src="/avatar.jpg" alt="User Avatar" />
-                <AvatarFallback>UF</AvatarFallback>
+                <AvatarFallback>
+                  <Skeleton className="h-full w-full rounded-full" />
+                </AvatarFallback>
               </Avatar>
             </Link>
           ) : (

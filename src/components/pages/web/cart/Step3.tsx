@@ -2,8 +2,8 @@
 
 import { Button } from "@/components/ui/button"
 import { orderDetails } from "@/constants/order"
-import Image from "next/image"
 import { useTranslations } from "next-intl"
+import Image from "@/components/MyImage"
 
 const Step3 = () => {
     const t = useTranslations("translation");
@@ -32,7 +32,7 @@ const Step3 = () => {
                                     height={96}
                                 />
                             </div>
-                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-gray-800 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">
+                            <div className="absolute -top-2 -right-2 z-30 w-6 h-6 bg-gray-800 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">
                                 {item.qty}
                             </div>
                         </div>

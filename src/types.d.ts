@@ -31,6 +31,7 @@ interface ProductCardProps {
 }
 
 interface Category {
+  id : number;
   title: LocalizedString;
   subtitle: LocalizedString;
   image: string;

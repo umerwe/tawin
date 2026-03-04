@@ -3,8 +3,8 @@
 import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
 import { useTranslations } from "next-intl";
-import Image from "next/image"
 import { useLocale } from "next-intl";
+import Image from "@/components/MyImage";
 
 export default function FavoritesList() {
   const locale = useLocale() as "en" | "ar";

@@ -1,12 +1,12 @@
 "use client"
 
-import Image from "next/image"
 import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useTranslations } from "next-intl"
+import Image from "@/components/MyImage"
 
 export function ProductImageGallery({ images, isNew, discount }: any) {
   const t = useTranslations("translation");

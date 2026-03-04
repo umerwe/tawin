@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/table"
 import { cartData } from "@/constants/cart"
 import PaymentSummary from "./PaymentSummary"
-import Image from "next/image"
 import { useLocale, useTranslations } from "next-intl"
+import Image from "@/components/MyImage"
 
 const Step1 = () => {
     const locale = useLocale() as "en" | "ar";

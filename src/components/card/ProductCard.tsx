@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import { useState } from "react"
 import { Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -9,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import StarRating from "../StarRating"
 import { useLocale, useTranslations } from "next-intl"
+import Image from "../MyImage"
 
 export function ProductCard({
     image,
@@ -21,7 +21,7 @@ export function ProductCard({
 }: ProductCardProps) {
     const locale = useLocale();
     const t = useTranslations("translation");
-    
+
     const [wished, setWished] = useState(false)
     const hasBadge = isNew || !!discount
 
@@ -75,7 +75,7 @@ export function ProductCard({
                 <div className="flex flex-col items-start gap-1 bg-background pt-4">
                     <StarRating />
                     <span className="line-clamp-1 text-sm font-medium text-foreground">
-                      {locale === "en" ? title.en : title.ar}
+                        {locale === "en" ? title.en : title.ar}
                     </span>
                     <div className="mt-0.5 flex items-center gap-2">
                         <span className="text-sm font-semibold text-foreground">

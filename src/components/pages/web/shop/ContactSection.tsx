@@ -21,7 +21,7 @@ export default function ContactSection() {
                 priority
             />
             <div className="absolute inset-0 bg-white/80" />
-            
+
             <div className="relative z-10 mx-auto flex min-h-[340px] max-w-xl flex-col items-center justify-center px-6 py-20 text-center">
                 <p className="text-sm text-muted-foreground leading-relaxed">
                     {t("unavailableContactText")}

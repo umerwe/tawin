@@ -3,8 +3,8 @@
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { X, Minus, Plus } from "lucide-react"
-import Image from "next/image"
 import { useLocale, useTranslations } from "next-intl"
+import Image from "@/components/MyImage"
 
 type OrderSummaryProps = {
     cartItems: any[]
