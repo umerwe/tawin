@@ -4,6 +4,7 @@ import { MapPin, Phone, Mail, Truck, ShieldCheck, Lock, Headphones } from "lucid
 import Image from "next/image"
 import ContactForm from "@/components/form/ContactForm"
 import { useTranslations } from "next-intl"
+import Link from "next/link"
 
 export default function ContactUsPage() {
   const t = useTranslations("translation");
@@ -39,9 +40,11 @@ export default function ContactUsPage() {
             <p className="text-gray-500 text-sm leading-relaxed">
               {t("aboutUsDescription")}
             </p>
-            <button className="text-sm font-semibold border-b-2 border-black w-fit pb-1 hover:text-gray-600 transition-colors">
+            <Link
+              href="/shop"
+              className="text-sm font-semibold border-b-2 border-black w-fit pb-1 hover:text-gray-600 transition-colors">
               {t("shopNow")} &rarr;
-            </button>
+            </Link>
           </div>
         </div>
       </section>
