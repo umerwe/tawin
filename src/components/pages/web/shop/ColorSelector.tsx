@@ -3,7 +3,6 @@
 import { DEFAULT_COLORS } from "@/constants/colors"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
-import { Color } from "@/types/product"
 import { useTranslations } from "next-intl"
 
 export default function ColorSelector({ colors = DEFAULT_COLORS }: { colors?: Color[] }) {
