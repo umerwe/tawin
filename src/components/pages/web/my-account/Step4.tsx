@@ -8,8 +8,8 @@ import Image from "next/image"
 export default function FavoritesList() {
   const t = useTranslations("translation");
   const favorites = [
-    { id: 1, name: "Wooden Door", color: "Black", price: 19.19, image: "https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?w=200" },
-    { id: 2, name: "Wooden Door", color: "Black", price: 19.19, image: "https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?w=200" },
+    { id: 1, name: "Modern Bathroom Vanity", color: "Black", price: 598.0, image: "/22018.png" },
+    { id: 2, name: "Industrial Power Generator", color: "Black", price: 4500.0, image: "/647719.png" },
   ]
   return (
     <div className="space-y-6 animate-in fade-in duration-300">

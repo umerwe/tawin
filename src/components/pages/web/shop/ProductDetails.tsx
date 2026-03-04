@@ -7,8 +7,7 @@ import { ProductDescription } from "@/components/pages/web/shop/ProductDescripti
 import Reviews from "@/components/pages/web/shop/Reviews"
 import Breadcrumb from "@/components/ui/breadcrumb"
 import { products } from "@/constants/products"
-import { Product } from "@/types/product"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 
 interface ProductDetailsProps {
@@ -16,7 +15,9 @@ interface ProductDetailsProps {
 }
 
 const ProductDetails = ({ params }: ProductDetailsProps) => {
+    const locale = useLocale() as "en" | "ar";
     const t = useTranslations("translation");
+
     const product = products.find(p => p.id.toString() === params.id)
 
     if (!product) {
@@ -47,24 +48,23 @@ const ProductDetails = ({ params }: ProductDetailsProps) => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 <ProductImageGallery
-                    images={product.images || [product.image]}
-                    remainingPieces={product.remainingPieces}
+                    images={[product.image]}
                     isNew={product.isNew}
                     discount={product.discount}
                 />
 
                 <ProductInfo
-                    product={product as Product}
+                    product={product}
                 />
             </div>
 
             <ProductDescription
                 productKey={product.id.toString()}
                 productCode={product.id.toString()}
-                category={product.category || "MCP Doors"}
+                category={product.category[locale] || "MCP Doors"}
             />
 
-            <Reviews />
+            <Reviews productName={product.title[locale]} />
         </Container>
     )
 }

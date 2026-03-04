@@ -1,86 +1,162 @@
 export const products = [
+  {
+    id: 1,
+    title: { en: "Industrial Transformer", ar: "محول صناعي" },
+    category: { en: "Electricals", ar: "الكهربائيات" },
+    price: 1250.0,
+    originalPrice: 1500.0,
+    rating: 5,
+    image: "/16431.png",
+    isNew: true,
+    discount: 15,
+    description: {
+      en: "High-capacity outdoor electrical transformer designed for industrial power distribution. Features robust cooling fins and high-voltage bushings.",
+      ar: "محول كهربائي خارجي عالي السعة مصمم لتوزيع الطاقة الصناعية. يتميز بزعانف تبريد قوية وموصلات جهد عالي.",
+    },
+    measurements: '48" x 36" x 60"',
+    colors: ["Grey"],
+    reviews: 24,
+  },
+  {
+    id: 2,
+    title: { en: "Modern Bathroom Vanity", ar: "خزانة حمام حديثة" },
+    category: { en: "Walls & Floors", ar: "الجدران والأرضيات" },
+    price: 299.0,
+    originalPrice: 450.0,
+    rating: 4,
+    image: "/22018.png",
+    description: {
+      en: "Wall-mounted dark wood vanity with a sleek white ceramic basin and chrome faucet. Perfect for modern minimalist bathroom designs.",
+      ar: "خزانة حمام معلقة على الحائط من الخشب الداكن مع حوض سيراميك أبيض أنيق وصنبور كروم. مثالية لتصاميم الحمامات الحديثة البسيطة.",
+    },
+    measurements: '24" x 18" x 20"',
+    colors: ["Charcoal", "White"],
+    reviews: 12,
+  },
+  {
+    id: 3,
+    title: { en: "Omnipower Three-Phase Meter", ar: "عداد أومني باور ثلاثي الأطوار" },
+    category: { en: "Electricals", ar: "الكهربائيات" },
+    price: 85.0,
+    rating: 5,
+    image: "/468478.png",
+    description: {
+      en: "Kamstrup Omnipower smart meter for accurate three-phase electricity monitoring with digital LCD display.",
+      ar: "عداد ذكي أومني باور من كامستروب لمراقبة دقيقة للكهرباء ثلاثية الأطوار مع شاشة LCD رقمية.",
+    },
+    isNew: true,
+  },
+  {
+    id: 4,
+    title: { en: "Industrial Power Generator", ar: "مولد طاقة صناعي" },
+    category: { en: "Solar Energy", ar: "الطاقة الشمسية" },
+    price: 4500.0,
+    rating: 5,
+    image: "/647719.png",
+    description: {
+      en: "Kohler high-output standby generator for construction sites and commercial buildings.",
+      ar: "مولد احتياطي عالي الإنتاج من كوهلر لمواقع البناء والمباني التجارية.",
+    },
+  },
+  {
+    id: 5,
+    title: { en: "Modern Aluminum Glass Door", ar: "باب زجاجي ألمنيوم حديث" },
+    category: { en: "Doors", ar: "الأبواب" },
+    price: 550.0,
+    rating: 5,
+    image: "/126305.png",
+    isNew: true,
+    description: {
+      en: "Sleek modern aluminum-framed glass door ideal for interior and exterior use. Provides both security and contemporary design.",
+      ar: "باب زجاجي بإطار ألمنيوم عصري مثالي للاستخدام الداخلي والخارجي. يوفر الأمان والتصميم المعاصر.",
+    },
+  },
+  {
+    id: 6,
+    title: { en: "Pro Industrial Waterbased Paint", ar: "دهان مائي صناعي احترافي" },
+    category: { en: "Paints", ar: "الدهانات" },
+    price: 45.0,
+    rating: 4,
+    image: "/images (2).jpeg",
+    description: {
+      en: "Waterbased Acrolon 100 high-performance coating for industrial surfaces.",
+      ar: "طلاء أكريليك يوريثان مائي أكرولون 100 عالي الأداء للأسطح الصناعية.",
+    },
+  },
+  {
+    id: 7,
+    title: { en: "Glass Balustrade Railing", ar: "درابزين زجاجي" },
+    category: { en: "Building Materials", ar: "مواد البناء" },
+    price: 120.0,
+    rating: 5,
+    image: "/596425.png",
+    description: {
+      en: "Premium tempered glass balustrade railing, ideal for balconies and staircases. Combines elegance and safety for modern buildings.",
+      ar: "درابزين زجاجي مقوى عالي الجودة، مثالي للشرفات والسلالم. يجمع بين الأناقة والأمان للمباني الحديثة.",
+    },
+  },
+];
+
+
+export const categories = [
     {
-        id: 1,
-        title: "Wooden Door",
-        category: "Wooden Door",
-        price: 199.00,
-        originalPrice: 400.00,
-        rating: 5,
-        image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80",
-        images: [
-            "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80",
-            "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&q=80",
-            "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&q=80"
-        ],
-        isNew: true,
-        discount: 50,
-        remainingPieces: 3,
-        description: "A modern solid wood door that combines geometric art with natural wood grain, providing security, durability, and excellent sound insulation. Suitable for entryways and rooms. It features an elegant appearance, customizability, and high resistance, making a long-term investment for your home.",
-        measurements: '17 1/2" x 20 5/8"',
-        colors: ["Black", "Dark Brown", "Natural"],
-        reviews: 11
+        id: 11,
+        title: {
+            en: "Electricals",
+            ar: "الكهربائيات"
+        },
+        subtitle: {
+            en: "High-performance electrical components and smart metering solutions for industrial and residential grids.",
+            ar: "مكونات كهربائية عالية الأداء وحلول عدادات ذكية لشبكات صناعية وسكنية."
+        },
+        image: "/468478.png"
     },
     {
-        id: 2,
-        title: "Wooden Door",
-        category: "Wooden Door",
-        price: 30.00,
-        description: "A modern solid wood door that combines geometric art with natural wood grain, providing security, durability, and excellent sound insulation. Suitable for entryways and rooms. It features an elegant appearance, customizability, and high resistance, making a long-term investment for your home.",
-        rating: 5,
-        image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&q=80",
+        id: 12,
+        title: {
+            en: "Doors",
+            ar: "الأبواب"
+        },
+        subtitle: {
+            en: "Premium interior and exterior doors designed for modern security, durability, and architectural style.",
+            ar: "أبواب داخلية وخارجية فاخرة مصممة للأمان الحديث والمتانة والأسلوب المعماري."
+        },
+        image: "/126305.png"
     },
     {
-        id: 3,
-        title: "Wooden Door",
-        category: "Wooden Door",
-        price: 30.00,
-        rating: 5,
-        image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&q=80",
+        id: 13,
+        title: {
+            en: "Paints",
+            ar: "الدهانات"
+        },
+        subtitle: {
+            en: "Professional-grade industrial coatings and high-quality water-based paints for a long-lasting finish.",
+            ar: "طلاءات صناعية احترافية ودهانات مائية عالية الجودة لتشطيب طويل الأمد."
+        },
+        image: "/images (2).jpeg"
     },
     {
-        id: 4,
-        title: "Wooden",
-        category: "Wooden Door",
-        price: 30.00,
-        originalPrice: 60.00,
-        rating: 5,
-        image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80",
-        isNew: true,
+        id: 14,
+        title: {
+            en: "Walls & Floors",
+            ar: "الجدران والأرضيات"
+        },
+        subtitle: {
+            en: "Modern vanities, elegant tiling, and flooring solutions to elevate your interior design.",
+            ar: "خزائن حمام حديثة، بلاط أنيق، وحلول أرضيات لرفع مستوى تصميم داخليتك."
+        },
+        image: "/22018.png"
     },
     {
-        id: 5,
-        title: "Wooden Door",
-        category: "Wooden Door",
-        price: 30.00,
-        rating: 5,
-        image: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400&q=80",
-    },
-    {
-        id: 6,
-        title: "Wooden Door",
-        category: "Wooden Door",
-        price: 199.00,
-        originalPrice: 400.00,
-        rating: 5,
-        image: "https://images.unsplash.com/photo-1611967164521-abae8fba4668?w=400&q=80",
-        isNew: true,
-        discount: 50,
-    },
-    {
-        id: 7,
-        title: "Wooden Door",
-        category: "Wooden Door",
-        price: 30.00,
-        rating: 5,
-        image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&q=80",
-        isNew: true,
-    },
-    {
-        id: 8,
-        title: "Black Brow Side table",
-        category: "Wooden Door",
-        price: 16.99,
-        rating: 5,
-        image: "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=400&q=80",
-    },
-]
+        id: 15,
+        title: {
+            en: "Building Materials",
+            ar: "مواد البناء"
+        },
+        subtitle: {
+            en: "Robust structural components and high-quality safety systems for reliable construction.",
+            ar: "مكونات هيكلية قوية وأنظمة أمان عالية الجودة للبناء الموثوق."
+        },
+        image: "/596425.png"
+    }
+];

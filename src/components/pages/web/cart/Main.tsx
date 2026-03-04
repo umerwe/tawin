@@ -32,7 +32,6 @@ export default function Cart() {
                             {step.id}
                         </div>
                         <span className={`text-sm font-medium ${currentStep === step.id ? "text-black" : "text-gray-400"}`}>
-                            {/* We map the label to a translation key: cartStep1, cartStep2, etc. */}
                             {t(`cartStep${step.id}`)}
                         </span>
                         {step.id === "1" && currentStep === "1" && <div className="absolute -bottom-2 left-0 w-full h-0.5 bg-aqua" />}

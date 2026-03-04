@@ -7,21 +7,20 @@ import { products } from "@/constants/products"
 import ContactSection from "@/components/pages/web/shop/ContactSection"
 import { useState } from "react"
 import { getGridClasses } from "@/utils/getGridClasses"
-import Hero from "./Hero"
 import Link from "next/link"
 import { useTranslations } from "next-intl"
+import Hero from "@/components/pages/web/shop/Hero"
 import { useSearchParams } from "next/navigation"
 
 const Shop = () => {
     const t = useTranslations("translation");
-    const params = useSearchParams();
-    const category = params.get("category");
-
+    const searchParams = useSearchParams();
     const [viewMode, setViewMode] = useState("grid4");
+    const activeCategory = searchParams.get("category") || "all";
 
     return (
         <div className="space-y-8">
-            <Hero activeCategory={category} />
+            <Hero activeCategory={activeCategory} />
 
             <FilterBar viewMode={viewMode} onViewModeChange={setViewMode} />
 

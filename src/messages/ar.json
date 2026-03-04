@@ -200,11 +200,23 @@
     "cancel": "إلغاء",
     "signIn": "تسجيل الدخول",
     "confirmLogout": "تأكيد تسجيل الخروج",
-    "confirmLogoutDescription": "هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى حسابك."
+    "confirmLogoutDescription": "هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى حسابك.",
+    "showingResultsFor": "عرض النتائج ل",
+    "clearAll": "مسح الكل",
+    "noProductsFound": "لا توجد منتجات",
+    "jenkateMW": "جينكات إم دبليو",
+    "maryamAhmed": "مريمأحمد"
   },
   "shop": {
-    "breadcrumb": "الرئيسية، المتجر",
-    "heroTitle": "الأبواب!",
-    "heroSubtitle": "لإنشاء المساحة التي طالما تخيلتها"
+    "home": "الرئيسية",
+    "breadcrumbShop": "المتجر",
+    "heroTitleDefault": "متجر مواد البناء",
+    "heroSubtitleDefault": "مواد بناء عالية الجودة لمشاريعك.",
+    "addToCart": "إضافة إلى السلة",
+    "new": "جديد",
+    "showingResultsFor": "عرض النتائج لـ",
+    "clearAll": "مسح الكل",
+    "noProductsFound": "لم يتم العثور على منتجات",
+    "showMore": "عرض المزيد"
   }
 }

@@ -1,12 +1,29 @@
 export const cartData = [
-    { id: 1, name: "Wooden Door", price: 19.00, qty: 2, image: "https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?w=100" },
-    { id: 2, name: "Wooden Door", price: 19.00, qty: 2, image: "https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?w=100" },
-    { id: 3, name: "Wooden Door", price: 19.00, qty: 2, image: "https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?w=100" },
-]
+    {
+        id: 1,
+        name: { en: "Modern Bathroom Vanity", ar: "خزانة حمام حديثة" },
+        price: 598.0,
+        qty: 2,
+        image: "/22018.png"
+    },
+    {
+        id: 2,
+        name: { en: "Industrial Power Generator", ar: "مولد طاقة صناعي" },
+        price: 4500.0,
+        qty: 1,
+        image: "/647719.png"
+    },
+    {
+        id: 3,
+        name: { en: "Glass Balustrade Railing", ar: "درابزين زجاجي" },
+        price: 360.0,
+        qty: 3,
+        image: "/596425.png"
+    },
+];
 
 export const steps = [
-        { id: "1", label: "Cart" },
-        { id: "2", label: "Checkout Details" },
-        { id: "3", label: "Checkout" },
-    ]
-  
+    { id: "1", label: "Cart" },
+    { id: "2", label: "Checkout Details" },
+    { id: "3", label: "Checkout" },
+]

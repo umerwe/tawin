@@ -12,9 +12,8 @@ const HeroSection = () => {
     const router = useRouter();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    const token = localStorage.getItem("token");
-
     function handleClick() {
+        const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
         if (token) {
             router.push("/my-account?tab=construction")
             return

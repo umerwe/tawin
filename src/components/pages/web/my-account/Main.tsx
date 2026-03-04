@@ -73,7 +73,7 @@ export default function MyAccount() {
                 <Camera className="w-4 h-4" />
               </button>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-8">Maryam Ahmed</h3>
+            <h3 className="font-semibold text-gray-900 mb-8">{t("maryamAhmed")}</h3>
 
             <nav className="w-full space-y-1">
               {accountItems.map((item) => (

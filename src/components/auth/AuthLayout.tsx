@@ -12,17 +12,17 @@ export default function AuthLayout({ FormComponent }: { FormComponent: ReactNode
 
             <section className="relative hidden lg:flex lg:w-1/2 items-center justify-center overflow-hidden">
                 <Image
-                    src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1400&q=85"
+                    src="/auth-bg.png"
                     alt="Construction site"
                     fill
                     priority
-                    className="object-cover"
+                    className="object-cover object-[center_45%]"
                 />
 
                 <div className="absolute inset-0 bg-navy/70" />
 
-                <div className="relative z-10 flex h-64 w-64 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-sm">
-                    <Building className="w-28 h-28 text-gray-400" />
+                <div className="relative z-10 flex h-64 w-64 items-center justify-center rounded-full border border-white/20 bg-gray-50/50 backdrop-blur-sm">
+                    <Building className="w-28 h-28 text-gray-700" />
                 </div>
 
             </section>

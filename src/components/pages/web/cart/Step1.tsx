@@ -15,9 +15,10 @@ import {
 import { cartData } from "@/constants/cart"
 import PaymentSummary from "./PaymentSummary"
 import Image from "next/image"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 const Step1 = () => {
+    const locale = useLocale() as "en" | "ar";
     const t = useTranslations("translation");
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -64,10 +65,10 @@ const Step1 = () => {
                                 <TableCell className="py-8">
                                     <div className="flex items-center space-x-4">
                                         <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden shrink-0">
-                                            <Image src={item.image} alt={item.name} width={80} height={80} className="w-full h-full object-cover" />
+                                            <Image src={item.image} alt={item.name[locale]} width={80} height={80} className="w-full h-full object-cover" />
                                         </div>
-                                        <div className="text-left">
-                                            <h3 className="text-sm font-semibold">{item.name}</h3>
+                                        <div>
+                                            <h3 className="text-sm font-semibold">{item.name[locale]}</h3>
                                             <p className="text-xs text-gray-400">{t("color")}: Black</p>
                                             <button onClick={() => removeItem(item.id)} className="flex items-center text-[10px] text-gray-400 mt-2 hover:text-red-500 transition-colors">
                                                 {t("remove")} <X className="w-3 h-3 ml-1" />
@@ -75,8 +76,8 @@ const Step1 = () => {
                                         </div>
                                     </div>
                                 </TableCell>
-                                <TableCell className="text-lg font-medium text-left">${item.price.toFixed(2)}</TableCell>
-                                <TableCell className="text-lg font-semibold text-left">${(item.price * item.qty).toFixed(2)}</TableCell>
+                                <TableCell>${item.price.toFixed(2)}</TableCell>
+                                <TableCell>${(item.price * item.qty).toFixed(2)}</TableCell>
                                 <TableCell>
                                     <div className="flex items-center border border-gray-200 rounded-md w-24">
                                         <button onClick={() => updateQty(item.id, -1)} className="p-2 hover:bg-gray-50 transition-colors"><Minus className="w-3 h-3" /></button>

@@ -4,8 +4,8 @@ export const orderDetails = {
     total: "$1,345.00",
     paymentMethod: "Card",
     items: [
-        { id: 1, image: "https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?w=200", qty: 2 },
-        { id: 2, image: "https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?w=200", qty: 2 },
-        { id: 3, image: "https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?w=200", qty: 1 },
+        { id: 1, image: "/22018.png", qty: 2 },
+        { id: 2, image: "/647719.png", qty: 1 },
+        { id: 3, image: "/596425.png", qty: 3 },
     ]
 }

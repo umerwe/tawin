@@ -8,19 +8,32 @@ interface CardProps {
   footerValue?: string;
   footerLabel?: string;
 }
+interface LocalizedString {
+  en: string;
+  ar: string;
+}
 
 interface ProductCardProps {
-    id: number
-    image: string
-    images?: string[]
-    title: string
-    category?: string
-    price: number
-    originalPrice?: number
-    rating?: number
-    isNew?: boolean
-    discount?: number
-    isListView?: boolean
+  id: number;
+  title: LocalizedString;
+  category: LocalizedString;
+  price: number;
+  originalPrice?: number;
+  rating: number;
+  image: string;
+  isNew?: boolean;
+  discount?: number;
+  description?: LocalizedString;
+  measurements?: string;
+  colors?: string[];
+  reviews?: number;
+  isListView?: boolean;
+}
+
+interface Category {
+  title: LocalizedString;
+  subtitle: LocalizedString;
+  image: string;
 }
 
 interface Color {

@@ -7,26 +7,26 @@ import CountdownTimer from "./CountdownTimer"
 import ColorSelector from "./ColorSelector"
 import QuantitySelector from "./QuantitySelector"
 import StarRating from "@/components/StarRating"
-import { Product, Color } from "@/types/product"
 import { DEFAULT_COLORS } from "@/constants/colors"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 interface ProductInfoProps {
-  product: Product
+  product: any
 }
 
 export function ProductInfo({ product }: ProductInfoProps) {
+  const locale = useLocale() as "en" | "ar";
   const t = useTranslations("translation");
   
   const {
     title,
-    description = "",
+    description,
     price,
     originalPrice,
     reviews = 0,
     measurements = "",
     colors = DEFAULT_COLORS,
-  } = product
+  } = product;
 
   return (
     <div className="flex flex-col gap-5">
@@ -37,10 +37,10 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       {/* Title */}
-      <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
+      <h1 className="text-2xl font-semibold text-foreground">{title[locale]}</h1>
 
       {/* Description */}
-      <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
+      <p className="text-sm text-muted-foreground leading-relaxed">{description[locale]}</p>
 
       <Separator />
 

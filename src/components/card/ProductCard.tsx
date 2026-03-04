@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import StarRating from "../StarRating"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 export function ProductCard({
     image,
@@ -19,7 +19,9 @@ export function ProductCard({
     discount,
     isListView = false,
 }: ProductCardProps) {
-    const t = useTranslations("translation")
+    const locale = useLocale();
+    const t = useTranslations("translation");
+    
     const [wished, setWished] = useState(false)
     const hasBadge = isNew || !!discount
 
@@ -29,7 +31,7 @@ export function ProductCard({
                 <div className="relative aspect-square w-full overflow-hidden" style={{ height: isListView ? "280px" : "300px" }}>
                     <Image
                         src={image}
-                        alt={title}
+                        alt={locale === "en" ? title.en : title.ar}
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
@@ -73,7 +75,7 @@ export function ProductCard({
                 <div className="flex flex-col items-start gap-1 bg-background pt-4">
                     <StarRating />
                     <span className="line-clamp-1 text-sm font-medium text-foreground">
-                        {title}
+                      {locale === "en" ? title.en : title.ar}
                     </span>
                     <div className="mt-0.5 flex items-center gap-2">
                         <span className="text-sm font-semibold text-foreground">

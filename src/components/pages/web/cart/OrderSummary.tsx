@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { X, Minus, Plus } from "lucide-react"
 import Image from "next/image"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 type OrderSummaryProps = {
     cartItems: any[]
@@ -12,6 +12,7 @@ type OrderSummaryProps = {
 }
 
 const OrderSummary = ({ cartItems: initialItems, discount }: OrderSummaryProps) => {
+    const locale = useLocale();
     const t = useTranslations("translation");
     const [items, setItems] = useState(initialItems)
 
@@ -38,13 +39,30 @@ const OrderSummary = ({ cartItems: initialItems, discount }: OrderSummaryProps) 
                 <div className="space-y-6 max-h-[400px] overflow-y-auto ltr:pr-2 rtl:pl-2 custom-scrollbar">
                     {items.map((item) => (
                         <div key={item.id} className="flex justify-between items-center border-b border-gray-50 pb-6 group">
-                            {/* Product Info Left */}
+                             <div className="flex items-center ltr:space-x-3 rtl:space-x-reverse">
+                                <button
+                                    onClick={() => removeItem(item.id)}
+                                    className="text-gray-300 hover:text-red-500 transition-colors"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
+                                <div className="w-20 h-20 bg-gray-100 rounded-xl overflow-hidden shadow-inner">
+                                    <Image
+                                        width={64}
+                                        height={80}
+                                        src={item.image}
+                                        alt={item.name}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            </div>
+                            
                             <div className="space-y-2 text-left rtl:text-right">
                                 <span className="text-sm font-semibold text-gray-900">
                                     ${(item.price * item.qty).toFixed(2)}
                                 </span>
                                 <div className="text-[11px] leading-tight">
-                                    <p className="font-semibold text-gray-800 uppercase tracking-tight">{item.name}</p>
+                                    <p className="font-semibold text-gray-800 uppercase tracking-tight">{item.name[locale]}</p>
                                     <p className="text-gray-400">{t("color")}: Black</p>
                                 </div>
 
@@ -67,25 +85,6 @@ const OrderSummary = ({ cartItems: initialItems, discount }: OrderSummaryProps) 
                                     </button>
                                 </div>
                             </div>
-
-                            {/* Image Right */}
-                            <div className="flex items-center ltr:space-x-3 rtl:space-x-reverse">
-                                <button
-                                    onClick={() => removeItem(item.id)}
-                                    className="text-gray-300 hover:text-red-500 transition-colors"
-                                >
-                                    <X className="w-4 h-4" />
-                                </button>
-                                <div className="w-20 h-20 bg-gray-100 rounded-xl overflow-hidden shadow-inner">
-                                    <Image
-                                        width={64}
-                                        height={80}
-                                        src={item.image}
-                                        alt={item.name}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                            </div>
                         </div>
                     ))}
                 </div>
@@ -105,7 +104,7 @@ const OrderSummary = ({ cartItems: initialItems, discount }: OrderSummaryProps) 
                 <div className="space-y-4 pt-4 border-t border-gray-100">
                     <div className="flex justify-between items-center text-aqua">
                         <span className="text-base font-semibold">[${discount.toFixed(2)}] {t("discount")}</span>
-                        <span className="text-lg">JenkateMW</span>
+                        <span className="text-lg">{t("jenkateMW")}</span>
                     </div>
 
                     <div className="flex justify-between items-center">

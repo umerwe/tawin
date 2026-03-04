@@ -28,7 +28,6 @@ const Step2 = () => {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <div className="lg:col-span-8 space-y-8">
-                {/* Personal Information */}
                 <div className="border border-gray-200 rounded-md p-6 space-y-6">
                     <h2 className="text-xl font-semibold">{t("personalInformation")}</h2>
                     <div className="space-y-4">

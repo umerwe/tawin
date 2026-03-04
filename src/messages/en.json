@@ -201,11 +201,23 @@
     "cancel": "Cancel",
     "signIn": "Sign in",
     "confirmLogout": "Confirm Logout",
-    "confirmLogoutDescription": "Are you sure you want to log out? You will need to login again to access your account."
+    "confirmLogoutDescription": "Are you sure you want to log out? You will need to login again to access your account.",
+    "showingResultsFor": "Showing results for",
+    "clearAll": "Clear All",
+    "noProductsFound": "No products found",
+    "jenkateMW": "JenkateMW",
+    "maryamAhmed": "Maryam Ahmed"
   },
   "shop": {
-    "breadcrumb": "Home, Shop",
-    "heroTitle": "Doors!",
-    "heroSubtitle": "To create the space you've always imagined"
+    "home": "Home",
+    "breadcrumbShop": "Shop",
+    "heroTitleDefault": "Construction Store",
+    "heroSubtitleDefault": "High-quality construction materials for your next big project.",
+    "addToCart": "Add to Cart",
+    "new": "New",
+    "showingResultsFor": "Showing results for",
+    "clearAll": "Clear All",
+    "noProductsFound": "No products found",
+    "showMore": "Show More"
   }
 }

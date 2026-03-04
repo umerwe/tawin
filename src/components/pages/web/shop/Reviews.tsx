@@ -15,19 +15,24 @@ import { useTranslations } from "next-intl"
 const mockReviews: Review[] = [
   {
     id: 1,
-    name: "Maryam Ahmed",
+    name: {
+      en: "Maryam Ahmed",
+      ar: "مريم أحمد"
+    },
     rating: 5,
     date: "2 days ago",
-    comment: "Excellent experience!",
+    comment: {
+      en: "Excellent experience!",
+      ar: "تجربة ممتازة!"
+    },
     avatar: "/profile.jpg"
   }
-]
+];
 
-export default function Reviews() {
+export default function Reviews( { productName }: { productName: string } ) {
   const t = useTranslations("translation");
   const [activeTab, setActiveTab] = useState("reviews")
 
-  // Using translation keys for labels while keeping the map structure
   const tabs = [
     { key: "reviews", label: t("reviewsTab") },
     { key: "faqs", label: t("faqsTab") },
@@ -53,7 +58,7 @@ export default function Reviews() {
 
       {activeTab === "reviews" && (
         <div className="space-y-8">
-          <ReviewHeader />
+          <ReviewHeader productName={productName} />
           <WriteReviewButton />
 
           <div className="flex justify-between items-center pt-2">
@@ -76,7 +81,7 @@ export default function Reviews() {
               <ReviewCard key={review.id} review={review} />
             ))}
           </div>
-          
+
           <div className="flex items-center justify-center">
             <Button
               className="border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-10 rounded-full"

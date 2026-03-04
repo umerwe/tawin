@@ -1,16 +1,29 @@
 "use client"
 
 import Image from 'next/image'
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
+import { categories } from "@/constants/products"
+import Breadcrumb from '@/components/ui/breadcrumb';
 
-const Hero = () => {
+interface HeroProps {
+    activeCategory: string | null;
+}
+
+const Hero = ({ activeCategory }: HeroProps) => {
+    const locale = useLocale();
     const t = useTranslations("shop");
 
+    const categoryData: any = categories.find(cat => cat.title.en.toLowerCase() === activeCategory?.toLowerCase());
+
+    const title = categoryData?.title[locale] || t("heroTitleDefault");
+    const subTitle = categoryData?.subtitle[locale] || t("heroTitleDefault");
+    const backgroundImage = categoryData?.image || "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600&q=85";
+
     return (
-        <section className="relative h-[600px] overflow-hidden">
+        <section className="relative h-[400px] md:h-[600px] overflow-hidden">
             <Image
-                src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600&q=85"
-                alt="Interior doors hero"
+                src={backgroundImage}
+                alt={title}
                 fill
                 priority
                 className="object-cover"
@@ -18,19 +31,22 @@ const Hero = () => {
             />
 
             {/* Dark overlay */}
-            <div className="absolute inset-0 bg-black/50" />
+            <div className="absolute inset-0 bg-black/60" />
 
-            {/* ── Content ── */}
             <div className="relative z-10 flex h-full items-center justify-center">
-                <div className="space-y-4 text-center">
-                    <p className="text-sm text-white/70">
-                        {t("breadcrumb")}
-                    </p>
+                <div className="flex flex-col items-center space-y-4 text-center px-4">
+                    <Breadcrumb
+                        variant='white'
+                        items={[
+                            { title: t("home"), href: "/" },
+                            { title: title },
+                        ]}
+                    />
                     <h1 className="text-5xl font-semibold text-white">
-                        {t("heroTitle")}
+                        {title}
                     </h1>
-                    <p className="text-white/70">
-                        {t("heroSubtitle")}
+                    <p className=" text-white/70 max-w-2xl mx-auto">
+                        {subTitle}
                     </p>
                 </div>
             </div>
