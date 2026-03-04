@@ -24,6 +24,7 @@ const BestSellerSection = () => {
                     >
                         <ProductCard {...product} />
                     </Link>
+                    
                 ))}
             </div>
         </section>

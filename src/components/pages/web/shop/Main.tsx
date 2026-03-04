@@ -16,6 +16,7 @@ const Shop = () => {
     const t = useTranslations("translation");
     const params = useSearchParams();
     const category = params.get("category");
+    let data = category ? products.filter((x) => x.category.en.toLowerCase() === category) : products;
 
     const [viewMode, setViewMode] = useState("grid4");
 
@@ -26,7 +27,7 @@ const Shop = () => {
             <FilterBar viewMode={viewMode} onViewModeChange={setViewMode} />
 
             <div className={getGridClasses(viewMode)}>
-                {products.map((product) => (
+                {data.map((product) => (
                     <Link href={`/shop/${product.id}`}
                         key={product.id}
                     >

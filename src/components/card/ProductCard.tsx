@@ -65,7 +65,10 @@ export function ProductCard({
                         />
                     </Button>
 
-                    <div className="absolute inset-x-3 bottom-3 z-10 translate-y-3 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+                    <div
+                     className="absolute inset-x-3 bottom-3 z-10 translate-y-3 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100"
+                     onClick={(e) => e.stopPropagation()}
+                     >
                         <Button variant="primary" size="sm">
                             {t("addToCart")}
                         </Button>
