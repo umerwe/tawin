@@ -37,7 +37,7 @@ const HeroSection = () => {
                         {t("heroTitle")}
                     </h1>
 
-                    {token && (
+                    {!token && (
                         <Button
                             variant="outline"
                             className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30 mt-4"
