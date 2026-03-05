@@ -42,7 +42,7 @@ export default function Cart() {
             {currentStep === "1" ? (
                 <Step1 />
             ) : currentStep === "2" ? (
-               <Step2 />
+                <Step2 />
             ) : (
                 <Step3 />
             )}

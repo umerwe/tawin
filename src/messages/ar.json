@@ -1,6 +1,6 @@
 {
   "translation": {
-    "brandName": "تعوين للمقاولات",
+    "brandName": "التعاون الانشائية",
     "signin": "تسجيل الدخول",
     "menu": "القائمة",
     "home": "الرئيسية",
@@ -11,10 +11,10 @@
     "allRightsReserved": "جميع الحقوق محفوظة",
     "termsAndConditions": "الأحكام والشروط",
     "privacyPolicy": "سياسة الخصوصية",
-    "heroTitle": "أكثر من مجرد بناء",
+    "heroTitle": "أكثر من مجرد مواد إنشائية. نحن أساس كل مشروع ناجح.",
     "heroTitleHighlight": "مواد.",
     "heroDescription": "نحن نوفر الجودة التي تبني الثقة لكل مشروع ناجح.",
-    "heroButton": "تسجيل سلة البناء",
+    "heroButton": "تسجيل الدخول",
     "bestSellers": "الأكثر مبيعاً",
     "viewAll": "عرض الكل",
     "new": "جديد",
@@ -208,7 +208,14 @@
     "maryamAhmed": "مريمأحمد",
     "details": "تفاصيل",
     "alreadyInCart": "أيضا في السلة",
-    "noItemsFound" : "لا توجد عناصر"
+    "noItemsFound": "لا توجد عناصر",
+    "aboutUsTitle": "نبذة عنا",
+    "aboutUsDescription2": "تعاون الانشائية هو مشروع من شركة مستقبل الإعمار بالتعاون مع المؤسسات الحكومية، تأسست 2026. فريق خدمة العملاء لدينا مستعد دائماً لدعمكم على مدار الساعة 24/7.",
+    "footerMotto": "أكثر من مجرد مواد إنشائية.",
+    "addressTitle": "العنوان",
+    "country": "العراق",
+    "pagesTitle": "الصفحات",
+    "copyrightText": "Copyright © 2026 Ta3awin. All rights reserved"
   },
   "shop": {
     "home": "الرئيسية",

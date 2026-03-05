@@ -1,6 +1,6 @@
 {
   "translation": {
-    "brandName": "Ta3win Construction",
+    "brandName": "Construction Cooperation",
     "signin": "Sign in",
     "menu": "Menu",
     "home": "Home",
@@ -11,10 +11,10 @@
     "allRightsReserved": "All rights reserved",
     "termsAndConditions": "Terms and Conditions",
     "privacyPolicy": "Privacy Policy",
-    "heroTitle": "More than just building",
+    "heroTitle": "More than just building materials. We are the foundation of every successful project.",
     "heroTitleHighlight": "materials.",
     "heroDescription": "We provide the quality that builds trust for every successful project.",
-    "heroButton": "Register Construction Basket",
+    "heroButton": "Login",
     "bestSellers": "Best Sellers",
     "viewAll": "View All",
     "new": "New",
@@ -209,7 +209,14 @@
     "maryamAhmed": "Maryam Ahmed",
     "details": "Details",
     "alreadyInCart": "Already in Cart",
-    "noItemsFound" : "No Item Found"  
+    "noItemsFound" : "No Item Found",
+    "aboutUsTitle": "About Us",
+    "aboutUsDescription2": "Construction Cooperation is a project by Future Construction Company in cooperation with government institutions, established in 2026. Our customer service team is always ready to support you 24/7.",
+    "footerMotto": "More than just construction materials.",
+    "addressTitle": "Address",
+    "country": "Iraq",
+    "pagesTitle": "Pages",
+    "copyrightText": "Copyright © 2026 Ta3awin. All rights reserved"
   },
   "shop": {
     "home": "Home",
