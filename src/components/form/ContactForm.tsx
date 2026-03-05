@@ -11,7 +11,7 @@ const ContactForm = ({ isHome }: { isHome?: boolean }) => {
   const t = useTranslations("translation");
 
   return (
-    <section className="max-w-7xl mx-auto ltr:pl-6 rtl:pr-6 my-16 bg-white">
+    <section className="max-w-7xl mx-auto my-16 bg-white">
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Contact Form */}
         <div className="w-full lg:w-1/2 space-y-6">

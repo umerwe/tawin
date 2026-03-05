@@ -83,7 +83,9 @@ export default function ContactUsPage() {
         </div>
       </section>
 
-      <ContactForm />
+      <section className="max-w-7xl mx-auto px-4">
+        <ContactForm />
+      </section>
 
       {/* 5. Features Footer Bar */}
       <section className="bg-gray-100 py-16">

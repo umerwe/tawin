@@ -4,13 +4,13 @@ import Link from "next/link"
 import { Instagram, Facebook, Youtube } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { useTranslations } from "next-intl"
+import { usePathname } from "next/navigation"
 
-interface FooterProps {
-    isHome?: boolean;
-}
-
-export default function Footer({ isHome = true }: FooterProps) {
+export default function Footer() {
     const t = useTranslations("translation");
+    const pathname = usePathname();
+
+    const isHome = pathname === "/" || pathname === "/en" || pathname === "/ar";
 
     if (isHome) {
         return (
