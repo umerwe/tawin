@@ -30,7 +30,7 @@ const ProductDetails = ({ params }: ProductDetailsProps) => {
     }
 
     return (
-        <Container className="space-y-8 py-8">
+        <Container className="space-y-8 pt-8 pb-16">
             <div className="flex items-center justify-between">
                 <Breadcrumb
                     items={[

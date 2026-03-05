@@ -10,7 +10,7 @@ export default function ContactUsPage() {
   const t = useTranslations("translation");
 
   return (
-    <div className="w-full bg-white font-sans text-gray-800">
+    <div className="w-full bg-white font-sans text-gray-800 pb-16">
       <section className="max-w-7xl mx-auto px-4 py-16 text-center ltr:md:text-left rtl:md:text-right">
         <div className="flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1 space-y-6">
