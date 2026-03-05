@@ -50,7 +50,7 @@ export function ProductCard({
             <CardContent className="p-0">
                 <div
                     onClick={() => router.push(`/shop/${id}`)}
-                    className="group relative aspect-square w-full overflow-hidden cursor-pointer" style={{ height: isListView ? "280px" : "300px" }}>
+                    className="group relative aspect-square w-full overflow-hidden cursor-pointer">
                     <Image
                         src={image}
                         alt={locale === "en" ? title.en : title.ar}
@@ -109,11 +109,11 @@ export function ProductCard({
                         )}
                     </div>
                     <Button
-                        variant={isInCart ? "secondary" : "outline"} // Change style if added
+                        variant={isInCart ? "secondary" : "primary"}
                         size="sm"
                         className="w-full mt-2"
                         onClick={handleAddToCart}
-                        disabled={isInCart} // Optional: disable the button
+                        disabled={isInCart}
                     >
                         {isInCart ? t("alreadyInCart") : t("addToCart")}
                     </Button>

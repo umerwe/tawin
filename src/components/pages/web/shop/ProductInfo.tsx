@@ -9,6 +9,10 @@ import QuantitySelector from "./QuantitySelector"
 import StarRating from "@/components/StarRating"
 import { DEFAULT_COLORS } from "@/constants/colors"
 import { useLocale, useTranslations } from "next-intl"
+// --- REDUX IMPORTS ---
+import { useDispatch, useSelector } from "react-redux"
+import { addToCart } from "@/store/cartSlice"
+import { RootState } from "@/store/store"
 
 interface ProductInfoProps {
   product: any
@@ -17,8 +21,10 @@ interface ProductInfoProps {
 export function ProductInfo({ product }: ProductInfoProps) {
   const locale = useLocale() as "en" | "ar";
   const t = useTranslations("translation");
-  
+  const dispatch = useDispatch();
+
   const {
+    id, // Ensure id is destructured
     title,
     description,
     price,
@@ -26,7 +32,24 @@ export function ProductInfo({ product }: ProductInfoProps) {
     reviews = 0,
     measurements = "",
     colors = DEFAULT_COLORS,
+    image, // Ensure image is available in the product object
   } = product;
+
+  // Check if item is already in cart
+  const isInCart = useSelector((state: RootState) =>
+    state.cart.items.some((item: any) => item.id === id)
+  );
+
+  const handleAddToCart = () => {
+    if (!isInCart) {
+      dispatch(addToCart({ 
+        id, 
+        image: image || product.images?.[0], // Fallback if image structure varies
+        title, 
+        price 
+      }));
+    }
+  };
 
   return (
     <div className="flex flex-col gap-5">
@@ -92,10 +115,12 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
       {/* Add to Cart */}
       <Button
-        variant="primary"
+        variant={isInCart ? "secondary" : "primary"}
         className="mb-2"
+        onClick={handleAddToCart}
+        disabled={isInCart}
       >
-        {t("addToCart")}
+        {isInCart ? t("alreadyInCart") : t("addToCart")}
       </Button>
 
       <Separator />

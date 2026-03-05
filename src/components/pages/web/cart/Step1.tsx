@@ -72,7 +72,7 @@ const Step1 = () => {
                                         <div>
                                             <h3 className="text-sm font-semibold">{locale === "en" ? item.title.en : item.title.ar}</h3>
                                             <p className="text-xs text-gray-400">{t("color")}: Black</p>
-                                            <button onClick={() => removeItem(item.id)} className="flex items-center text-[10px] text-gray-400 mt-2 hover:text-red-500 transition-colors">
+                                            <button onClick={() => removeItem(item.id)} className="flex items-center text-xs text-gray-400 mt-2 hover:text-red-500 transition-colors">
                                                 {t("remove")} <X className="w-3 h-3 ml-1" />
                                             </button>
                                         </div>
