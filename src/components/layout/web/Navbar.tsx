@@ -111,7 +111,7 @@ export default function Navbar() {
           {/* Hamburger Toggle */}
           <button
             onClick={() => setIsOpen(true)}
-            className="md:hidden p-2 text-gray-600 hover:text-aqua transition-colors"
+            className="md:hidden text-gray-600 hover:text-aqua transition-colors"
             aria-label="Toggle Menu"
           >
             <Menu className="w-6 h-6" />
