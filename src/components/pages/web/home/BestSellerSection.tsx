@@ -19,12 +19,7 @@ const BestSellerSection = () => {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
                 {products.slice(0, 4).map((product) => (
-                    <Link href={`/shop/${product.id}`}
-                        key={product.id}
-                    >
-                        <ProductCard {...product} />
-                    </Link>
-                    
+                    <ProductCard {...product} />
                 ))}
             </div>
         </section>

@@ -9,8 +9,10 @@ import { cn } from "@/lib/utils"
 import StarRating from "../StarRating"
 import { useLocale, useTranslations } from "next-intl"
 import Image from "../MyImage"
+import Link from "next/link"
 
 export function ProductCard({
+    id,
     image,
     title,
     price,
@@ -26,9 +28,9 @@ export function ProductCard({
     const hasBadge = isNew || !!discount
 
     return (
-        <Card className="group relative overflow-hidden rounded-xl border-0 shadow-none">
+        <Card className="relative overflow-hidden rounded-xl border-0 shadow-none">
             <CardContent className="p-0">
-                <div className="relative aspect-square w-full overflow-hidden" style={{ height: isListView ? "280px" : "300px" }}>
+                <div className="group relative aspect-square w-full overflow-hidden" style={{ height: isListView ? "280px" : "300px" }}>
                     <Image
                         src={image}
                         alt={locale === "en" ? title.en : title.ar}
@@ -66,9 +68,9 @@ export function ProductCard({
                     </Button>
 
                     <div
-                     className="absolute inset-x-3 bottom-3 z-10 translate-y-3 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100"
-                     onClick={(e) => e.stopPropagation()}
-                     >
+                        className="absolute inset-x-3 bottom-3 z-10 translate-y-3 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <Button variant="primary" size="sm">
                             {t("addToCart")}
                         </Button>
@@ -90,6 +92,18 @@ export function ProductCard({
                             </span>
                         )}
                     </div>
+                    <Link
+                        href={`/shop/${id}`}
+                        className="mt-2 w-full"
+                    >
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full"
+                        >
+                            {t("details")}
+                        </Button>
+                    </Link>
                 </div>
             </CardContent>
         </Card>

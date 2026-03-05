@@ -28,14 +28,10 @@ const Shop = () => {
 
             <div className={getGridClasses(viewMode)}>
                 {data.map((product) => (
-                    <Link href={`/shop/${product.id}`}
-                        key={product.id}
-                    >
-                        <ProductCard
-                            {...product as any}
-                            isListView={viewMode === "list"}
-                        />
-                    </Link>
+                    <ProductCard
+                        {...product as any}
+                        isListView={viewMode === "list"}
+                    />
                 ))}
             </div>
 
