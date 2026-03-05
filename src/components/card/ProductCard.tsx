@@ -9,7 +9,12 @@ import { cn } from "@/lib/utils"
 import StarRating from "../StarRating"
 import { useLocale, useTranslations } from "next-intl"
 import Image from "../MyImage"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
+// --- REDUX IMPORTS ---
+import { useDispatch, useSelector } from "react-redux"
+import { addToCart } from "@/store/cartSlice"
+import { RootState } from "@/store/store"
 
 export function ProductCard({
     id,
@@ -22,15 +27,30 @@ export function ProductCard({
     isListView = false,
 }: ProductCardProps) {
     const locale = useLocale();
+    const router = useRouter();
     const t = useTranslations("translation");
+    const dispatch = useDispatch();
 
     const [wished, setWished] = useState(false)
     const hasBadge = isNew || !!discount
 
+    const isInCart = useSelector((state: RootState) =>
+        state.cart.items.some((item: any) => item.id === id)
+    );
+
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!isInCart) {
+            dispatch(addToCart({ id, image, title, price }));
+        }
+    };
+
     return (
         <Card className="relative overflow-hidden rounded-xl border-0 shadow-none">
             <CardContent className="p-0">
-                <div className="group relative aspect-square w-full overflow-hidden" style={{ height: isListView ? "280px" : "300px" }}>
+                <div
+                    onClick={() => router.push(`/shop/${id}`)}
+                    className="group relative aspect-square w-full overflow-hidden cursor-pointer" style={{ height: isListView ? "280px" : "300px" }}>
                     <Image
                         src={image}
                         alt={locale === "en" ? title.en : title.ar}
@@ -55,7 +75,10 @@ export function ProductCard({
                     <Button
                         size="icon"
                         variant="outline"
-                        onClick={() => setWished((w) => !w)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setWished((w) => !w);
+                        }}
                         className="absolute right-3 top-3 z-10 h-8 w-8 rounded-full border-border bg-background/90 shadow-sm hover:bg-background"
                         aria-label="Toggle wishlist"
                     >
@@ -66,22 +89,15 @@ export function ProductCard({
                             )}
                         />
                     </Button>
-
-                    <div
-                        className="absolute inset-x-3 bottom-3 z-10 translate-y-3 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <Button variant="primary" size="sm">
-                            {t("addToCart")}
-                        </Button>
-                    </div>
                 </div>
 
                 <div className="flex flex-col items-start gap-1 bg-background pt-4">
                     <StarRating />
-                    <span className="line-clamp-1 text-sm font-medium text-foreground">
+
+                    <Link href={`/shop/${id}`} className="line-clamp-1 text-sm font-medium text-foreground cursor-pointer">
                         {locale === "en" ? title.en : title.ar}
-                    </span>
+                    </Link>
+
                     <div className="mt-0.5 flex items-center gap-2">
                         <span className="text-sm font-semibold text-foreground">
                             ${price.toFixed(2)}
@@ -92,18 +108,15 @@ export function ProductCard({
                             </span>
                         )}
                     </div>
-                    <Link
-                        href={`/shop/${id}`}
-                        className="mt-2 w-full"
+                    <Button
+                        variant={isInCart ? "secondary" : "outline"} // Change style if added
+                        size="sm"
+                        className="w-full mt-2"
+                        onClick={handleAddToCart}
+                        disabled={isInCart} // Optional: disable the button
                     >
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="w-full"
-                        >
-                            {t("details")}
-                        </Button>
-                    </Link>
+                        {isInCart ? t("alreadyInCart") : t("addToCart")}
+                    </Button>
                 </div>
             </CardContent>
         </Card>

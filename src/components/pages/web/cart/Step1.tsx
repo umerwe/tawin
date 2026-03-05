@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Minus, Plus, X, Ticket } from "lucide-react"
@@ -12,32 +11,35 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { cartData } from "@/constants/cart"
 import PaymentSummary from "./PaymentSummary"
 import { useLocale, useTranslations } from "next-intl"
 import Image from "@/components/MyImage"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from "@/store/store"
+import { removeFromCart, updateQuantity } from "@/store/cartSlice"
 
 const Step1 = () => {
     const locale = useLocale() as "en" | "ar";
     const t = useTranslations("translation");
     const router = useRouter()
     const searchParams = useSearchParams()
+    
+    const dispatch = useDispatch()
+    const cartItems = useSelector((state: RootState) => state.cart.items)
 
-    const [cartItems, setCartItems] = useState(cartData)
-
-    const updateQty = (id: number, delta: number) => {
-        setCartItems(prev =>
-            prev.map(item =>
-                item.id === id ? { ...item, qty: Math.max(1, item.qty + delta) } : item
-            )
-        )
+    const updateQty = (id: number | string, delta: number) => {
+        const item = cartItems.find((i: any) => i.id === id)
+        if (item) {
+            const newQty = Math.max(1, item.quantity + delta)
+            dispatch(updateQuantity({ id, quantity: newQty }))
+        }
     }
 
-    const removeItem = (id: number) => {
-        setCartItems(prev => prev.filter(item => item.id !== id))
+    const removeItem = (id: number | string) => {
+        dispatch(removeFromCart(id))
     }
 
-    const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+    const subtotal = cartItems.reduce((acc: number, item: any) => acc + item.price * item.quantity, 0)
     const shipping = 0
     const total = subtotal + shipping
 
@@ -60,15 +62,15 @@ const Step1 = () => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {cartItems.map((item) => (
+                        {cartItems.map((item: any) => (
                             <TableRow key={item.id} className="border-b border-gray-50 hover:bg-transparent">
                                 <TableCell className="py-8">
                                     <div className="flex items-center space-x-4">
                                         <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden shrink-0">
-                                            <Image src={item.image} alt={item.name[locale]} width={80} height={80} className="w-full h-full object-cover" />
+                                            <Image src={item.image} alt={locale === "en" ? item.title.en : item.title.ar} width={80} height={80} className="w-full h-full object-cover" />
                                         </div>
                                         <div>
-                                            <h3 className="text-sm font-semibold">{item.name[locale]}</h3>
+                                            <h3 className="text-sm font-semibold">{locale === "en" ? item.title.en : item.title.ar}</h3>
                                             <p className="text-xs text-gray-400">{t("color")}: Black</p>
                                             <button onClick={() => removeItem(item.id)} className="flex items-center text-[10px] text-gray-400 mt-2 hover:text-red-500 transition-colors">
                                                 {t("remove")} <X className="w-3 h-3 ml-1" />
@@ -77,11 +79,11 @@ const Step1 = () => {
                                     </div>
                                 </TableCell>
                                 <TableCell>${item.price.toFixed(2)}</TableCell>
-                                <TableCell>${(item.price * item.qty).toFixed(2)}</TableCell>
+                                <TableCell>${(item.price * item.quantity).toFixed(2)}</TableCell>
                                 <TableCell>
                                     <div className="flex items-center border border-gray-200 rounded-md w-24">
                                         <button onClick={() => updateQty(item.id, -1)} className="p-2 hover:bg-gray-50 transition-colors"><Minus className="w-3 h-3" /></button>
-                                        <span className="flex-1 text-center text-sm font-medium">{item.qty}</span>
+                                        <span className="flex-1 text-center text-sm font-medium">{item.quantity}</span>
                                         <button onClick={() => updateQty(item.id, 1)} className="p-2 hover:bg-gray-50 transition-colors"><Plus className="w-3 h-3" /></button>
                                     </div>
                                 </TableCell>

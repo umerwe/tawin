@@ -8,7 +8,6 @@ import ContactSection from "@/components/pages/web/shop/ContactSection"
 import { useState } from "react"
 import { getGridClasses } from "@/utils/getGridClasses"
 import Hero from "./Hero"
-import Link from "next/link"
 import { useTranslations } from "next-intl"
 import { useSearchParams } from "next/navigation"
 

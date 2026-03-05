@@ -1,34 +1,37 @@
 "use client"
 
-import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { X, Minus, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import Image from "@/components/MyImage"
+// --- REDUX IMPORTS ---
+import { useDispatch } from "react-redux"
+import { removeFromCart, updateQuantity } from "@/store/cartSlice"
 
 type OrderSummaryProps = {
     cartItems: any[]
     discount: number
 }
 
-const OrderSummary = ({ cartItems: initialItems, discount }: OrderSummaryProps) => {
-    const locale = useLocale();
+const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
+    const locale = useLocale() as "en" | "ar";
     const t = useTranslations("translation");
-    const [items, setItems] = useState(initialItems)
+    const dispatch = useDispatch();
 
-    const updateQty = (id: number, delta: number) => {
-        setItems(prev =>
-            prev.map(item =>
-                item.id === id ? { ...item, qty: Math.max(1, item.qty + delta) } : item
-            )
-        )
+    const updateQty = (id: number | string, delta: number) => {
+        const item = cartItems.find((i) => i.id === id);
+        if (item) {
+            const newQty = Math.max(1, (item.quantity || item.qty) + delta);
+            dispatch(updateQuantity({ id, quantity: newQty }));
+        }
     }
 
-    const removeItem = (id: number) => {
-        setItems(prev => prev.filter(item => item.id !== id))
+    const removeItem = (id: number | string) => {
+        dispatch(removeFromCart(id));
     }
 
-    const subtotal = items.reduce((acc, item) => acc + item.price * item.qty, 0)
+    // Support both 'qty' and 'quantity' naming to prevent errors
+    const subtotal = cartItems.reduce((acc, item) => acc + item.price * (item.quantity || item.qty || 1), 0)
     const grandTotal = subtotal - discount
 
     return (
@@ -37,7 +40,7 @@ const OrderSummary = ({ cartItems: initialItems, discount }: OrderSummaryProps) 
                 <h2 className="text-xl font-semibold text-gray-900">{t("orderSummary")}</h2>
 
                 <div className="space-y-6 max-h-[400px] overflow-y-auto ltr:pr-2 rtl:pl-2 custom-scrollbar">
-                    {items.map((item) => (
+                    {cartItems.map((item) => (
                         <div key={item.id} className="flex justify-between items-center border-b border-gray-50 pb-6 group">
                              <div className="flex items-center ltr:space-x-3 rtl:space-x-reverse">
                                 <button
@@ -51,7 +54,7 @@ const OrderSummary = ({ cartItems: initialItems, discount }: OrderSummaryProps) 
                                         width={64}
                                         height={80}
                                         src={item.image}
-                                        alt={item.name}
+                                        alt={locale === "en" ? item.title?.en : item.title?.ar}
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
@@ -59,10 +62,12 @@ const OrderSummary = ({ cartItems: initialItems, discount }: OrderSummaryProps) 
                             
                             <div className="space-y-2 text-left rtl:text-right">
                                 <span className="text-sm font-semibold text-gray-900">
-                                    ${(item.price * item.qty).toFixed(2)}
+                                    ${(item.price * (item.quantity || item.qty || 1)).toFixed(2)}
                                 </span>
                                 <div className="text-[11px] leading-tight">
-                                    <p className="font-semibold text-gray-800 uppercase tracking-tight">{item.name[locale]}</p>
+                                    <p className="font-semibold text-gray-800 uppercase tracking-tight">
+                                        {locale === "en" ? item.title?.en : item.title?.ar}
+                                    </p>
                                     <p className="text-gray-400">{t("color")}: Black</p>
                                 </div>
 
@@ -75,7 +80,7 @@ const OrderSummary = ({ cartItems: initialItems, discount }: OrderSummaryProps) 
                                         <Minus className="w-3 h-3" />
                                     </button>
                                     <span className="flex-1 text-center text-xs font-semibold text-gray-700">
-                                        {item.qty}
+                                        {item.quantity || item.qty || 1}
                                     </span>
                                     <button
                                         onClick={() => updateQty(item.id, 1)}
@@ -103,8 +108,8 @@ const OrderSummary = ({ cartItems: initialItems, discount }: OrderSummaryProps) 
                 {/* Summary Totals */}
                 <div className="space-y-4 pt-4 border-t border-gray-100">
                     <div className="flex justify-between items-center text-aqua">
-                        <span className="text-base font-semibold">[${discount.toFixed(2)}] {t("discount")}</span>
-                        <span className="text-lg">{t("jenkateMW")}</span>
+                        <span className="text-base font-semibold">{t("discount")}</span>
+                        <span className="text-lg">-${discount.toFixed(2)}</span>
                     </div>
 
                     <div className="flex justify-between items-center">

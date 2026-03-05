@@ -206,7 +206,9 @@
     "noProductsFound": "لا توجد منتجات",
     "jenkateMW": "جينكات إم دبليو",
     "maryamAhmed": "مريمأحمد",
-    "details": "تفاصيل"
+    "details": "تفاصيل",
+    "alreadyInCart": "أيضا في السلة",
+    "noItemsFound" : "لا توجد عناصر"
   },
   "shop": {
     "home": "الرئيسية",

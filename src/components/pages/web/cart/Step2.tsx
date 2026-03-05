@@ -5,18 +5,24 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { cartData } from "@/constants/cart"
 import OrderSummary from "./OrderSummary"
 import { useTranslations } from "next-intl"
+// --- REDUX IMPORTS ---
+import { useSelector } from "react-redux"
+import { RootState } from "@/store/store"
 
 const Step2 = () => {
     const t = useTranslations("translation");
     const router = useRouter()
     const searchParams = useSearchParams()
 
+    // Get live cart data from Redux
+    const cartItems = useSelector((state: RootState) => state.cart.items)
+
     const [paymentMethod, setPaymentMethod] = useState<"card" | "cash">("card")
 
-    const subtotal = cartData.reduce((acc, item) => acc + item.price * item.qty, 0)
+    // Dynamic calculation based on Redux items
+    const subtotal = cartItems.reduce((acc: number, item: any) => acc + item.price * item.quantity, 0)
     const discount = 25.00
 
     const setStep = (step: string) => {
@@ -48,7 +54,6 @@ const Step2 = () => {
                     </div>
                 </div>
 
-                {/* Address Section */}
                 <div className="border border-gray-200 rounded-md p-6 space-y-6">
                     <h2 className="text-xl font-semibold">{t("address")}</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -83,7 +88,6 @@ const Step2 = () => {
                     </div>
                 </div>
 
-                {/* Payment Method */}
                 <div className="border border-gray-200 rounded-md p-6 space-y-6">
                     <h2 className="text-xl font-semibold">{t("paymentMethod")}</h2>
                     <div className="space-y-3">
@@ -146,7 +150,7 @@ const Step2 = () => {
             </div>
 
             <OrderSummary
-                cartItems={cartData}
+                cartItems={cartItems}
                 discount={discount}
             />
         </div>

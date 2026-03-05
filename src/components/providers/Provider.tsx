@@ -1,17 +1,18 @@
 import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { SidebarProvider } from "../ui/sidebar";
+import ReduxProvider from "./ReduxProvider";
 
 const Providers = async ({ children }: { children: React.ReactNode }) => {
   const messages = await getMessages();
   return (
-    <div>
+    <ReduxProvider>
       <NextIntlClientProvider messages={messages}>
         <SidebarProvider>
           {children}
         </SidebarProvider>
       </NextIntlClientProvider>
-    </div>
+    </ReduxProvider>
   );
 };
 
