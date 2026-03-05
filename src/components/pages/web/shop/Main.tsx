@@ -20,7 +20,7 @@ const Shop = () => {
     const [viewMode, setViewMode] = useState("grid4");
 
     return (
-        <div className="space-y-8 pb-16 max-w-7xl mx-auto">
+        <div className="space-y-8 pb-16 max-w-7xl mx-auto px-4">
             <Hero activeCategory={category} />
 
             <FilterBar viewMode={viewMode} onViewModeChange={setViewMode} />
