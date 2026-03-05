@@ -29,6 +29,7 @@ const Shop = () => {
             <div className={getGridClasses(viewMode)}>
                 {data.map((product) => (
                     <ProductCard
+                        key={product.id}
                         {...product as any}
                         isListView={viewMode === "list"}
                     />

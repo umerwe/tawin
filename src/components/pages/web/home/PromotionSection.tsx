@@ -14,7 +14,7 @@ export default function PromotionSection() {
             {/* 1. Limited Offers Section */}
             <section className="flex flex-col lg:flex-row min-h-[500px]">
                 {/* Left: Lifestyle Image */}
-                <div className="w-full lg:w-1/2 relative min-h-[400px]">
+                <div className="w-full lg:w-1/2 relative min-h-[500px]">
                     <Image
                         src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&q=80"
                         alt="Living Room Decoration"
@@ -72,7 +72,7 @@ export default function PromotionSection() {
             <section className="max-w-7xl mx-auto px-4 py-12">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-12">
                     <div className="w-full md:w-1/2 hidden sm:flex justify-end">
-                        <div className="relative w-64 h-[450px]">
+                        <div className="relative w-64 h-[350px]">
                             <Image
                                 src="/mob.jpg"
                                 alt="App Mockup"
