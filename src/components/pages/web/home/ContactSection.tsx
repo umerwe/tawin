@@ -20,7 +20,7 @@ const ContactSection = () => {
         </div>
       </section>
 
-      <div className="relative pr-6 md:pr-12 md:pl-12 max-w-7xl mx-auto -mt-16 lg:mt-0 lg:absolute lg:top-48 lg:left-0 lg:right-0">
+      <div className="relative ltr:pr-6 rtl:pl-6 md:pr-12 md:pl-12 max-w-7xl mx-auto -mt-16 lg:mt-0 lg:absolute lg:top-48 lg:left-0 lg:right-0">
         <div className="max-w-7xl mx-auto">
           <ContactForm isHome={true} />
         </div>
