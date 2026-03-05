@@ -16,7 +16,7 @@ export default function Footer({ isHome = true }: FooterProps) {
         return (
             <footer className="bg-white text-[#2D3E50] py-6">
                 <div>
-                    <div className="flex flex-col md:flex-row md:justify-between items-start gap-12 mb-16 mx-auto max-w-7xl px-8">
+                    <div className="flex flex-col md:flex-row md:justify-between items-start gap-12 mb-16 mx-auto max-w-7xl px-4 md:px-12">
                         {/* 1. Brand Section */}
                         <div className="space-y-4 md:w-1/3">
                             <h2 className="text-base font-bold text-[#2D3E50]">

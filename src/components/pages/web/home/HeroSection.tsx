@@ -22,7 +22,7 @@ const HeroSection = () => {
     }
 
     return (
-        <section className="relative h-[600px] w-full overflow-hidden">
+        <section className="relative h-[400px] md:h-[600px] w-full overflow-hidden">
             <Image
                 src="/hero.webp"
                 alt="Construction scaffolding background"
@@ -31,9 +31,9 @@ const HeroSection = () => {
             />
             <div className="absolute inset-0 bg-black/60"></div>
 
-            <div className="absolute inset-0 flex items-center px-12">
+            <div className="absolute inset-0 flex items-center px-4 md:px-12">
                 <div className="max-w-xl">
-                    <h1 className="text-4xl font-semibold text-white leading-tight mb-6">
+                    <h1 className="text-2xl md:text-4xl font-semibold text-white leading-tight mb-6">
                         {t("heroTitle")}
                     </h1>
 
