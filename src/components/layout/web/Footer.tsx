@@ -26,7 +26,7 @@ export default function Footer() {
                         <Link href="/contact" className="text-sm text-white/60 transition-colors hover:text-white">
                             {t("contact")}
                         </Link>
-                        <Link href="/product/1" className="text-sm text-white/60 transition-colors hover:text-white">
+                        <Link href="/shop" className="text-sm text-white/60 transition-colors hover:text-white">
                             {t("shop")}
                         </Link>
                     </nav>
