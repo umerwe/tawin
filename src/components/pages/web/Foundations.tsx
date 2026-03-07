@@ -22,7 +22,7 @@ const Foundations = () => {
 
             <div className="hidden md:block md:absolute md:-bottom-60 md:right-0 w-full md:w-full h-52 md:h-92">
                 <Image
-                    src="/truck-bg.png"
+                    src="/truck-logo.png"
                     alt="Truck"
                     fill
                     className="object-contain object-bottom-right"
