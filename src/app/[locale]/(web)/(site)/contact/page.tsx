@@ -35,7 +35,7 @@ export default function ContactUsPage() {
               className="object-cover"
             />
           </div>
-          <div className="w-full md:w-1/2 p-12 flex flex-col justify-center space-y-6">
+          <div className="w-full md:w-1/2 p-6 sm:p-12 flex flex-col justify-center space-y-6">
             <h2 className="text-3xl font-semibold">{t("aboutUs")}</h2>
             <p className="text-gray-500 text-sm leading-relaxed">
               {t("aboutUsDescription")}
@@ -51,7 +51,7 @@ export default function ContactUsPage() {
 
       {/* 3. Contact Info Cards */}
       <section className="max-w-7xl mx-auto px-2 sm:px-6 text-center">
-        <h2 className="text-4xl font-semibold mb-12">{t("contact")}</h2>
+        <h2 className="text-3xl font-semibold mb-12">{t("contact")}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             {
@@ -83,7 +83,7 @@ export default function ContactUsPage() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-2 sm:px-6">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6">
         <ContactForm />
       </section>
 

@@ -50,15 +50,15 @@ export default function MyAccount() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12 font-sans text-gray-800">
-      <h1 className="text-3xl font-semibold text-center mb-16 text-gray-900 capitalize">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 font-sans text-gray-800">
+      <h1 className="text-3xl font-semibold text-center mb-10 sm:mb-16 text-gray-900 capitalize">
         {currentTab === "account" ? t("myAccount") : t(currentTab)}
       </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         {/* Sidebar Navigation */}
         <div className="lg:col-span-4">
-          <div className="bg-[#F3F5F7] rounded-2xl p-8 flex flex-col items-center">
+          <div className="bg-[#F3F5F7] rounded-2xl p-4 sm:p-8 flex flex-col items-center">
             <div className="relative mb-4">
               <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white shadow-sm">
                 <Image
