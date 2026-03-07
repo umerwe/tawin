@@ -1,55 +1,32 @@
 "use client"
 
 import { useTranslations } from "next-intl"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { LoginDialog } from "@/components/dialog/LoginDialog"
 import Image from "@/components/MyImage"
 
 const HeroSection = () => {
     const t = useTranslations("translation");
-    const router = useRouter();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-    function handleClick() {
-        const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-        if (token) {
-            router.push("/my-account?tab=construction")
-            return
-        }
-        setIsDialogOpen(true)
-    }
 
     return (
-        <section className="relative h-[600px] w-full overflow-hidden">
+        <section className="relative h-[400px] md:h-[600px] w-full overflow-hidden">
             <Image
-                src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1600"
+                src="/contact-bg.jpg"
                 alt="HeroSection"
                 fill
-                className="object-cover brightness-50"
+                className="object-cover"
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-                <h1 className="text-4xl font-semibold text-white max-w-4xl leading-tight">
-                    {t("heroTitle")}{" "}
-                    <span className="text-aqua underline">{t("heroTitleHighlight")}</span>
-                </h1>
-                <p className="mt-4 text-base text-gray-200 max-w-xl">
-                    {t("heroDescription")}
-                </p>
+            <div className="absolute inset-0 bg-black/40"></div>
 
-                {/* <Button
-                    variant="primary"
-                    className="w-74 mt-8"
-                    onClick={handleClick}
-                >
-                    {t("heroButton")} →
-                </Button> */}
+            <div className="absolute inset-0 flex items-center px-4 md:px-12">
+                <div className="max-w-xl">
+                    <h1 className="text-2xl md:text-4xl font-semibold text-white leading-tight mb-6">
+                        {t("heroTitle")}
+                    </h1>
+
+                    <p className="text-sm md:text-base text-gray-200">
+                        {t("heroDescription")}
+                    </p>
+                </div>
             </div>
-
-            <LoginDialog
-                open={isDialogOpen}
-                onOpenChange={setIsDialogOpen}
-            />
         </section>
     )
 }

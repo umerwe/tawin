@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl"
 const BestSellerSection = () => {
     const t = useTranslations("translation")
     return (
-        <section className="max-w-7xl mx-auto">
+        <section>
             <div className="flex items-center justify-between mb-4">
                 <h2 className="text-2xl font-semibold text-gray-900">
                     {t("bestSellers")}

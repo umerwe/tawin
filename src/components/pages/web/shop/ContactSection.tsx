@@ -13,14 +13,13 @@ export default function ContactSection() {
     return (
         <section className="relative w-full overflow-hidden">
             <Image
-                src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1600&q=85"
+                src="/banner.png"
                 alt={t("contactBgAlt")}
                 fill
                 className="object-cover"
                 sizes="100vw"
                 priority
             />
-            <div className="absolute inset-0 bg-white/80" />
 
             <div className="relative z-10 mx-auto flex min-h-[340px] max-w-xl flex-col items-center justify-center px-6 py-20 text-center">
                 <p className="text-sm text-muted-foreground leading-relaxed">

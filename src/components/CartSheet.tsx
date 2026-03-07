@@ -147,6 +147,7 @@ export default function CartSheet({ open, onOpenChange }: CartSheetProps) {
                             onOpenChange(false)
                             router.push("/cart?step=2")
                         }}
+                        disabled={cartItems.length === 0}
                     >
                         {t("completePayment") ?? "Complete Payment"}
                     </Button>
@@ -160,6 +161,7 @@ export default function CartSheet({ open, onOpenChange }: CartSheetProps) {
                             }}
                             variant="outline"
                             className="text-sm text-gray-900 font-medium underline bg-transparent border-0 hover:bg-transparent underline-offset-2 hover:text-aqua transition-colors"
+                            disabled={cartItems.length === 0}
                         >
                             {t("viewCart") ?? "View Cart"}
                         </Button>

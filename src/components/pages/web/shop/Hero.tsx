@@ -17,38 +17,30 @@ const Hero = ({ activeCategory }: HeroProps) => {
 
     const title = categoryData?.title[locale] || t("heroTitleDefault");
     const subTitle = categoryData?.subtitle[locale] || t("heroTitleDefault");
-    const backgroundImage = categoryData?.image || "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600&q=85";
-console.log({
-activeCategory,
-backgroundImage
-})
+    const backgroundImage = categoryData?.image || "/shop.png";
+
     return (
         <section className="relative h-[400px] md:h-[600px] overflow-hidden">
             <Image
                 src={backgroundImage}
                 alt={title}
                 fill
-                priority
                 className="object-cover"
                 sizes="100vw"
             />
 
-            {/* Dark overlay */}
-            <div className="absolute inset-0 bg-black/60" />
-
             <div className="absolute inset-0 flex h-full items-center justify-center">
                 <div className="flex flex-col items-center space-y-4 text-center px-4">
                     <Breadcrumb
-                        variant='white'
                         items={[
                             { title: t("home"), href: "/" },
                             { title: title },
                         ]}
                     />
-                    <h1 className="text-4xl font-semibold text-white">
+                    <h1 className="text-4xl font-semibold">
                         {title}
                     </h1>
-                    <p className="text-base text-gray-200 max-w-2xl mx-auto">
+                    <p className="text-base max-w-2xl mx-auto">
                         {subTitle}
                     </p>
                 </div>

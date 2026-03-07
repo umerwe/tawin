@@ -59,12 +59,12 @@ export default function Navbar() {
 
         <Link
           href="/"
-          className="flex-1 pt-10">
+          className="flex-1">
           <Image
             src="/logo.png"
             alt="Logo"
-            width={100}
-            height={100}
+            width={60}
+            height={60}
           />
         </Link>
 

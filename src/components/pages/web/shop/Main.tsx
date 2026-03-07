@@ -10,6 +10,7 @@ import { getGridClasses } from "@/utils/getGridClasses"
 import Hero from "./Hero"
 import { useTranslations } from "next-intl"
 import { useSearchParams } from "next/navigation"
+import Container from "@/components/common/Container"
 
 const Shop = () => {
     const t = useTranslations("translation");
@@ -20,29 +21,31 @@ const Shop = () => {
     const [viewMode, setViewMode] = useState("grid4");
 
     return (
-        <div className="space-y-8 pb-16 max-w-7xl mx-auto px-4">
+        <div className="space-y-10">
             <Hero activeCategory={category} />
 
-            <FilterBar viewMode={viewMode} onViewModeChange={setViewMode} />
+            <Container className="space-y-10 mb-14">
+                <FilterBar viewMode={viewMode} onViewModeChange={setViewMode} />
 
-            <div className={getGridClasses(viewMode)}>
-                {data.map((product) => (
-                    <ProductCard
-                        key={product.id}
-                        {...product as any}
-                        isListView={viewMode === "list"}
-                    />
-                ))}
-            </div>
+                <div className={getGridClasses(viewMode)}>
+                    {data.map((product) => (
+                        <ProductCard
+                            key={product.id}
+                            {...product as any}
+                            isListView={viewMode === "list"}
+                        />
+                    ))}
+                </div>
 
-            <div className="flex items-center justify-center">
-                <Button
-                    className="border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-10 rounded-full"
-                    size="sm"
-                >
-                    {t("showMore")}
-                </Button>
-            </div>
+                <div className="flex items-center justify-center">
+                    <Button
+                        className="border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-10 rounded-full"
+                        size="sm"
+                    >
+                        {t("showMore")}
+                    </Button>
+                </div>
+            </Container>
 
             <ContactSection />
         </div>

@@ -10,8 +10,8 @@ export default function ContactUsPage() {
   const t = useTranslations("translation");
 
   return (
-    <div className="w-full bg-white font-sans text-gray-800 pb-16">
-      <section className="max-w-7xl mx-auto px-4 py-16 text-center ltr:md:text-left rtl:md:text-right">
+    <div className="w-full bg-white font-sans text-gray-800 space-y-10 pt-10">
+      <section className="max-w-7xl mx-auto px-2 sm:px-6 text-center ltr:md:text-left rtl:md:text-right">
         <div className="flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1 space-y-6">
             <h1 className="text-2xl md:text-4xl font-semibold leading-tight text-gray-900">
@@ -25,11 +25,11 @@ export default function ContactUsPage() {
       </section>
 
       {/* 2. About Us Image Section */}
-      <section className="max-w-7xl mx-auto px-4 py-12">
+      <section className="max-w-7xl mx-auto px-2 sm:px-6">
         <div className="flex flex-col md:flex-row items-stretch bg-gray-100 overflow-hidden">
           <div className="relative w-full md:w-1/2 min-h-[400px]">
             <Image
-              src="/construction.webp"
+              src="/about-us.png"
               alt="Construction Site"
               fill
               className="object-cover"
@@ -50,7 +50,7 @@ export default function ContactUsPage() {
       </section>
 
       {/* 3. Contact Info Cards */}
-      <section className="max-w-7xl mx-auto px-4 py-16 text-center">
+      <section className="max-w-7xl mx-auto px-2 sm:px-6 text-center">
         <h2 className="text-4xl font-semibold mb-12">{t("contact")}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
@@ -83,7 +83,7 @@ export default function ContactUsPage() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4">
+      <section className="max-w-7xl mx-auto px-2 sm:px-6">
         <ContactForm />
       </section>
 

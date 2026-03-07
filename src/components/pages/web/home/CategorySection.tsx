@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl"
 export default function ShopByCategory() {
     const t = useTranslations("translation")
     return (
-        <section className="max-w-7xl mx-auto px-4">
+        <section className="mt-10">
             <h2 className="text-2xl font-semibold text-center mb-12 text-gray-800">
                 {t("shopByCategory")}
             </h2>

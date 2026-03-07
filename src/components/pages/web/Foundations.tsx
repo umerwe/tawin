@@ -10,8 +10,8 @@ const Foundations = () => {
     const t = useTranslations("translation");
 
     return (
-        <section className="relative pt-24 md:mb-80">
-            <div className="hidden md:absolute bottom-0 left-1/2 -translate-x-1/2 w-[1700px] md:h-[800px] overflow-hidden">
+        <section className="md:relative pt-24 md:mb-80">
+            <div className="hidden md:block md:absolute md:bottom-0 md:left-1/2 -translate-x-1/2 w-[1700px] md:h-[800px] overflow-hidden">
                 <Image
                     src="/foundation-bg.png"
                     alt="Foundation Background"
@@ -20,7 +20,7 @@ const Foundations = () => {
                 />
             </div>
 
-            <div className="hidden md:absolute -bottom-60 right-0 w-full md:w-full h-52 md:h-92">
+            <div className="hidden md:block md:absolute md:-bottom-60 md:right-0 w-full md:w-full h-52 md:h-92">
                 <Image
                     src="/truck-bg.png"
                     alt="Truck"

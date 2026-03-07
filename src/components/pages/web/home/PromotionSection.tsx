@@ -16,7 +16,7 @@ export default function PromotionSection() {
                 {/* Left: Lifestyle Image */}
                 <div className="w-full lg:w-1/2 relative min-h-[500px]">
                     <Image
-                        src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&q=80"
+                        src="/promotion.png"
                         alt="Living Room Decoration"
                         fill
                         className="object-cover"
