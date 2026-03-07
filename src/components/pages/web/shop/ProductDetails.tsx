@@ -30,7 +30,7 @@ const ProductDetails = ({ params }: ProductDetailsProps) => {
     }
 
     return (
-        <Container className="max-w-7xl mx-auto space-y-8 pt-8 pb-16">
+        <Container className="px-4 sm:px-6 space-y-10 pt-8 pb-16">
             <div className="flex items-center justify-between">
                 <Breadcrumb
                     items={[
