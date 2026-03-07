@@ -1,7 +1,7 @@
-import Home from "@/components/pages/web/home/Main"
+import Main from "@/components/pages/web/Main"
 
-export default function HomePage() {
+export default function MainPage() {
     return (
-      <Home/>
+      <Main/>
   )
 }

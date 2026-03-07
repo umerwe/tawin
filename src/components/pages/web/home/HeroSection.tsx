@@ -1,53 +1,55 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import { useTranslations } from "next-intl"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { LoginDialog } from "@/components/dialog/LoginDialog"
 import Image from "@/components/MyImage"
-import { useEffect, useState } from "react"
 
 const HeroSection = () => {
-    const t = useTranslations("translation")
-    const router = useRouter()
-
-    const [token, setToken] = useState<string | null>(null)
-
-    useEffect(() => {
-        const storedToken = localStorage.getItem("token")
-        setToken(storedToken)
-    }, [])
+    const t = useTranslations("translation");
+    const router = useRouter();
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     function handleClick() {
-        router.push("/auth/login")
+        const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+        if (token) {
+            router.push("/my-account?tab=construction")
+            return
+        }
+        setIsDialogOpen(true)
     }
 
     return (
-        <section className="relative h-[400px] md:h-[600px] w-full overflow-hidden">
+        <section className="relative h-[600px] w-full overflow-hidden">
             <Image
-                src="/hero.webp"
-                alt="Construction scaffolding background"
+                src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1600"
+                alt="HeroSection"
                 fill
-                className="object-cover"
+                className="object-cover brightness-50"
             />
-            <div className="absolute inset-0 bg-black/60"></div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+                <h1 className="text-4xl font-semibold text-white max-w-4xl leading-tight">
+                    {t("heroTitle")}{" "}
+                    <span className="text-aqua underline">{t("heroTitleHighlight")}</span>
+                </h1>
+                <p className="mt-4 text-base text-gray-200 max-w-xl">
+                    {t("heroDescription")}
+                </p>
 
-            <div className="absolute inset-0 flex items-center px-4 md:px-12">
-                <div className="max-w-xl">
-                    <h1 className="text-2xl md:text-4xl font-semibold text-white leading-tight mb-6">
-                        {t("heroTitle")}
-                    </h1>
-
-                    {!token && (
-                        <Button
-                            variant="outline"
-                            className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30 mt-4"
-                            onClick={handleClick}
-                        >
-                            {t("heroButton")}
-                        </Button>
-                    )}
-                </div>
+                {/* <Button
+                    variant="primary"
+                    className="w-74 mt-8"
+                    onClick={handleClick}
+                >
+                    {t("heroButton")} →
+                </Button> */}
             </div>
+
+            <LoginDialog
+                open={isDialogOpen}
+                onOpenChange={setIsDialogOpen}
+            />
         </section>
     )
 }

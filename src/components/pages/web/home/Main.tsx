@@ -1,18 +1,23 @@
 "use client"
 
+import CategorySection from "./CategorySection"
+import PromotionSection from "./PromotionSection"
+import BestSellerSection from "./BestSellerSection"
 import HeroSection from "./HeroSection"
-import Foundations from "./Foundations"
-import ContactSection from "./ContactSection"
+import Container from "@/components/common/Container"
 
 export default function Home() {
     return (
         <div className="w-full space-y-10">
             <HeroSection />
 
-            <Foundations />
+            <Container>
+                <BestSellerSection />
 
-            <ContactSection />
+                <CategorySection />
+            </Container>
 
+            <PromotionSection />
         </div>
     )
 }

@@ -2,7 +2,7 @@
 
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
-import { Globe } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,22 +11,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const languages = [
-    { code: "en", name: "English", flag: "🇺🇸" },
-    { code: "ar", name: "العربية", flag: "🇸🇦" },
+    { code: "en", name: "English" },
+    { code: "ar", name: "العربية" },
 ];
 
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher({ isHome }: { isHome?: boolean }) {
     const locale = useLocale();
     const router = useRouter();
     const pathname = usePathname();
 
     const handleLanguageChange = (newLocale: string) => {
-        // Get the current path without the locale prefix
         const segments = pathname.split("/").filter(Boolean);
         const pathWithoutLocale =
             segments.length > 1 ? "/" + segments.slice(1).join("/") : "";
-
-        // Navigate to the new locale with the same path
         const newPath = `/${newLocale}${pathWithoutLocale}`;
         router.push(newPath);
         router.refresh();
@@ -37,23 +34,18 @@ export default function LanguageSwitcher() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                {/* <Button variant="outline" size="sm" className="gap-2"> */}
-                <Globe className="size-6 text-black cursor-pointer" />
-                {/* <span className="hidden sm:inline">
-            {currentLanguage?.flag} {currentLanguage?.name}
-          </span>
-          <span className="sm:hidden">{currentLanguage?.flag}</span> */}
-                {/* </Button> */}
+                <button className={`flex items-center gap-1 text-sm font-medium text-inherit cursor-pointer outline-none ${isHome ? "text-white" : ""}`}>
+                    {currentLanguage?.name}
+                    <ChevronDown className="w-3.5 h-3.5 opacity-60" />
+                </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 {languages.map((language) => (
                     <DropdownMenuItem
                         key={language.code}
                         onClick={() => handleLanguageChange(language.code)}
-                        className={`cursor-pointer ${locale === language.code ? "bg-accent" : ""
-                            }`}
+                        className={`cursor-pointer ${locale === language.code ? "bg-accent" : ""}`}
                     >
-                        <span className="mr-2">{language.flag}</span>
                         {language.name}
                     </DropdownMenuItem>
                 ))}

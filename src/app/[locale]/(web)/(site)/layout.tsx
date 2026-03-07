@@ -9,9 +9,7 @@ export default function SiteLayout({
     return (
         <div className="w-full">
             <Navbar />
-            
                 {children}
-         
             <Footer />
         </div>
     )

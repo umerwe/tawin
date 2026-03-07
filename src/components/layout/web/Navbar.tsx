@@ -17,17 +17,21 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import CartSheet from "@/components/CartSheet"
 
+
 export default function Navbar() {
   const t = useTranslations("translation");
   const router = useRouter();
   const pathname = usePathname();
 
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  const normalizedPath = "/" + pathname.split("/").filter(Boolean).slice(1).join("/");
+  const rawNormalizedPath = "/" + pathname.split("/").filter(Boolean).slice(1).join("/");
+  const normalizedPath = rawNormalizedPath === "/" ? "/" : rawNormalizedPath;
+
+  const isHome = rawNormalizedPath === "/";
 
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [cartOpen, setCartOpen] = useState(false); // 👈 new state for cart sheet
+  const [cartOpen, setCartOpen] = useState(false);
 
   const count = cartItems.length;
 
@@ -42,16 +46,29 @@ export default function Navbar() {
   };
 
   return (
-    <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50">
-      <div className="mx-auto h-14 flex max-w-7xl items-center px-2 sm:px-6">
+    <header
+      className={cn(
+        "w-full border-b transition-colors duration-300 z-50",
+        isHome
+          ? "absolute top-0 left-0 right-0 bg-transparent border-transparent"
+          : "sticky top-0 bg-white border-gray-100"
+      )}
+    >
+      <div className="h-14 flex items-center px-2 sm:px-6">
 
         <div className="flex flex-1">
-          <Link href="/" className="text-base font-semibold tracking-tight text-gray-900">
+          <Link
+            href="/"
+            className={cn(
+              "text-base font-semibold tracking-tight",
+              isHome ? "text-white" : "text-gray-900"
+            )}
+          >
             {t("brandName")}
           </Link>
         </div>
 
-        {/* Desktop Navigation (Hidden on Mobile) */}
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-10">
           {navLinks.map((link) => (
             <Link
@@ -61,7 +78,9 @@ export default function Navbar() {
                 "text-sm font-medium transition-all relative pb-1",
                 normalizedPath === link.href
                   ? "text-aqua"
-                  : "text-gray-500 hover:text-gray-900"
+                  : isHome
+                    ? "text-white/80 hover:text-white"
+                    : "text-gray-500 hover:text-gray-900"
               )}
             >
               {t(`${link.label.toLowerCase()}`)}
@@ -73,13 +92,17 @@ export default function Navbar() {
         </nav>
 
         <div className="flex flex-1 justify-end items-center gap-3 md:gap-4">
-          <LanguageSwitcher />
+          <LanguageSwitcher isHome={isHome} />
 
           {isLoggedIn && (
-            // 👇 changed from Link to button, opens CartSheet
             <button
               onClick={() => setCartOpen(true)}
-              className="flex items-center justify-center text-gray-600 hover:text-aqua transition-colors relative"
+              className={cn(
+                "flex items-center justify-center transition-colors relative",
+                isHome
+                  ? "text-white/80 hover:text-white"
+                  : "text-gray-600 hover:text-aqua"
+              )}
             >
               <ShoppingCart className="w-5 h-5" />
               {count > 0 && (
@@ -103,7 +126,12 @@ export default function Navbar() {
           ) : (
             <Link
               href="/auth/signin"
-              className="hidden md:block text-sm font-semibold text-gray-900 hover:text-aqua transition-colors"
+              className={cn(
+                "hidden md:block text-sm font-semibold transition-colors",
+                isHome
+                  ? "text-white/90 hover:text-white"
+                  : "text-gray-900 hover:text-aqua"
+              )}
             >
               {t("signin")}
             </Link>
@@ -112,7 +140,12 @@ export default function Navbar() {
           {/* Hamburger Toggle */}
           <button
             onClick={() => setIsOpen(true)}
-            className="md:hidden text-gray-600 hover:text-aqua transition-colors"
+            className={cn(
+              "md:hidden transition-colors",
+              isHome
+                ? "text-white/80 hover:text-white"
+                : "text-gray-600 hover:text-aqua"
+            )}
             aria-label="Toggle Menu"
           >
             <Menu className="w-6 h-6" />
@@ -127,8 +160,6 @@ export default function Navbar() {
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setIsOpen(false)}
           />
-
-          {/* Menu Content (Slides from Right) */}
           <div className="absolute top-0 ltr:right-0 rtl:left-0 w-[280px] h-full bg-white shadow-2xl p-6 flex flex-col animate-in ltr:slide-in-from-right rtl:slide-in-from-left duration-300">
             <div className="flex items-center justify-between mb-10">
               <span className="font-semibold text-lg">{t("menu")}</span>
@@ -155,17 +186,11 @@ export default function Navbar() {
 
             <div className="mt-auto pt-10">
               {isLoggedIn ? (
-                <Button
-                  onClick={handleLogout}
-                  variant="primary"
-                >
+                <Button onClick={handleLogout} variant="primary">
                   {t("logout")}
                 </Button>
               ) : (
-                <Button
-                  onClick={() => router.push("/auth/signin")}
-                  variant="primary"
-                >
+                <Button onClick={() => router.push("/auth/signin")} variant="primary">
                   {t("signin")}
                 </Button>
               )}
@@ -174,7 +199,7 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* 👇 Cart Sheet — rendered here, controlled by cartOpen state */}
+      {/* Cart Sheet */}
       <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
     </header>
   )
