@@ -45,7 +45,7 @@ const ContactForm = ({ isHome }: { isHome?: boolean }) => {
         <div className={`w-full lg:w-1/2 bg-gray-200 overflow-hidden relative ${isHome ? "h-[500px]" : "h-[415px]"}`}>
           {isHome ? (
             <Image
-              src="/contact-bg.jpg"
+              src="/about-us.png"
               alt="Contact Background"
               fill
               className="object-cover"

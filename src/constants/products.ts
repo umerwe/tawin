@@ -169,7 +169,6 @@ export const foundations = [
             en: "A secure technical infrastructure compatible with official standards, ensuring data protection and operational continuity on a national level.", 
             ar: "بنية تقنية آمنة ومتوافقة مع المعايير الرسمية، تضمن حماية البيانات واستمرارية العمليات على مستوى وطني." 
         },
-        icon: "Gavel",
     },
     {
         id: "supported",
@@ -178,7 +177,6 @@ export const foundations = [
             en: "An integrated digital platform for building materials management, supported by government entities to ensure transparency.", 
             ar: "منصة رقمية متكاملة لإدارة وشراء مواد البناء، مدعومة من الجهات الحكومية لضمان الشفافية والموثوقية." 
         },
-        icon: "Award",
     },
     {
         id: "advanced",
@@ -187,7 +185,6 @@ export const foundations = [
             en: "An advanced management system allowing control over inventory, prices, orders, and high-efficiency operational reports.", 
             ar: "نظام إدارة متطور يتيح التحكم بالمخزون، الأسعار، الطلبات، والتقارير التشغيلية بكفاءة عالية." 
         },
-        icon: "Settings",
     },
     {
         id: "tracking",
@@ -195,7 +192,6 @@ export const foundations = [
         description: { 
             en: "A professional electronic store where customers can browse products, submit orders, and track them easily and safely.", 
             ar: "متجر إلكتروني احترافي يمكن العملاء من استعراض المنتجات، تقديم الطلبات، وتتبعها بسهولة وأمان." 
-        },
-        icon: "MapPin",
+        }
     }
 ];
