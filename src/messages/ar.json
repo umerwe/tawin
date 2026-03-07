@@ -217,7 +217,8 @@
     "pagesTitle": "الصفحات",
     "copyrightText": "Copyright © 2026 Ta3awin. All rights reserved",
     "completePayment": "اكمال الدفع",
-    "viewCart": "معاينة السلة"
+    "viewCart": "معاينة السلة",
+    "emptyCart": "سلةك فارغة"
   },
   "shop": {
     "home": "الرئيسية",

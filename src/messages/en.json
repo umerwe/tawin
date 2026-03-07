@@ -218,7 +218,8 @@
     "pagesTitle": "Pages",
     "copyrightText": "Copyright © 2026 Ta3awin. All rights reserved",
     "completePayment": "Complete Payment",
-    "viewCart": "View Cart"
+    "viewCart": "View Cart",
+    "emptyCart": "Your cart is empty"
   },
   "shop": {
     "home": "Home",

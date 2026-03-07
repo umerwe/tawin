@@ -63,7 +63,7 @@ export default function CartSheet({ open, onOpenChange }: CartSheetProps) {
                 <div className="flex-1 overflow-y-auto divide-y divide-gray-100">
                     {cartItems.length === 0 ? (
                         <div className="flex items-center justify-center h-40 text-sm text-gray-400">
-                            {t("emptyCart") ?? "Your cart is empty"}
+                            {t("emptyCart")}
                         </div>
                     ) : (
                         cartItems.map((item: any) => (
