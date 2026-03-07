@@ -10,18 +10,37 @@ const Foundations = () => {
     const t = useTranslations("translation");
 
     return (
-        <section className="py-12">
-            <div className="container mx-auto px-4 max-w-6xl">
-                {/* Section Title */}
+        <section className="relative pt-24 md:mb-80">
+            <div className="hidden md:absolute bottom-0 left-1/2 -translate-x-1/2 w-[1700px] md:h-[800px] overflow-hidden">
+                <Image
+                    src="/foundation-bg.png"
+                    alt="Foundation Background"
+                    fill
+                    className="object-cover"
+                />
+            </div>
+
+            <div className="hidden md:absolute -bottom-60 right-0 w-full md:w-full h-52 md:h-92">
+                <Image
+                    src="/truck-bg.png"
+                    alt="Truck"
+                    fill
+                    className="object-contain object-bottom-right"
+                    priority
+                />
+            </div>
+
+            {/* Cards + title — always on top */}
+            <div className="relative z-10 container mx-auto px-4 max-w-6xl">
                 <h2 className="md:text-3xl text-2xl font-semibold text-center mb-12 text-gray-800">
                     {t("foundationsTitle")}
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch pb-24 md:pb-80">
                     {foundations.map((item, index) => (
                         <Card
                             key={item.id}
-                            className="flex flex-col border border-slate-100 shadow-sm rounded-3xl py-16 px-4 transition-all hover:shadow-lg"
+                            className="flex flex-col bg-white border border-slate-100 shadow-sm rounded-3xl py-16 px-4 transition-all hover:shadow-lg"
                         >
                             <CardHeader className="flex flex-col items-center justify-center text-center p-0">
                                 <div className="flex items-center justify-center">

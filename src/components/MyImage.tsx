@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image, { ImageProps } from "next/image";
 
 interface MyImageProps extends ImageProps {
@@ -23,30 +23,33 @@ const MyImage = ({
     setIsLoading(true);
   }, [src]);
 
+  const imageEl = (
+    <Image
+      {...props}
+      src={imgSrc}
+      alt={alt}
+      fill={fill}
+      onLoadingComplete={() => setIsLoading(false)}
+      onError={() => {
+        setImgSrc(fallbackSrc);
+        setIsLoading(false);
+      }}
+      className={`transition-opacity duration-300 ${isLoading ? "opacity-0" : "opacity-100"} ${className}`}
+    />
+  );
+
+  // When fill is used, the parent is already positioned — no wrapper needed
+  if (fill) {
+    return imageEl;
+  }
+
   return (
     <div className="relative w-full h-full overflow-hidden">
-
-      {/* ✅ Shimmer Loader */}
+      {/* Shimmer Loader */}
       {isLoading && (
-        <div
-          className="absolute inset-0 z-10 bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 bg-size[200%_100%] shimmer
-          "
-        />
+        <div className="absolute inset-0 z-10 bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 bg-size[200%_100%] shimmer" />
       )}
-
-      <Image
-        {...props}
-        src={imgSrc}
-        alt={alt}
-        fill={fill}
-        onLoadingComplete={() => setIsLoading(false)}
-        onError={() => {
-          setImgSrc(fallbackSrc);
-          setIsLoading(false);
-        }}
-        className={`transition-opacity duration-300 ${isLoading ? "opacity-0" : "opacity-100"
-          } ${className}`}
-      />
+      {imageEl}
     </div>
   );
 };

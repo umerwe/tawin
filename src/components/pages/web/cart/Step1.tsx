@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation"
 import { Input } from "@/components/ui/input"
-import { Minus, Plus, X, Ticket } from "lucide-react"
+import { Minus, Plus, X, Ticket, ShoppingCart } from "lucide-react"
 import {
     Table,
     TableBody,
@@ -23,7 +23,7 @@ const Step1 = () => {
     const t = useTranslations("translation");
     const router = useRouter()
     const searchParams = useSearchParams()
-    
+
     const dispatch = useDispatch()
     const cartItems = useSelector((state: RootState) => state.cart.items)
 
@@ -62,33 +62,43 @@ const Step1 = () => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {cartItems.map((item: any) => (
-                            <TableRow key={item.id} className="border-b border-gray-50 hover:bg-transparent">
-                                <TableCell className="py-8">
-                                    <div className="flex items-center space-x-4">
-                                        <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden shrink-0">
-                                            <Image src={item.image} alt={locale === "en" ? item.title.en : item.title.ar} width={80} height={80} className="w-full h-full object-cover" />
-                                        </div>
-                                        <div>
-                                            <h3 className="text-sm font-semibold">{locale === "en" ? item.title.en : item.title.ar}</h3>
-                                            <p className="text-xs text-gray-400">{t("color")}: Black</p>
-                                            <button onClick={() => removeItem(item.id)} className="flex items-center text-xs text-gray-400 mt-2 hover:text-red-500 transition-colors">
-                                                {t("remove")} <X className="w-3 h-3 ml-1" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </TableCell>
-                                <TableCell>${item.price.toFixed(2)}</TableCell>
-                                <TableCell>${(item.price * item.quantity).toFixed(2)}</TableCell>
-                                <TableCell>
-                                    <div className="flex items-center border border-gray-200 rounded-md w-24">
-                                        <button onClick={() => updateQty(item.id, -1)} className="p-2 hover:bg-gray-50 transition-colors"><Minus className="w-3 h-3" /></button>
-                                        <span className="flex-1 text-center text-sm font-medium">{item.quantity}</span>
-                                        <button onClick={() => updateQty(item.id, 1)} className="p-2 hover:bg-gray-50 transition-colors"><Plus className="w-3 h-3" /></button>
+                        {cartItems.length === 0 ? (
+                            <TableRow className="hover:bg-transparent">
+                                <TableCell colSpan={4} className="py-20 text-center">
+                                    <div className="flex flex-col items-center gap-3 text-gray-400">
+                                        <p className="text-sm font-medium">{t("emptyCart")}</p>
                                     </div>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            cartItems.map((item: any) => (
+                                <TableRow key={item.id} className="border-b border-gray-50 hover:bg-transparent">
+                                    <TableCell className="py-8">
+                                        <div className="flex items-center space-x-4">
+                                            <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden shrink-0">
+                                                <Image src={item.image} alt={locale === "en" ? item.title.en : item.title.ar} width={80} height={80} className="w-full h-full object-cover" />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-sm font-semibold">{locale === "en" ? item.title.en : item.title.ar}</h3>
+                                                <p className="text-xs text-gray-400">{t("color")}: Black</p>
+                                                <button onClick={() => removeItem(item.id)} className="flex items-center text-xs text-gray-400 mt-2 hover:text-red-500 transition-colors">
+                                                    {t("remove")} <X className="w-3 h-3 ml-1" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>${item.price.toFixed(2)}</TableCell>
+                                    <TableCell>${(item.price * item.quantity).toFixed(2)}</TableCell>
+                                    <TableCell>
+                                        <div className="flex items-center border border-gray-200 rounded-md w-24">
+                                            <button onClick={() => updateQty(item.id, -1)} className="p-2 hover:bg-gray-50 transition-colors"><Minus className="w-3 h-3" /></button>
+                                            <span className="flex-1 text-center text-sm font-medium">{item.quantity}</span>
+                                            <button onClick={() => updateQty(item.id, 1)} className="p-2 hover:bg-gray-50 transition-colors"><Plus className="w-3 h-3" /></button>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
 

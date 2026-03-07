@@ -1,8 +1,8 @@
 "use client";
 
-import { Building } from "lucide-react";
 import { ReactNode } from "react";
 import Image from "../MyImage";
+import Link from "next/link";
 
 export default function AuthLayout({ FormComponent }: { FormComponent: ReactNode }) {
     return (
@@ -21,9 +21,16 @@ export default function AuthLayout({ FormComponent }: { FormComponent: ReactNode
 
                 <div className="absolute inset-0 bg-navy/70" />
 
-                <div className="absolute z-10 flex h-64 w-64 items-center justify-center rounded-full border border-white/20 bg-gray-50/50 backdrop-blur-sm">
-                    <Building className="w-28 h-28 text-gray-700" />
-                </div>
+                <Link
+                    href="/"
+                    className="relative z-10">
+                    <Image
+                        src="/logo.png"
+                        alt="Logo"
+                        width={300}
+                        height={300}
+                    />
+                </Link>
 
             </section>
         </div>

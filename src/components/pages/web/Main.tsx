@@ -6,7 +6,7 @@ import ContactSection from "./ContactSection"
 
 export default function Main() {
     return (
-        <div className="w-full space-y-10">
+        <div className="w-full bg-[#F3FFFD]">
             <HeroSection />
 
             <Foundations />

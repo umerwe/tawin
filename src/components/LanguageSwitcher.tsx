@@ -34,7 +34,7 @@ export default function LanguageSwitcher({ isHome }: { isHome?: boolean }) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <button className={`flex items-center gap-1 text-sm font-medium text-inherit cursor-pointer outline-none ${isHome ? "text-white" : ""}`}>
+                <button className={`flex items-center gap-1 text-sm text-inherit cursor-pointer outline-none ${isHome ? "text-white" : ""}`}>
                     {currentLanguage?.name}
                     <ChevronDown className="w-3.5 h-3.5 opacity-60" />
                 </button>

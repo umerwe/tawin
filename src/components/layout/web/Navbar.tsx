@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation"
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import CartSheet from "@/components/CartSheet"
+import Image from "next/image"
 
 
 export default function Navbar() {
@@ -48,25 +49,24 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        "w-full border-b transition-colors duration-300 z-50",
+        "w-full pr-4 sm:px-6 border-b transition-colors duration-300 z-50",
         isHome
           ? "absolute top-0 left-0 right-0 bg-transparent border-transparent"
           : "sticky top-0 bg-white border-gray-100"
       )}
     >
-      <div className="h-14 flex items-center px-2 sm:px-6">
+      <div className="h-14 flex items-center">
 
-        <div className="flex flex-1">
-          <Link
-            href="/"
-            className={cn(
-              "text-base font-semibold tracking-tight",
-              isHome ? "text-white" : "text-gray-900"
-            )}
-          >
-            {t("brandName")}
-          </Link>
-        </div>
+        <Link
+          href="/"
+          className="flex-1 pt-10">
+          <Image
+            src="/logo.png"
+            alt="Logo"
+            width={100}
+            height={100}
+          />
+        </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-10">
@@ -127,7 +127,7 @@ export default function Navbar() {
             <Link
               href="/auth/signin"
               className={cn(
-                "hidden md:block text-sm font-semibold transition-colors",
+                "hidden md:block text-sm transition-colors",
                 isHome
                   ? "text-white/90 hover:text-white"
                   : "text-gray-900 hover:text-aqua"
