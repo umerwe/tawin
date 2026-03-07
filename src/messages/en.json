@@ -209,14 +209,16 @@
     "maryamAhmed": "Maryam Ahmed",
     "details": "Details",
     "alreadyInCart": "Already in Cart",
-    "noItemsFound" : "No Item Found",
+    "noItemsFound": "No Item Found",
     "aboutUsTitle": "About Us",
     "aboutUsDescription2": "Construction Cooperation is a project by Future Construction Company in cooperation with government institutions, established in 2026. Our customer service team is always ready to support you 24/7.",
     "footerMotto": "More than just construction materials.",
     "addressTitle": "Address",
     "country": "Iraq",
     "pagesTitle": "Pages",
-    "copyrightText": "Copyright © 2026 Ta3awin. All rights reserved"
+    "copyrightText": "Copyright © 2026 Ta3awin. All rights reserved",
+    "completePayment": "Complete Payment",
+    "viewCart": "View Cart"
   },
   "shop": {
     "home": "Home",

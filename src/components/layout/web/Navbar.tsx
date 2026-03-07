@@ -15,6 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useRouter } from "next/navigation"
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import CartSheet from "@/components/CartSheet"
 
 export default function Navbar() {
   const t = useTranslations("translation");
@@ -26,6 +27,7 @@ export default function Navbar() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false); // 👈 new state for cart sheet
 
   const count = cartItems.length;
 
@@ -73,21 +75,20 @@ export default function Navbar() {
         <div className="flex flex-1 justify-end items-center gap-3 md:gap-4">
           <LanguageSwitcher />
 
-          {
-            isLoggedIn &&
-            <Link
-              href="/cart"
+          {isLoggedIn && (
+            // 👇 changed from Link to button, opens CartSheet
+            <button
+              onClick={() => setCartOpen(true)}
               className="flex items-center justify-center text-gray-600 hover:text-aqua transition-colors relative"
             >
               <ShoppingCart className="w-5 h-5" />
-
               {count > 0 && (
                 <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-aqua text-[10px] text-white">
                   {count}
                 </span>
               )}
-            </Link>
-          }
+            </button>
+          )}
 
           {/* If Logged In → Show Avatar */}
           {isLoggedIn ? (
@@ -172,6 +173,9 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      {/* 👇 Cart Sheet — rendered here, controlled by cartOpen state */}
+      <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
     </header>
   )
 }

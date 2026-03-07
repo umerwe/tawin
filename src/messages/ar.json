@@ -215,7 +215,9 @@
     "addressTitle": "العنوان",
     "country": "العراق",
     "pagesTitle": "الصفحات",
-    "copyrightText": "Copyright © 2026 Ta3awin. All rights reserved"
+    "copyrightText": "Copyright © 2026 Ta3awin. All rights reserved",
+    "completePayment": "اكمال الدفع",
+    "viewCart": "معاينة السلة"
   },
   "shop": {
     "home": "الرئيسية",
