@@ -49,7 +49,7 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        "w-full pr-4 sm:px-6 border-b transition-colors duration-300 z-50",
+        "w-full ltr:pr-4 rtl:pl-4 sm:px-6 border-b transition-colors duration-300 z-50",
         isMain
           ? "absolute top-0 left-0 right-0 bg-transparent border-transparent"
           : "sticky top-0 bg-white border-gray-100"
