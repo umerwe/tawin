@@ -16,7 +16,7 @@ const Step3 = () => {
             <div className="max-w-3xl w-full bg-white rounded-3xl shadow-sm p-8 md:p-16 border border-gray-100 flex flex-col items-center space-y-10">
                 {cartItems.length === 0 ? (
                     <div className="text-center py-10">
-                        <h2 className="text-xl text-gray-400">{t("noItemsFound")}</h2>
+                        <h2 className="text-sm font-medium text-gray-400">{t("noItemsFound")}</h2>
                     </div>
                 ) : (
                     <>

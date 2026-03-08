@@ -25,16 +25,27 @@ export default function Cart() {
                 {t("cart")}
             </h1>
 
-            <div className="flex justify-center items-center space-x-12 mb-16">
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-8 md:mb-16 px-4">
                 {steps.map((step) => (
-                    <div key={step.id} onClick={() => setStep(step.id)} className="flex items-center space-x-3 cursor-pointer relative">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm transition-colors ${currentStep === step.id ? "bg-aqua" : "bg-gray-300"}`}>
+                    <div
+                        key={step.id}
+                        onClick={() => setStep(step.id)}
+                        className="flex items-center space-x-2 md:space-x-3 cursor-pointer relative pb-2"
+                    >
+                        {/* Circle Number */}
+                        <div className={`w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-white text-xs md:text-sm transition-colors shrink-0 ${currentStep === step.id ? "bg-aqua" : "bg-gray-300"}`}>
                             {step.id}
                         </div>
-                        <span className={`text-sm font-medium ${currentStep === step.id ? "text-black" : "text-gray-400"}`}>
+
+                        {/* Label */}
+                        <span className={`text-xs md:text-sm font-medium whitespace-nowrap ${currentStep === step.id ? "text-black" : "text-gray-400"}`}>
                             {t(`cartStep${step.id}`)}
                         </span>
-                        {step.id === "1" && currentStep === "1" && <div className="absolute -bottom-2 left-0 w-full h-0.5 bg-aqua" />}
+
+                        {/* Underline Indicator - Adjusted for mobile */}
+                        {currentStep === step.id && (
+                            <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-aqua" />
+                        )}
                     </div>
                 ))}
             </div>
