@@ -4,19 +4,18 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { navLinks } from "@/constants/navLinks"
-import { Menu, X } from "lucide-react"
+import { CircleUser, CircleUserRound, Menu, Search, ShoppingBag, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import LanguageSwitcher from "../../LanguageSwitcher"
 import { useTranslations } from "next-intl"
-import { ShoppingCart } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Skeleton } from "@/components/ui/skeleton"
 import { useRouter } from "next/navigation"
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import CartSheet from "@/components/CartSheet"
+import SearchDialog from "@/components/dialog/SearchDialog"
 import Image from "next/image"
+import { FaRegCircleUser } from "react-icons/fa6";
 
 
 export default function Navbar() {
@@ -28,11 +27,12 @@ export default function Navbar() {
   const rawNormalizedPath = "/" + pathname.split("/").filter(Boolean).slice(1).join("/");
   const normalizedPath = rawNormalizedPath === "/" ? "/" : rawNormalizedPath;
 
-  const isHome = rawNormalizedPath === "/";
+  const isMain = rawNormalizedPath === "/";
 
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const count = cartItems.length;
 
@@ -50,16 +50,14 @@ export default function Navbar() {
     <header
       className={cn(
         "w-full pr-4 sm:px-6 border-b transition-colors duration-300 z-50",
-        isHome
+        isMain
           ? "absolute top-0 left-0 right-0 bg-transparent border-transparent"
           : "sticky top-0 bg-white border-gray-100"
       )}
     >
       <div className="h-14 flex items-center">
 
-        <Link
-          href="/"
-          className="flex-1">
+        <Link href="/" className="flex-1">
           <Image
             src="/logo.png"
             alt="Logo"
@@ -78,9 +76,9 @@ export default function Navbar() {
                 "text-sm font-medium transition-all relative pb-1",
                 normalizedPath === link.href
                   ? "text-aqua"
-                  : isHome
+                  : isMain
                     ? "text-white/80 hover:text-white"
-                    : "text-gray-500 hover:text-gray-900"
+                    : "text-gray-500 hover:text-gray:900"
               )}
             >
               {t(`${link.label.toLowerCase()}`)}
@@ -91,58 +89,55 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="flex flex-1 justify-end items-center gap-3 md:gap-4">
-          <LanguageSwitcher isHome={isHome} />
+        <div className="flex flex-1 justify-end items-center gap-3">
+          {!isMain && (
+            <>
+              <LanguageSwitcher isMain={isMain} />
 
-          {isLoggedIn && (
-            <button
-              onClick={() => setCartOpen(true)}
-              className={cn(
-                "flex items-center justify-center transition-colors relative",
-                isHome
-                  ? "text-white/80 hover:text-white"
-                  : "text-gray-600 hover:text-aqua"
+              {isLoggedIn && (
+                <button
+                  onClick={() => setCartOpen(true)}
+                  className="flex items-center justify-center gap-1 transition-colors relative text-gray-600 hover:text-aqua"
+                >
+                  <ShoppingBag className="w-5 h-5" />
+                  {count > 0 && (
+                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] text-white">
+                      {count}
+                    </span>
+                  )}
+                </button>
               )}
-            >
-              <ShoppingCart className="w-5 h-5" />
-              {count > 0 && (
-                <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-aqua text-[10px] text-white">
-                  {count}
-                </span>
+
+              {isLoggedIn ? (
+                <Link href="/my-account">
+                  <CircleUserRound className="w-6 h-6 stroke-[1.5] hover:text-aqua transition-colors cursor-pointer" />
+                </Link>
+              ) : (
+                <Link
+                  href="/auth/signin"
+                  className="hidden md:block text-sm transition-colors text-gray-900 hover:text-aqua"
+                >
+                  {t("signin")}
+                </Link>
               )}
-            </button>
+            </>
           )}
 
-          {/* If Logged In → Show Avatar */}
-          {isLoggedIn ? (
-            <Link href="/my-account">
-              <Avatar className="h-8 w-8 cursor-pointer">
-                <AvatarImage src="/avatar.jpg" alt="User Avatar" />
-                <AvatarFallback>
-                  <Skeleton className="h-full w-full rounded-full" />
-                </AvatarFallback>
-              </Avatar>
-            </Link>
-          ) : (
-            <Link
-              href="/auth/signin"
-              className={cn(
-                "hidden md:block text-sm transition-colors",
-                isHome
-                  ? "text-white/90 hover:text-white"
-                  : "text-gray-900 hover:text-aqua"
-              )}
-            >
-              {t("signin")}
-            </Link>
-          )}
+          {/* Search */}
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="flex items-center justify-center text-black hover:text-aqua transition-colors"
+            aria-label="Search"
+          >
+            <Search className="w-5 h-5" />
+          </button>
 
           {/* Hamburger Toggle */}
           <button
             onClick={() => setIsOpen(true)}
             className={cn(
               "md:hidden transition-colors",
-              isHome
+              isMain
                 ? "text-white/80 hover:text-white"
                 : "text-gray-600 hover:text-aqua"
             )}
@@ -184,23 +179,28 @@ export default function Navbar() {
               ))}
             </nav>
 
-            <div className="mt-auto pt-10">
-              {isLoggedIn ? (
-                <Button onClick={handleLogout} variant="primary">
-                  {t("logout")}
-                </Button>
-              ) : (
-                <Button onClick={() => router.push("/auth/signin")} variant="primary">
-                  {t("signin")}
-                </Button>
-              )}
-            </div>
+            {!isMain && (
+              <div className="mt-auto pt-10">
+                {isLoggedIn ? (
+                  <Button onClick={handleLogout} variant="primary">
+                    {t("logout")}
+                  </Button>
+                ) : (
+                  <Button onClick={() => router.push("/auth/signin")} variant="primary">
+                    {t("signin")}
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}
 
       {/* Cart Sheet */}
       <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
+
+      {/* Search Dialog */}
+      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     </header>
   )
 }

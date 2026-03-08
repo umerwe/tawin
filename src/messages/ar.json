@@ -219,7 +219,14 @@
     "completePayment": "اكمال الدفع",
     "viewCart": "معاينة السلة",
     "emptyCart": "سلةك فارغة",
-    "foundationsTitle": "أسس عملنا"
+    "foundationsTitle": "أسس عملنا",
+    "searchPlaceholder": "ابحث...",
+    "searchFor": "البحث عن",
+    "searchHint": "اكتب للبدء في البحث...",
+    "filters": "الفلاتر",
+    "priceRange": "نطاق السعر",
+    "resultsFound": "نتائج وُجدت",
+    "noResults": "لا توجد منتجات"
   },
   "shop": {
     "home": "الرئيسية",

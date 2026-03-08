@@ -220,7 +220,14 @@
     "completePayment": "Complete Payment",
     "viewCart": "View Cart",
     "emptyCart": "Your cart is empty",
-    "foundationsTitle": "Our Business Foundations"
+    "foundationsTitle": "Our Business Foundations",
+    "searchPlaceholder": "Search...",
+    "searchFor": "Search for",
+    "searchHint": "Type to start searching...",
+    "filters": "Filters",
+    "priceRange": "Price Range",
+    "resultsFound": "results found",
+    "noResults": "No products found"
   },
   "shop": {
     "home": "Home",

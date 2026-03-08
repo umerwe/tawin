@@ -24,7 +24,6 @@ export function ProductCard({
     originalPrice,
     isNew = false,
     discount,
-    isListView = false,
 }: ProductCardProps) {
     const locale = useLocale();
     const router = useRouter();
