@@ -66,7 +66,7 @@ export default function Navbar() {
           />
          {
           !isMain && 
-           <h2 className="text-sm font-semibold text-[#2D3E50]">
+           <h2 className="text-xs sm:text-sm font-semibold text-[#2D3E50]">
             {t("brandName")}
           </h2>
          }
@@ -105,9 +105,9 @@ export default function Navbar() {
                   onClick={() => setCartOpen(true)}
                   className="flex items-center justify-center gap-1 transition-colors relative text-gray-600 hover:text-aqua"
                 >
-                  <ShoppingBag className="w-5 h-5" />
+                  <ShoppingBag className="w-4 h-4 sm:h-5 sm:w-5" />
                   {count > 0 && (
-                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] text-white">
+                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-black text-[8px] sm:text-[10px] text-white">
                       {count}
                     </span>
                   )}
@@ -116,7 +116,7 @@ export default function Navbar() {
 
               {isLoggedIn ? (
                 <Link href="/my-account">
-                  <CircleUserRound className="w-6 h-6 stroke-[1.5] hover:text-aqua transition-colors cursor-pointer" />
+                  <CircleUserRound className="w-5 h-5 sm:h-6 sm:w-6 stroke-[1.5] hover:text-aqua transition-colors cursor-pointer" />
                 </Link>
               ) : (
                 <Link
@@ -133,7 +133,7 @@ export default function Navbar() {
                 className="flex items-center justify-center text-black hover:text-aqua transition-colors"
                 aria-label="Search"
               >
-                <Search className="w-5 h-5" />
+                <Search className="w-4 h-4 sm:h-5 sm:w-5" />
               </button>
             </>
           )}
@@ -149,7 +149,7 @@ export default function Navbar() {
             )}
             aria-label="Toggle Menu"
           >
-            <Menu className="w-6 h-6" />
+            <Menu className="w-5 h-5 sm:h-6 sm:w-6" />
           </button>
         </div>
       </div>

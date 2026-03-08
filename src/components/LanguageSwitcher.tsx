@@ -34,7 +34,7 @@ export default function LanguageSwitcher({ isMain }: { isMain?: boolean }) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <button className={`flex items-center gap-1 text-sm text-inherit cursor-pointer outline-none ${isMain ? "text-white" : ""}`}>
+                <button className={`flex items-center gap-1 text-xs sm:text-sm text-inherit cursor-pointer outline-none ${isMain ? "text-white" : ""}`}>
                     {currentLanguage?.name}
                 </button>
             </DropdownMenuTrigger>
