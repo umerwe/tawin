@@ -57,13 +57,19 @@ export default function Navbar() {
     >
       <div className="h-14 flex items-center">
 
-        <Link href="/" className="flex-1">
+        <Link href="/" className="flex items-center flex-1">
           <Image
             src="/logo.png"
             alt="Logo"
             width={60}
             height={60}
           />
+         {
+          !isMain && 
+           <h2 className="text-sm font-semibold text-[#2D3E50]">
+            {t("brandName")}
+          </h2>
+         }
         </Link>
 
         {/* Desktop Navigation */}
@@ -120,17 +126,17 @@ export default function Navbar() {
                   {t("signin")}
                 </Link>
               )}
+
+              {/* Search */}
+              <button
+                onClick={() => setSearchOpen(true)}
+                className="flex items-center justify-center text-black hover:text-aqua transition-colors"
+                aria-label="Search"
+              >
+                <Search className="w-5 h-5" />
+              </button>
             </>
           )}
-
-          {/* Search */}
-          <button
-            onClick={() => setSearchOpen(true)}
-            className="flex items-center justify-center text-black hover:text-aqua transition-colors"
-            aria-label="Search"
-          >
-            <Search className="w-5 h-5" />
-          </button>
 
           {/* Hamburger Toggle */}
           <button
