@@ -11,12 +11,21 @@ const Foundations = () => {
 
     return (
         <section className="md:relative pt-24 md:mb-80">
-            <div className="hidden md:block md:absolute md:bottom-0 md:left-1/2 -translate-x-1/2 w-[1700px] md:h-[800px] overflow-hidden">
+            <div className="hidden md:block md:absolute md:-bottom-50 md:left-1/2 -translate-x-1/2 w-[1300px] md:h-[800px] overflow-hidden">
                 <Image
                     src="/foundation-bg.png"
                     alt="Foundation Background"
                     fill
-                    className="object-cover"
+                    className="object-contain"
+                />
+            </div>
+
+            <div className="hidden md:block md:absolute md:bottom-46 md:left-1/2 -translate-x-1/2 w-6 h-6 overflow-hidden">
+                <Image
+                    src="/drop_location.svg"
+                    alt="location"
+                    fill
+                    className="object-contain"
                 />
             </div>
 

@@ -21,8 +21,8 @@ export default function Cart() {
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-10 font-sans text-gray-800">
-            <h1 className="text-3xl font-bold text-center mb-12">
-                {t("cart")}
+            <h1 className="text-3xl font-semibold text-center mb-12">
+                {t(`cartStep${currentStep}`)}
             </h1>
 
             <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-8 md:mb-16 px-4">

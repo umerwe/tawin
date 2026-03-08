@@ -16,7 +16,7 @@ const Hero = ({ activeCategory }: HeroProps) => {
     const categoryData: any = categories.find(cat => cat?.title?.en?.toLowerCase() === activeCategory?.toLowerCase());
 
     const title = categoryData?.title[locale] || t("heroTitleDefault");
-    const subTitle = categoryData?.subtitle[locale] || t("heroTitleDefault");
+    const subTitle = categoryData?.subtitle[locale] || t("heroSubtitleDefault");
     const backgroundImage = categoryData?.image || "/shop.png";
 
     return (
@@ -34,7 +34,7 @@ const Hero = ({ activeCategory }: HeroProps) => {
                     <Breadcrumb
                         items={[
                             { title: t("home"), href: "/" },
-                            { title: title },
+                            { title: t("breadcrumbShop") },
                         ]}
                     />
                     <h1 className="text-4xl font-semibold">

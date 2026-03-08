@@ -115,7 +115,7 @@ export default function Footer() {
                         <div className="h-5 w-px bg-white/30" />
                     </div>
                     <nav className="flex flex-wrap items-center gap-6 md:gap-8">
-                        <Link href="/" className="text-sm font-medium text-white transition-colors hover:text-white/80">
+                        <Link href="/" className="text-sm font-medium text-white/60 transition-colors hover:text-white">
                             {t("home")}
                         </Link>
                         <Link href="/contact" className="text-sm text-white/60 transition-colors hover:text-white">

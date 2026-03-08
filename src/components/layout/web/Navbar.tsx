@@ -105,12 +105,12 @@ export default function Navbar() {
                   onClick={() => setCartOpen(true)}
                   className="flex items-center justify-center gap-1 transition-colors relative text-gray-600 hover:text-aqua"
                 >
-                  <ShoppingBag className="w-4 h-4 sm:h-5 sm:w-5" />
                   {count > 0 && (
                     <span className="flex h-4 w-4 items-center justify-center rounded-full bg-black text-[8px] sm:text-[10px] text-white">
                       {count}
                     </span>
                   )}
+                  <ShoppingBag className="w-4 h-4 sm:h-5 sm:w-5" />
                 </button>
               )}
 

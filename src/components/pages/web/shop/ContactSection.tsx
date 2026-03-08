@@ -28,6 +28,14 @@ export default function ContactSection() {
 
                 <form onSubmit={(e) => e.preventDefault()} className="mt-10 w-full">
                     <div className="flex items-center border-b border-border pb-1">
+                        <Input
+                            placeholder={t("requestPlaceholder")}
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            className="h-auto flex-1 border-0 bg-transparent p-0 text-sm text-foreground shadow-none placeholder:text-muted-foreground focus-visible:ring-0"
+                        />
+                        <div className="mx-4 h-4 w-px bg-border" />
+
                         <Button
                             type="submit"
                             variant="ghost"
@@ -35,13 +43,6 @@ export default function ContactSection() {
                         >
                             {t("send")}
                         </Button>
-                        <div className="mx-4 h-4 w-px bg-border" />
-                        <Input
-                            placeholder={t("requestPlaceholder")}
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                            className="h-auto flex-1 border-0 bg-transparent p-0 text-sm text-foreground shadow-none placeholder:text-muted-foreground focus-visible:ring-0"
-                        />
                     </div>
                 </form>
             </div>
