@@ -29,25 +29,33 @@ const MyImage = ({
       src={imgSrc}
       alt={alt}
       fill={fill}
-      onLoadingComplete={() => setIsLoading(false)}
+      onLoad={() => setIsLoading(false)}
       onError={() => {
         setImgSrc(fallbackSrc);
         setIsLoading(false);
       }}
-      className={`transition-opacity duration-300 ${isLoading ? "opacity-0" : "opacity-100"} ${className}`}
+      className={`transition-opacity duration-500 ${
+        isLoading ? "opacity-0" : "opacity-100"
+      } ${className ?? ""}`}
     />
   );
 
-  // When fill is used, the parent is already positioned — no wrapper needed
   if (fill) {
-    return imageEl;
+    return (
+      <>
+        {isLoading && (
+          <div className="absolute inset-0 z-10 animate-pulse bg-linear-to-r from-gray-200 via-gray-300 to-gray-300" />
+        )}
+        {imageEl}
+      </>
+    );
   }
 
+  // normal mode — wrap in relative container with skeleton
   return (
     <div className="relative w-full h-full overflow-hidden">
-      {/* Shimmer Loader */}
       {isLoading && (
-        <div className="absolute inset-0 z-10 bg-linear-to-r from-gray-200 via-gray-100 to-gray-200 bg-size[200%_100%] shimmer" />
+        <div className="absolute inset-0 z-10 animate-pulse bg-linear-to-r from-gray-200 via-gray-300 to-gray-300" />
       )}
       {imageEl}
     </div>
