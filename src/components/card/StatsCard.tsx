@@ -36,7 +36,7 @@ const StatsCard: React.FC<CardProps> = ({
       </CardContent>
 
       <CardFooter className="flex justify-end">
-        <Button >
+        <Button>
           Details
         </Button>
       </CardFooter>
