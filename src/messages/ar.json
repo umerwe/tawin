@@ -226,13 +226,38 @@
     "filters": "الفلاتر",
     "priceRange": "نطاق السعر",
     "resultsFound": "نتائج وُجدت",
-    "noResults": "لا توجد منتجات"
+    "noResults": "لا توجد منتجات",
+    "dashboard": "لوحة التحكم",
+    "orderManagement": "إدارة الطلبات",
+    "users": "المستخدمين",
+    "suppliers": "الموردين",
+    "couponCodes": "أكواد الخصم",
+    "financialTransfers": "التحويلات المالية",
+    "addProduct": "إضافة منتج",
+    "productList": "قائمة المنتجات",
+    "lowStock": "نقص المخزون",
+    "customerReviews": "تقييمات العملاء",
+    "admin": "المسؤول",
+    "controlPermissions": "التحكم في الصلاحيات",
+    "constructionManagement": "إدارة الإنشاءات",
+    "cm": "م.إ",
+    "confirm" : "تأكيد",
+    "search" : "بحث"
+  },
+  "confirm": {
+    "logout": {
+      "description": "هل أنت متأكد من تسجيل الخروج؟"
+    },
+    "delete": {
+      "title": "حذف {value}",
+      "description": "هل أنت متأكد من حذف {value}؟"
+    }
   },
   "shop": {
     "home": "الرئيسية",
     "breadcrumbShop": "المتجر",
     "heroTitleDefault": "الأبواب",
-    "heroSubtitleDefault":"لنصمّم المكان الذي لطالما تخيلته",
+    "heroSubtitleDefault": "لنصمّم المكان الذي لطالما تخيلته",
     "addToCart": "إضافة إلى السلة",
     "new": "جديد",
     "showingResultsFor": "عرض النتائج لـ",

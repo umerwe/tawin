@@ -12,11 +12,6 @@ import {
     Star,
     Shield,
     Settings,
-    FileText,
-    CreditCard,
-    User,
-    Bell,
-    Headset,
     type LucideIcon,
 } from 'lucide-react';
 
@@ -28,21 +23,21 @@ export interface MenuItem {
 
 export const sidebarMenu = [
     // Main Menu
-    { title: "Dashboard", icon: LayoutGrid, path: "/" },
-    { title: "OrderManagement", icon: ShoppingCart, path: "/orders" },
-    { title: "Users", icon: Users, path: "/users" },
-    { title: "Suppliers", icon: Truck, path: "/suppliers" },
-    { title: "CouponCodes", icon: Tag, path: "/coupons" },
-    { title: "FinancialTransfers", icon: DollarSign, path: "/transfers" },
-    { title: "Brand", icon: Building, path: "/brand" },
-    
+    { title: "dashboard", icon: LayoutGrid, path: "/admin" },
+    { title: "orderManagement", icon: ShoppingCart, path: "/admin/orders" },
+    { title: "users", icon: Users, path: "/admin/users" },
+    { title: "suppliers", icon: Truck, path: "/admin/suppliers" },
+    { title: "couponCodes", icon: Tag, path: "/admin/coupons" },
+    { title: "financialTransfers", icon: DollarSign, path: "/admin/transfers" },
+    { title: "brand", icon: Building, path: "/admin/brand" },
+
     // Products
-    { title: "AddProduct", icon: Package, path: "/products/add" },
-    { title: "ProductList", icon: List, path: "/products" },
-    { title: "LowStock", icon: AlertTriangle, path: "/low-stock" },
-    { title: "CustomerReviews", icon: Star, path: "/reviews" },
-    
+    { title: "addProduct", icon: Package, path: "/admin/products/add" },
+    { title: "productList", icon: List, path: "/admin/products" },
+    { title: "lowStock", icon: AlertTriangle, path: "/admin/low-stock" },
+    { title: "customerReviews", icon: Star, path: "/admin/reviews" },
+
     // Administration
-    { title: "Admin", icon: Shield, path: "/admin" },
-    { title: "ControlPermissions", icon: Settings, path: "/permissions" }
+    { title: "admin", icon: Shield, path: "/admin/admin" },
+    { title: "controlPermissions", icon: Settings, path: "/admin/permissions" }
 ];

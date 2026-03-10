@@ -13,7 +13,7 @@ export default function WebLayout({
             <Sidebar />
             <SidebarInset className="min-h-screen">
                 <Navbar />
-                <Container>
+                <Container variant="admin">
                     {children}
                 </Container>
             </SidebarInset>

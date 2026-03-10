@@ -24,9 +24,9 @@ const stats = [
 
 export default function WeeklyReportChart() {
     return (
-        <Card>
+        <Card className="border">
             <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-xl font-semibold text-black">Weekly Report</CardTitle>
+                <CardTitle>Weekly Report</CardTitle>
                 <div className="flex items-center gap-3">
                     <div className="flex bg-[#f8f9fa] p-1 rounded-lg border border-gray-100">
                         <button

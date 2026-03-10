@@ -227,7 +227,32 @@
     "filters": "Filters",
     "priceRange": "Price Range",
     "resultsFound": "results found",
-    "noResults": "No products found"
+    "noResults": "No products found",
+    "dashboard": "Dashboard",
+    "orderManagement": "Order Management",
+    "users": "Users",
+    "suppliers": "Suppliers",
+    "couponCodes": "Coupon Codes",
+    "financialTransfers": "Financial Transfers",
+    "addProduct": "Add Product",
+    "productList": "Product List",
+    "lowStock": "Low Stock",
+    "customerReviews": "Customer Reviews",
+    "admin": "Admin",
+    "controlPermissions": "Control Permissions",
+    "constructionManagement": "Construction Management",
+    "cm": "CM",
+    "confirm": "Confirm",
+    "search" : "Search"
+  },
+  "confirm": {
+    "logout": {
+      "description": "Are you sure you want to logout?"
+    },
+    "delete": {
+      "title": "Delete {value}",
+      "description": "Are you sure you want to delete this {value}?"
+    }
   },
   "shop": {
     "home": "Home",

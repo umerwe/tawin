@@ -8,13 +8,13 @@ const StatsCard: React.FC<CardProps> = ({
   title, subtitle, value, change, changeLabel, changeType, footerValue, footerLabel
 }) => {
   return (
-    <Card className="relative">
+    <Card className="relative border">
       <div className="absolute right-4 top-6 text-gray-400 hover:text-gray-600">
         <MoreVertical size={22} />
       </div>
 
       <CardHeader className='mb-1'>
-        <CardTitle className="text-black text-lg font-semibold">{title}</CardTitle>
+        <CardTitle className="text-black text-lg font-bold">{title}</CardTitle>
         <CardDescription className="text-gray-400 text-xs">{subtitle}</CardDescription>
       </CardHeader>
 
@@ -36,7 +36,10 @@ const StatsCard: React.FC<CardProps> = ({
       </CardContent>
 
       <CardFooter className="flex justify-end">
-        <Button>
+        <Button
+        variant="default"
+        size="xs"
+        >
           Details
         </Button>
       </CardFooter>

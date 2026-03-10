@@ -4,19 +4,24 @@ import { AiOutlineBell } from "react-icons/ai";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import SearchInput from '@/components/ui/searchInput';
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useTranslations } from "use-intl";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function Navbar() {
+  const t = useTranslations("translation");
   return (
     <nav className="w-full bg-white border-b border-gray-50 sticky top-0 z-50">
-      <div className="py-3 px-6 flex items-center justify-between">
-       
-        <div className="font-semibold text-lg space-x-2">
-           <SidebarTrigger />
-          <span>Dashboard</span>
+      <div className="py-1 px-6 flex items-center justify-between">
+
+        <div className="font-semibold text-lg flex items-center gap-1">
+          <SidebarTrigger />
+          <span>{t("dashboard")}</span>
         </div>
 
         <div className="flex items-center gap-4">
-          <SearchInput placeholder="Search" />
+          <SearchInput placeholder={t("search")} className="w-[320px]" />
+
+          <LanguageSwitcher />
 
           {/* Notification */}
           <div className="relative cursor-pointer">

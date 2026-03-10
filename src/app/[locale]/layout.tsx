@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { poppins } from "@/lib/fonts";
+import { cairo } from "@/lib/fonts";
 import Provider from "@/components/providers/Provider";
 import getDirection from "@/utils/getDirection";
 import TopLoader from "@/components/ui/TopLoader";
@@ -20,7 +20,7 @@ export default async function RootLayout({
   const dir = getDirection(locale);
   return (
     <html dir={dir} lang={locale} suppressHydrationWarning>
-      <body className={`${poppins.className} overflow-x-hidden`}>
+      <body className={`${cairo.className} overflow-x-hidden`}>
         <Provider>
           {children}
           <TopLoader />

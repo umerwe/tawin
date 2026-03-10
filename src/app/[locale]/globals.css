@@ -59,7 +59,7 @@
   --brand-aqua: oklch(0.74 0.1478 169.16);
   --brand-navy: oklch(0.22 0.0383 249.94);
   --brand-red: oklch(0.577 0.245 27.325);
-  --brand-green: oklch(0.548 0.166 142.49);
+  --brand-green: oklch(65.57% 0.1104 156.71);
   --brand-purple: oklch(0.679 0.196 293.13);
 
   /* ... keep your existing :root and .dark variables exactly as they were ... */

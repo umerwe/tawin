@@ -21,7 +21,8 @@ import { sidebarMenu } from "@/constants/sidebar";
 import ConfirmDialog from "@/components/dialog/ConfirmDialog";
 
 export default function Sidebar({ className }: { className?: string }) {
-  const t = useTranslations();
+  const t = useTranslations("translation");
+  const t2 = useTranslations("confirm");
   
   const pathname = usePathname();
   const locale = useLocale();
@@ -31,9 +32,7 @@ export default function Sidebar({ className }: { className?: string }) {
 
   // Logic to determine if a menu item is active
   const isMenuActive = (path: string) => {
-    // This removes the locale prefix (e.g., /en/orders -> /orders) for easier comparison
     const pathWithoutLocale = pathname.replace(`/${locale}`, "") || "/";
-    console.log(pathWithoutLocale)
     if (path === "/") {
       return pathWithoutLocale === "/";
     }
@@ -63,8 +62,8 @@ export default function Sidebar({ className }: { className?: string }) {
       {/* Header Section */}
       <SidebarHeader className="bg-white px-[24px] group-data-[collapsible=icon]:px-2 py-4 h-auto">
         <div className="font-medium text-sm text-gray-900 group-data-[collapsible=icon]:text-center">
-          <span className="group-data-[collapsible=icon]:hidden">Construction Management</span>
-          <span className="hidden group-data-[collapsible=icon]:inline">CM</span>
+          <span className="group-data-[collapsible=icon]:hidden">{t('constructionManagement')}</span>
+          <span className="hidden group-data-[collapsible=icon]:inline">{t("cm")}</span>
         </div>
       </SidebarHeader>
 
@@ -78,7 +77,7 @@ export default function Sidebar({ className }: { className?: string }) {
                 <SidebarMenuButton
                   asChild
                   isActive={active}
-                  tooltip={t(`translation.${title}`)}
+                  tooltip={t(`${title}`)}
                   onClick={() => {
                     if (isMobile && openMobile) {
                       setOpenMobile(false);
@@ -94,7 +93,7 @@ export default function Sidebar({ className }: { className?: string }) {
                       className={cn(active ? "fill-white text-white" : "fill-none")}
                     />
                     <span className="text-sm font-medium">
-                      {t(`translation.${title}`)}
+                      {t(`${title}`)}
                     </span>
                   </Link>
                 </SidebarMenuButton>
@@ -107,11 +106,11 @@ export default function Sidebar({ className }: { className?: string }) {
       {/* Footer Section with User Profile and Logout */}
       <SidebarFooter>
         <ConfirmDialog
-          title={t("translation.logout")}
-          description={t("confirm.logout.description")}
+          title={t("logout")}
+          description={t2("logout.description")}
           onConfirm={() => handleConfirm()}
           variant="destructive"
-          confirmText={t("translation.confirm")}
+          confirmText={t("confirm")}
           asChild
         >
           {/* <div className="flex items-center gap-3">
@@ -125,7 +124,7 @@ export default function Sidebar({ className }: { className?: string }) {
             </div>
           </div> */}
           <SidebarMenuButton className="bg-red-500 hover:bg-red-600 hover:text-white text-white transition-colors">
-            <Power size={16} /> <span>{t("translation.logout")}</span>
+            <Power size={16} /> <span>{t("logout")}</span>
           </SidebarMenuButton>
         </ConfirmDialog>
       </SidebarFooter>
