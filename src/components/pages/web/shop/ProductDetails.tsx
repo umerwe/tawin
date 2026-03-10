@@ -34,7 +34,7 @@ const ProductDetails = ({ params }: ProductDetailsProps) => {
             <div className="flex items-center justify-between">
                 <Breadcrumb
                     items={[
-                        { title: t("home"), href: "/" },
+                        { title: t("home"), href: "/home" },
                         { title: t("product"), href: `/product` },
                     ]}
                 />
