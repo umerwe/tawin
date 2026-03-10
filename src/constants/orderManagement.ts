@@ -1,3 +1,14 @@
+export interface CardProps {
+  title: string;
+  subtitle: string;
+  value: string;
+  change: string;
+  changeLabel: string;
+  changeType: "increase" | "decrease";
+  footerValue: string;
+  footerLabel: string;
+}
+
 export const ordersData = [
   {
     id: 1,
@@ -124,7 +135,7 @@ export const statusConfig = {
   },
 };
 
-export const orderStats = [
+export const orderStats: CardProps[] = [
   {
     title: "Total Orders",
     subtitle: "This month",
