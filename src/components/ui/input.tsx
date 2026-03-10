@@ -20,7 +20,7 @@ function Input({ className, type, variant = "default", error, errorMessage, ...p
           variant === "default" && [
             "h-[52px] px-4 rounded-full bg-gray-50 border-transparent border",
             "placeholder:text-gray-400 selection:bg-purple-100",
-            "focus-visible:ring-2 focus-visible:ring-purple-100 focus-visible:border-aqua",
+            "focus-visible:ring focus-visible:ring-purple-100 focus-visible:border-aqua",
             error && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-100"
           ],
 

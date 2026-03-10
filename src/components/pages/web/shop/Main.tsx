@@ -16,7 +16,10 @@ const Shop = () => {
     const t = useTranslations("translation");
     const params = useSearchParams();
     const category = params.get("category");
-    let data = category ? products.filter((x) => x.category.en.toLowerCase() === category) : products;
+
+    const data = category
+        ? products.filter((x) => x.category.en.toLowerCase() === category.toLowerCase())
+        : products;
 
     const [viewMode, setViewMode] = useState("grid4");
 
@@ -27,24 +30,46 @@ const Shop = () => {
             <Container className="space-y-10 mb-14">
                 <FilterBar viewMode={viewMode} onViewModeChange={setViewMode} />
 
-                <div className={getGridClasses(viewMode)}>
-                    {data.map((product) => (
-                        <ProductCard
-                            key={product.id}
-                            {...product as any}
-                            isListView={viewMode === "list"}
-                        />
-                    ))}
-                </div>
+                {/* Check if data is empty */}
+                {data.length > 0 ? (
+                    <>
+                        <div className={getGridClasses(viewMode)}>
+                            {data.map((product) => (
+                                <ProductCard
+                                    key={product.id}
+                                    {...product as any}
+                                    isListView={viewMode === "list"}
+                                />
+                            ))}
+                        </div>
 
-                <div className="flex items-center justify-center">
-                    <Button
-                        className="border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-10 rounded-full"
-                        size="sm"
-                    >
-                        {t("showMore")}
-                    </Button>
-                </div>
+                        <div className="flex items-center justify-center">
+                            <Button
+                                className="border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-10 rounded-full"
+                                size="sm"
+                            >
+                                {t("showMore")}
+                            </Button>
+                        </div>
+                    </>
+                ) : (
+                    /* Not Found State */
+                    <div className="flex flex-col items-center justify-center py-20 text-center">
+                        <div className="bg-gray-100 p-6 rounded-full mb-4">
+                            <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h2 className="text-2xl font-semibold text-gray-800">{t("noProductsFound")}</h2>
+                        <Button
+                            variant="link"
+                            className="mt-2 text-aqua"
+                            onClick={() => window.location.href = '/shop'}
+                        >
+                            {t("viewAllProducts")}
+                        </Button>
+                    </div>
+                )}
             </Container>
 
             <ContactSection />

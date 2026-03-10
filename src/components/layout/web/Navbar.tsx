@@ -16,6 +16,7 @@ import CartSheet from "@/components/CartSheet"
 import SearchDialog from "@/components/dialog/SearchDialog"
 import Image from "next/image"
 import { FaRegCircleUser } from "react-icons/fa6";
+import { ShopDropdown } from "@/components/ShopDropdown"
 
 
 export default function Navbar() {
@@ -74,26 +75,42 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-10">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "text-sm font-medium transition-all relative pb-1",
-                normalizedPath === link.href
-                  ? "text-aqua"
-                  : isMain
-                    ? "text-white/80 hover:text-white"
-                    : "text-gray-500 hover:text-gray:900"
-              )}
-            >
-              {t(`${link.label.toLowerCase()}`)}
-              {normalizedPath === link.href && (
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-aqua" />
-              )}
-            </Link>
-          ))}
-        </nav>
+  {navLinks.map((link) => {
+    // If it's the shop link, use the dropdown
+    if (link.label.toLowerCase() === "shop") {
+      return (
+        <div key={link.href} className="relative">
+          <ShopDropdown isMain={isMain} />
+          {/* Keep your active indicator line if needed */}
+          {normalizedPath.startsWith("/shop") && (
+            <span className="absolute bottom-[-2px] left-0 w-full h-0.5 bg-aqua" />
+          )}
+        </div>
+      )
+    }
+
+    // Standard links
+    return (
+      <Link
+        key={link.href}
+        href={link.href}
+        className={cn(
+          "text-sm font-medium transition-all relative pb-1",
+          normalizedPath === link.href
+            ? "text-aqua"
+            : isMain
+              ? "text-white/80 hover:text-white"
+              : "text-gray-500 hover:text-gray:900"
+        )}
+      >
+        {t(`${link.label.toLowerCase()}`)}
+        {normalizedPath === link.href && (
+          <span className="absolute bottom-0 left-0 w-full h-0.5 bg-aqua" />
+        )}
+      </Link>
+    )
+  })}
+</nav>
 
         <div className="flex flex-1 justify-end items-center gap-3">
           {!isMain && (

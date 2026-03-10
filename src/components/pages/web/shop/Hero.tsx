@@ -13,10 +13,10 @@ const Hero = ({ activeCategory }: HeroProps) => {
     const locale = useLocale() as "en" | "ar";
     const t = useTranslations("shop");
 
-    const categoryData: any = categories.find(cat => cat?.title?.en?.toLowerCase() === activeCategory?.toLowerCase());
+    const categoryData: any = categories.find(cat => cat?.slug === activeCategory);
 
-    const title = categoryData?.title[locale] || t("heroTitleDefault");
-    const subTitle = categoryData?.subtitle[locale] || t("heroSubtitleDefault");
+    const title = categoryData?.name[locale] || t("heroTitleDefault");
+    const subTitle = categoryData?.description[locale] || t("heroSubtitleDefault");
     const backgroundImage = categoryData?.image || "/shop.png";
 
     return (
@@ -33,7 +33,7 @@ const Hero = ({ activeCategory }: HeroProps) => {
                 <div className="flex flex-col items-center space-y-4 text-center px-4">
                     <Breadcrumb
                         items={[
-                            { title: t("home"), href: "/" },
+                            { title: t("home"), href: "/home" },
                             { title: t("breadcrumbShop") },
                         ]}
                     />

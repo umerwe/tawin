@@ -242,7 +242,8 @@
     "constructionManagement": "إدارة الإنشاءات",
     "cm": "م.إ",
     "confirm" : "تأكيد",
-    "search" : "بحث"
+    "search" : "بحث",
+    "viewAllProducts" : "عرض جميع المنتجات"
   },
   "confirm": {
     "logout": {

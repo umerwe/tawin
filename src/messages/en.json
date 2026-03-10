@@ -243,7 +243,8 @@
     "constructionManagement": "Construction Management",
     "cm": "CM",
     "confirm": "Confirm",
-    "search" : "Search"
+    "search" : "Search",
+    "viewAllProducts" : "View All Products"
   },
   "confirm": {
     "logout": {

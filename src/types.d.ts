@@ -30,11 +30,20 @@ interface ProductCardProps {
   isListView?: boolean;
 }
 
-interface Category {
-  id : number;
+interface Subcategory {
+  id: string | number;
+  parentId: number;
   title: LocalizedString;
+  slug: string;
+}
+
+interface Category {
+  id: number;
+  name: LocalizedString;
   subtitle: LocalizedString;
+  slug: string;
   image: string;
+  subcategories: Subcategory[];
 }
 
 interface Color {
