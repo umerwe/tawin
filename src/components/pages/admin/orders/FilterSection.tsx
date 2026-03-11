@@ -9,11 +9,15 @@ interface FilterSectionProps {
     activeTab: string;
     setActiveTab: (val: string) => void;
     data: any[];
-    type?: string;
+    type?: "order" | "user" | "supplier" | "product";
 }
 
 const FilterSection = ({ activeTab, setActiveTab, data, type = "order" }: FilterSectionProps) => {
-    const tabs = ["All Orders", "Completed", "Processing", "Cancelled"];
+    const getTabs = () => {
+        if (type === "product") return ["All Products", "Featured Products", "Reduced", "Out of Stock"];
+        return ["All Orders", "Completed", "Processing", "Cancelled"];
+    };
+    const tabs = getTabs();
 
     const actions = [
         { icon: <RefreshCcw className="h-4 w-4" />, color: "text-gray-500" },
@@ -23,10 +27,18 @@ const FilterSection = ({ activeTab, setActiveTab, data, type = "order" }: Filter
         { icon: <FileText className="h-4 w-4" />, color: "text-red-500" },
     ];
 
+    // Dynamic Title Logic
+    const getTitle = () => {
+        if (type === "user") return "Users List";
+        if (type === "supplier") return "Suppliers List";
+        return "";
+    };
+
     return (
         <>
-            {
-                type === "order" ? (
+            {/* LEFT SIDE: Order Tabs or Dynamic Title */}
+            <div className="flex items-center">
+                {type === "order" || type === "product" ? (
                     <div className="flex items-center gap-1 bg-emerald-50/40 p-1 rounded-lg border border-gray-100">
                         {tabs.map((tab) => (
                             <Button
@@ -42,20 +54,23 @@ const FilterSection = ({ activeTab, setActiveTab, data, type = "order" }: Filter
                                 )}
                             >
                                 {tab}
-                                {tab === "All Orders" && <span className="ml-1 text-aqua font-bold">({data.length})</span>}
+                                {tab === "All Orders" || tab === "All Products" && (
+                                    <span className="ml-1 text-aqua font-bold">({data.length})</span>
+                                )}
                             </Button>
                         ))}
                     </div>
-                )
-                    :
-                    <h1 className="text-lg font-bold">
-                        Users List
+                ) : (
+                    <h1 className="text-lg font-bold text-gray-800">
+                        {getTitle()}
                     </h1>
-            }
+                )}
+            </div>
 
+            {/* RIGHT SIDE: Search & Actions */}
             <div className="flex items-center gap-2">
                 <SearchInput
-                    placeholder="Search users..."
+                    placeholder={`Search ${type}s...`}
                     className="w-[240px]"
                 />
 
@@ -70,18 +85,18 @@ const FilterSection = ({ activeTab, setActiveTab, data, type = "order" }: Filter
                             {action.icon}
                         </Button>
                     ))}
-                    {
-                        type === "user" && (
-                            <Button
-                                variant="primary"
-                                size="xs"
-                                className="w-28"
-                            >
-                                Add User
-                                <CirclePlus className="h-3 w-3" />
-                            </Button>
-                        )
-                    }
+
+                    {/* Show Add Button for non-order types */}
+                    {type !== "order" && (
+                        <Button
+                            variant="primary"
+                            size="xs"
+                            className="w-32 gap-2"
+                        >
+                            Add {type === "user" ? "User" : "Supplier"}
+                            <CirclePlus className="h-3 w-3" />
+                        </Button>
+                    )}
                 </div>
             </div>
         </>

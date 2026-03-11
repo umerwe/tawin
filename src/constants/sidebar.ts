@@ -33,11 +33,11 @@ export const sidebarMenu = [
 
     // Products
     { title: "addProduct", icon: Package, path: "/admin/products/add" },
-    { title: "productList", icon: List, path: "/admin/products" },
+    { title: "productList", icon: List, path: "/admin/product-list" },
     { title: "lowStock", icon: AlertTriangle, path: "/admin/low-stock" },
     { title: "customerReviews", icon: Star, path: "/admin/reviews" },
 
     // Administration
-    { title: "admin", icon: Shield, path: "/admin/admin" },
+    { title: "manager", icon: Shield, path: "/admin/manager" },
     { title: "controlPermissions", icon: Settings, path: "/admin/permissions" }
 ];

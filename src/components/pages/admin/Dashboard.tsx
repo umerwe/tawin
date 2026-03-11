@@ -8,6 +8,14 @@ import FinancialTransfers from "./FinancialTransfers";
 import AddNewProduct from "./AddNewProduct";
 import TopSellingProducts from "./TopSellingProducts";
 
+const tableStats = [
+  { label: "Users", value: "52k", active: true },
+  { label: "Total Products", value: "3.5k" },
+  { label: "Available Products", value: "2.5k" },
+  { label: "Out of Stock", value: "0.5k" },
+  { label: "Revenue", value: "250k" },
+];
+
 const Dashboard = () => {
   return (
     <div className="space-y-6">
@@ -22,7 +30,9 @@ const Dashboard = () => {
       {/* Grid for Chart and Regional Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <WeeklyReportChart />
+          <WeeklyReportChart
+            data={tableStats}
+          />
         </div>
         <div className="lg:col-span-1">
           <SalesByRegion />

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import WeeklyReportChart from "@/components/charts/WeeklyReportChart";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import UserTable from "@/components/tables/UserTable";
@@ -13,8 +13,14 @@ const stats = [
   { title: "Visitors", value: "11,040", trend: "+14.4%", isUp: true, time: "Last 7 days" },
 ];
 
+const tableStats = [
+  { label: "Active customers", value: "25k", active: true },
+  { label: "Repeat customers", value: "5.6k" },
+  { label: "Store visitors", value: "250k" },
+  { label: "Conversion rate", value: "5.5%" },
+];
+
 const UsersPage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("All Users");
 
   return (
@@ -24,7 +30,10 @@ const UsersPage = () => {
 
         {/* Left: Large Chart (2/3 width) */}
         <div className="lg:col-span-2">
-          <WeeklyReportChart />
+          <WeeklyReportChart
+            title="User Statistics"
+            data={tableStats}
+          />
         </div>
 
         {/* Right: Vertically stacked stat cards (1/3 width) */}
@@ -46,7 +55,7 @@ const UsersPage = () => {
           />
         </CardHeader>
         <CardContent>
-          <UserTable searchQuery={searchQuery} activeTab={activeTab} />
+          <UserTable activeTab={activeTab} />
         </CardContent>
       </Card>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 import { cn } from "@/lib/utils";
@@ -11,17 +11,15 @@ const users = [
     { id: 1, userCode: "#CUST001", name: "Ahmed Shaker", phone: "+1234567890", orders: 25, spending: "3,450.00", status: "Active" },
     { id: 2, userCode: "#CUST002", name: "Ahmed Shaker", phone: "+1234567890", orders: 12, spending: "1,200.00", status: "Inactive" },
     { id: 3, userCode: "#CUST003", name: "Ahmed Shaker", phone: "+1234567890", orders: 45, spending: "8,900.00", status: "VIP" },
-    // ... more data
 ];
 
-const UserTable = ({ searchQuery, activeTab }: { searchQuery: string, activeTab: string }) => {
+const UserTable = ({ activeTab }: { activeTab: string }) => {
     const [page, setPage] = useState(1);
     const cols = ["User Code", "Name", "Phone", "Order Count", "Total Spending", "Status", "Actions"];
 
     const filteredData = users.filter(user => {
-        const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) || user.userCode.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesTab = activeTab === "All Users" || user.status === activeTab;
-        return matchesSearch && matchesTab;
+        return matchesTab;
     });
 
     const row = (item: typeof users[0]) => (

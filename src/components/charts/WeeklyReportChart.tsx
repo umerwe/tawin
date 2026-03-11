@@ -4,7 +4,7 @@ import { MoreVertical } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const data = [
+const daysData = [
     { day: "Sun", value: 15000 },
     { day: "Mon", value: 27000 },
     { day: "Tue", value: 27000 },
@@ -14,19 +14,11 @@ const data = [
     { day: "Sat", value: 30000 },
 ];
 
-const stats = [
-    { label: "Users", value: "52k", active: true },
-    { label: "Total Products", value: "3.5k" },
-    { label: "Available Products", value: "2.5k" },
-    { label: "Out of Stock", value: "0.5k" },
-    { label: "Revenue", value: "250k" },
-];
-
-export default function WeeklyReportChart() {
+export default function WeeklyReportChart({ data, title = "Weekly Report" }: { data: any, title?: string }) {
     return (
         <Card className="border">
             <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Weekly Report</CardTitle>
+                <CardTitle>{title}</CardTitle>
                 <div className="flex items-center gap-3">
                     <div className="flex bg-[#f8f9fa] p-1 rounded-lg border border-gray-100">
                         <button
@@ -45,7 +37,7 @@ export default function WeeklyReportChart() {
 
             <CardContent className="p-0">
                 <div className="flex justify-between px-10 py-6 border-b border-gray-50">
-                    {stats.map((stat, i) => (
+                    {data?.map((stat: any, i: any) => (
                         <div key={i} className="text-center relative cursor-pointer">
                             <div className="text-2xl font-semibold text-black">{stat.value}</div>
                             <div className="text-xs text-gray-400 mt-1 uppercase tracking-wider">{stat.label}</div>
@@ -59,7 +51,7 @@ export default function WeeklyReportChart() {
                 {/* Chart Section */}
                 <div className="h-[320px] w-full pt-12 pb-4">
                     <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                        <AreaChart data={daysData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                             <defs>
                                 <linearGradient id="colorAqua" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="var(--brand-aqua)" stopOpacity={0.2} />
@@ -77,7 +69,7 @@ export default function WeeklyReportChart() {
                             <YAxis
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fill: '#9ca3af', fontSize: 12}}
+                                tick={{ fill: '#9ca3af', fontSize: 12 }}
                                 tickFormatter={(value) => `${value / 1000}k`}
                             />
                             <Tooltip
