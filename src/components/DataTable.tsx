@@ -10,6 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { Pagination } from "./Pagination";
 
 type DataTableProps<T> = {
     data: T[];
@@ -88,7 +89,7 @@ export function DataTable<T>({
                     </>
                 </Table>
             )}
-            {/* {pagination && (
+            {pagination && (
                 <Pagination
                     pagination={{
                         total,
@@ -97,7 +98,7 @@ export function DataTable<T>({
                     }}
                     changePage={(newPage) => setPage(newPage)}
                 />
-            )} */}
+            )}
         </div>
     );
 }

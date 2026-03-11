@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { navLinks } from "@/constants/navLinks"
-import { CircleUser, CircleUserRound, Menu, Search, ShoppingBag, X } from "lucide-react"
+import { CircleUserRound, Menu, Search, ShoppingBag, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import LanguageSwitcher from "../../LanguageSwitcher"
@@ -15,7 +15,6 @@ import { useSelector } from "react-redux";
 import CartSheet from "@/components/CartSheet"
 import SearchDialog from "@/components/dialog/SearchDialog"
 import Image from "next/image"
-import { FaRegCircleUser } from "react-icons/fa6";
 import { ShopDropdown } from "@/components/ShopDropdown"
 
 
@@ -65,52 +64,52 @@ export default function Navbar() {
             width={60}
             height={60}
           />
-         {
-          !isMain && 
-           <h2 className="text-xs sm:text-sm font-semibold text-[#2D3E50]">
-            {t("brandName")}
-          </h2>
-         }
+          {
+            !isMain &&
+            <h2 className="text-xs sm:text-sm font-semibold text-[#2D3E50]">
+              {t("brandName")}
+            </h2>
+          }
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-10">
-  {navLinks.map((link) => {
-    // If it's the shop link, use the dropdown
-    if (link.label.toLowerCase() === "shop") {
-      return (
-        <div key={link.href} className="relative">
-          <ShopDropdown isMain={isMain} />
-          {/* Keep your active indicator line if needed */}
-          {normalizedPath.startsWith("/shop") && (
-            <span className="absolute bottom-[-2px] left-0 w-full h-0.5 bg-aqua" />
-          )}
-        </div>
-      )
-    }
+          {navLinks.map((link) => {
+            // If it's the shop link, use the dropdown
+            if (link.label.toLowerCase() === "shop") {
+              return (
+                <div key={link.href} className="relative">
+                  <ShopDropdown isMain={isMain} />
+                  {/* Keep your active indicator line if needed */}
+                  {normalizedPath.startsWith("/shop") && (
+                    <span className="absolute bottom-[-2px] left-0 w-full h-0.5 bg-aqua" />
+                  )}
+                </div>
+              )
+            }
 
-    // Standard links
-    return (
-      <Link
-        key={link.href}
-        href={link.href}
-        className={cn(
-          "text-sm font-medium transition-all relative pb-1",
-          normalizedPath === link.href
-            ? "text-aqua"
-            : isMain
-              ? "text-white/80 hover:text-white"
-              : "text-gray-500 hover:text-gray:900"
-        )}
-      >
-        {t(`${link.label.toLowerCase()}`)}
-        {normalizedPath === link.href && (
-          <span className="absolute bottom-0 left-0 w-full h-0.5 bg-aqua" />
-        )}
-      </Link>
-    )
-  })}
-</nav>
+            // Standard links
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "text-sm font-medium transition-all relative pb-1",
+                  normalizedPath === link.href
+                    ? "text-aqua"
+                    : isMain
+                      ? "text-white/80 hover:text-white"
+                      : "text-gray-500 hover:text-gray:900"
+                )}
+              >
+                {t(`${link.label.toLowerCase()}`)}
+                {normalizedPath === link.href && (
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-aqua" />
+                )}
+              </Link>
+            )
+          })}
+        </nav>
 
         <div className="flex flex-1 justify-end items-center gap-3">
           {!isMain && (

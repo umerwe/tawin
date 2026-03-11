@@ -23,7 +23,7 @@ import ConfirmDialog from "@/components/dialog/ConfirmDialog";
 export default function Sidebar({ className }: { className?: string }) {
   const t = useTranslations("translation");
   const t2 = useTranslations("confirm");
-  
+
   const pathname = usePathname();
   const locale = useLocale();
   const { openMobile, setOpenMobile, isMobile } = useSidebar();
@@ -33,10 +33,18 @@ export default function Sidebar({ className }: { className?: string }) {
   // Logic to determine if a menu item is active
   const isMenuActive = (path: string) => {
     const pathWithoutLocale = pathname.replace(`/${locale}`, "") || "/";
-    if (path === "/") {
-      return pathWithoutLocale === "/";
+
+    // Exact match
+    if (pathWithoutLocale === path) {
+      return true;
     }
-    return pathWithoutLocale.startsWith(path);
+
+    // Parent route match
+    if (path !== "/admin" && pathWithoutLocale.startsWith(path + "/")) {
+      return true;
+    }
+
+    return false;
   };
 
   // Close sidebar on mobile when route changes
