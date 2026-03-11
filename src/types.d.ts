@@ -31,14 +31,14 @@ interface ProductCardProps {
 }
 
 interface Subcategory {
-  id: string | number;
+  _id: string | number;
   parentId: number;
   title: LocalizedString;
   slug: string;
 }
 
 interface Category {
-  id: number;
+  _id: string;
   name: LocalizedString;
   subtitle: LocalizedString;
   slug: string;

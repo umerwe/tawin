@@ -13,8 +13,8 @@ export default function ShopByCategory() {
             </h2>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-y-12 gap-x-6">
-                {categories.map((category: Category) => (
-                    <CategoryCard key={category.id} data={category} />
+                {categories.map((category: any) => (
+                    <CategoryCard key={category._id} data={category} />
                 ))}
             </div>
         </section>
