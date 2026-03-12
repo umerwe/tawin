@@ -30,24 +30,13 @@ export default function Sidebar({ className }: { className?: string }) {
 
   const dir = getDirection(locale);
 
-  // Logic to determine if a menu item is active
   const isMenuActive = (path: string) => {
     const pathWithoutLocale = pathname.replace(`/${locale}`, "") || "/";
-
-    // Exact match
-    if (pathWithoutLocale === path) {
-      return true;
-    }
-
-    // Parent route match
-    if (path !== "/admin" && pathWithoutLocale.startsWith(path + "/")) {
-      return true;
-    }
-
+    if (pathWithoutLocale === path) return true;
+    if (path !== "/admin" && pathWithoutLocale.startsWith(path + "/")) return true;
     return false;
   };
 
-  // Close sidebar on mobile when route changes
   useEffect(() => {
     if (isMobile && openMobile) {
       setOpenMobile(false);
@@ -55,19 +44,52 @@ export default function Sidebar({ className }: { className?: string }) {
   }, [pathname]);
 
   const handleConfirm = () => {
-    // markLogout();
-    // localStorage.removeItem("token");
-    // localStorage.removeItem("permissions");
-    // router.replace("/auth/login");
+    // logout logic
   };
 
+  // UPDATED: Sections partitioning
+  // 1-7: items 0 to 6
+  const mainMenu = sidebarMenu.slice(0, 7); 
+  // 8-11: items 7 to 11
+  const productsMenu = sidebarMenu.slice(7, 11); 
+  // 12+: items 11 onwards
+  const adminMenu = sidebarMenu.slice(11); 
+
+  const SectionHeader = ({ title }: { title: string }) => (
+    <div className="px-2 py-2 text-sm font-semibold text-gray-400 group-data-[collapsible=icon]:hidden">
+      {t(title)}
+    </div>
+  );
+
+  const renderMenuItems = (items: typeof sidebarMenu) => (
+    <SidebarMenu className="flex flex-col gap-1">
+      {items.map(({ icon: Icon, path, title }: any) => {
+        const active = isMenuActive(path);
+        return (
+          <SidebarMenuItem key={path}>
+            <SidebarMenuButton
+              asChild
+              isActive={active}
+              tooltip={t(`${title}`)}
+              onClick={() => isMobile && setOpenMobile(false)}
+            >
+              <Link href={path}>
+                <Icon
+                  size={16}
+                  strokeWidth={active ? 2.5 : 2}
+                  className={cn(active ? "fill-white text-white" : "fill-none")}
+                />
+                <span className="text-sm font-medium">{t(`${title}`)}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        );
+      })}
+    </SidebarMenu>
+  );
+
   return (
-    <SidebarComponent
-      className={cn("border-r border-gray-200", className)}
-      collapsible="icon"
-      dir={dir}
-    >
-      {/* Header Section */}
+    <SidebarComponent className={cn("border-r border-gray-200", className)} collapsible="icon" dir={dir}>
       <SidebarHeader className="bg-white px-[24px] group-data-[collapsible=icon]:px-2 py-4 h-auto">
         <div className="font-medium text-sm text-gray-900 group-data-[collapsible=icon]:text-center">
           <span className="group-data-[collapsible=icon]:hidden">{t('constructionManagement')}</span>
@@ -75,62 +97,34 @@ export default function Sidebar({ className }: { className?: string }) {
         </div>
       </SidebarHeader>
 
-      {/* Navigation Content */}
       <SidebarContent className="bg-white px-4 no-scrollbar group-data-[collapsible=icon]:overflow-y-auto group-data-[collapsible=icon]:px-2">
-        <SidebarMenu className="flex flex-col gap-1">
-          {sidebarMenu.map(({ icon: Icon, path, title }: any) => {
-            const active = isMenuActive(path);
-            return (
-              <SidebarMenuItem key={path}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={active}
-                  tooltip={t(`${title}`)}
-                  onClick={() => {
-                    if (isMobile && openMobile) {
-                      setOpenMobile(false);
-                    }
-                  }}
-                >
-                  <Link
-                    href={path}
-                  >
-                    <Icon
-                      size={16}
-                      strokeWidth={active ? 2.5 : 2}
-                      className={cn(active ? "fill-white text-white" : "fill-none")}
-                    />
-                    <span className="text-sm font-medium">
-                      {t(`${title}`)}
-                    </span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            );
-          })}
-        </SidebarMenu>
+        
+        <div className="mb-2">
+          <SectionHeader title="mainMenu" />
+          {renderMenuItems(mainMenu)}
+        </div>
+
+        <div className="mb-2">
+          <SectionHeader title="products" />
+          {renderMenuItems(productsMenu)}
+        </div>
+
+        <div className="mb-2">
+          <SectionHeader title="administrator" />
+          {renderMenuItems(adminMenu)}
+        </div>
+
       </SidebarContent>
 
-      {/* Footer Section with User Profile and Logout */}
       <SidebarFooter>
         <ConfirmDialog
           title={t("logout")}
           description={t2("logout.description")}
-          onConfirm={() => handleConfirm()}
+          onConfirm={handleConfirm}
           variant="destructive"
           confirmText={t("confirm")}
           asChild
         >
-          {/* <div className="flex items-center gap-3">
-            <Avatar className="h-[40px] w-[41px] border border-gray-100">
-              <AvatarImage src="https://github.com/shadcn.png" alt="User" />
-              <AvatarFallback>UF</AvatarFallback>
-            </Avatar>
-            <div className="overflow-hidden">
-              <p className="font-semibold text-base text-gray-900 truncate">ahmad</p>
-              <p className="text-sm text-gray-500 -mt-1 truncate">ahmad@gmail.com</p>
-            </div>
-          </div> */}
           <SidebarMenuButton className="bg-red-500 hover:bg-red-600 hover:text-white text-white transition-colors">
             <Power size={16} /> <span>{t("logout")}</span>
           </SidebarMenuButton>

@@ -8,21 +8,46 @@ import { MessageSquare, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const users = [
-    { id: 1, userCode: "#CUST001", name: "Ahmed Shaker", phone: "+1234567890", orders: 25, spending: "3,450.00", status: "Active" },
-    { id: 2, userCode: "#CUST002", name: "Ahmed Shaker", phone: "+1234567890", orders: 12, spending: "1,200.00", status: "Inactive" },
-    { id: 3, userCode: "#CUST003", name: "Ahmed Shaker", phone: "+1234567890", orders: 45, spending: "8,900.00", status: "VIP" },
+    {
+        id: 1,
+        userCode: "#CUST001",
+        name: "Ahmed Shaker",
+        phone: "+1234567890",
+        orders: 25,
+        spending: "3,450.00",
+        status: { en: "Active", ar: "نشط" }
+    },
+    {
+        id: 2,
+        userCode: "#CUST002",
+        name: "Ahmed Shaker",
+        phone: "+1234567890",
+        orders: 12,
+        spending: "1,200.00",
+        status: { en: "Inactive", ar: "غير نشط" }
+    },
+    {
+        id: 3,
+        userCode: "#CUST003",
+        name: "Ahmed Shaker",
+        phone: "+1234567890",
+        orders: 45,
+        spending: "8,900.00",
+        status: { en: "VIP", ar: "عميل مميز" }
+    },
 ];
 
 const UserTable = ({ activeTab }: { activeTab: string }) => {
     const [page, setPage] = useState(1);
-    const cols = ["User Code", "Name", "Phone", "Order Count", "Total Spending", "Status", "Actions"];
+
+    const cols = ["userCode", "name", "phone", "orderCount", "totalSpending", "status", "actions"];
 
     const filteredData = users.filter(user => {
-        const matchesTab = activeTab === "All Users" || user.status === activeTab;
+        const matchesTab = activeTab === "All Users" || user.status.en === activeTab;
         return matchesTab;
     });
 
-    const row = (item: typeof users[0]) => (
+    const row = (item: any, index: number, locale: "en" | "ar") => (
         <>
             <TableCell>{item.userCode}</TableCell>
             <TableCell>{item.name}</TableCell>
@@ -32,12 +57,12 @@ const UserTable = ({ activeTab }: { activeTab: string }) => {
             <TableCell>
                 <div className="flex items-center gap-2">
                     <span className={cn("h-1.5 w-1.5 rounded-full",
-                        item.status === "Active" ? "bg-aqua" : item.status === "VIP" ? "bg-amber-500" : "bg-red-500")}
+                        item.status.en === "Active" ? "bg-aqua" : item.status.en === "VIP" ? "bg-amber-500" : "bg-red-500")}
                     />
                     <span className={cn("text-xs font-medium",
-                        item.status === "Active" ? "text-aqua" : item.status === "VIP" ? "text-amber-600" : "text-red-600")}
+                        item.status.en === "Active" ? "text-aqua" : item.status.en === "VIP" ? "text-amber-600" : "text-red-600")}
                     >
-                        {item.status}
+                        {item.status[locale]}
                     </span>
                 </div>
             </TableCell>

@@ -8,24 +8,67 @@ import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 
 const products = [
-  { id: "1", name: "Wooden Door", code: "#FXZ-4567", orders: 104, status: "In Stock", price: "$999.00", img: "/door.png", color: "bg-emerald-500", textColor: "text-emerald-600" },
-  { id: "2", name: "Nike Air Jordan", code: "#FXZ-4567", orders: 56, status: "Out of Stock", price: "$999.00", img: "/shoes.png", color: "bg-red-500", textColor: "text-red-600" },
-  { id: "3", name: "Wooden Door", code: "#FXZ-4567", orders: 104, status: "In Stock", price: "$999.00", img: "/door.png", color: "bg-emerald-500", textColor: "text-emerald-600" },
-  { id: "4", name: "Wooden Door", code: "#FXZ-4567", orders: 104, status: "In Stock", price: "$999.00", img: "/door.png", color: "bg-emerald-500", textColor: "text-emerald-600" },
+  {
+    id: "1",
+    name: { en: "Wooden Door", ar: "باب خشبي" },
+    code: "#FXZ-4567",
+    orders: 104,
+    status: { en: "In Stock", ar: "متوفر" },
+    price: "$999.00",
+    img: "https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=800&auto=format&fit=crop",
+    color: "bg-emerald-500",
+    textColor: "text-emerald-600"
+  },
+  {
+    id: "2",
+    name: { en: "Nike Air Jordan", ar: "نايكي إير جوردان" },
+    code: "#FXZ-4567",
+    orders: 56,
+    status: { en: "Out of Stock", ar: "غير متوفر" },
+    price: "$999.00",
+    img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800&auto=format&fit=crop",
+    color: "bg-red-500",
+    textColor: "text-red-600"
+  },
+  {
+    id: "3",
+    name: { en: "Wooden Door", ar: "باب خشبي" },
+    code: "#FXZ-4567",
+    orders: 104,
+    status: { en: "In Stock", ar: "متوفر" },
+    price: "$999.00",
+    img: "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=800&auto=format&fit=crop",
+    color: "bg-emerald-500",
+    textColor: "text-emerald-600"
+  },
+  {
+    id: "4",
+    name: { en: "Wooden Door", ar: "باب خشبي" },
+    code: "#FXZ-4567",
+    orders: 104,
+    status: { en: "In Stock", ar: "متوفر" },
+    price: "$999.00",
+    img: "https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?q=80&w=800&auto=format&fit=crop",
+    color: "bg-emerald-500",
+    textColor: "text-emerald-600"
+  },
 ];
 
 const TopSellingProducts = () => {
-  const cols = ["Product", "Total Orders", "Status", "Price"];
+  const cols = ["product", "totalOrders", "status", "price"];
 
-  const row = (product: typeof products[0]) => (
+  // Updated row function to accept locale from DataTable
+  const row = (product: typeof products[0], index: number, locale: "en" | "ar") => (
     <>
       <TableCell>
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 shrink-0 relative rounded bg-gray-100 overflow-hidden">
-            <Image src={product.img} alt={product.name} fill className="object-cover" />
+            {/* Added proper alt translation */}
+            <Image src={product.img} alt={product.name[locale]} fill className="object-cover" />
           </div>
           <div className="flex flex-col">
-            <span className="font-semibold text-sm">{product.name}</span>
+            {/* Displaying name based on locale */}
+            <span className="font-semibold text-sm">{product.name[locale]}</span>
             <span className="text-xs text-muted-foreground">Item: {product.code}</span>
           </div>
         </div>
@@ -35,7 +78,8 @@ const TopSellingProducts = () => {
         <div className="flex items-center gap-2">
           <span className={`h-1.5 w-1.5 rounded-full ${product.color}`} />
           <span className={`${product.textColor}`}>
-            {product.status}
+            {/* Displaying status based on locale */}
+            {product.status[locale]}
           </span>
         </div>
       </TableCell>
@@ -59,6 +103,7 @@ const TopSellingProducts = () => {
             data={products}
             row={row}
             headerClassName="bg-aqua/5 border-none"
+            showPagination={false}
           />
         </div>
 

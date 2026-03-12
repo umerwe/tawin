@@ -1,23 +1,30 @@
-import { Search } from "lucide-react"
-import { Input } from "./input"
+"use client";
 
-interface SearchInputProps {
-    className?: string;
-    placeholder?: string;
+import { Search } from "lucide-react";
+import { Input, InputProps } from "./input";
+import { cn } from "@/lib/utils";
+
+interface SearchInputProps extends InputProps {
+    containerClassName?: string;
 }
 
-const SearchInput = ({ className, placeholder }: SearchInputProps) => {
+const SearchInput = ({ className, containerClassName, placeholder, ...props }: SearchInputProps) => {
     return (
-        <div className={`relative ${className}`}>
+        <div className={cn("relative w-full", containerClassName)}>
             <Input
                 placeholder={placeholder}
+                className={cn(
+                    "pr-12",
+                    className
+                )}
+                {...props}
             />
             <Search
-                className="absolute ltr:right-4 rtl:left-4 top-1/2 -translate-y-1/2 text-gray-500"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
                 size={20}
             />
         </div>
-    )
-}
+    );
+};
 
-export default SearchInput
+export default SearchInput;

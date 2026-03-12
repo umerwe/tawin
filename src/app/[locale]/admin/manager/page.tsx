@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/MyImage";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 const ProfileSettings = () => {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-1">
-            <Card className="lg:col-span-2 border shadow-none"> //
+            <Card className="lg:col-span-2 border shadow-none">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <h2 className="text-lg font-bold text-gray-800">Edit Profile</h2>
                     <Button variant="outline" size="sm" className="text-gray-400 px-6">

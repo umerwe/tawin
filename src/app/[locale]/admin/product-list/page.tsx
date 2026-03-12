@@ -47,74 +47,74 @@ const productsData = [
     { 
         id: 1, 
         number: 1, 
-        name: "Solid Wood Door", 
-        img: "https://images.unsplash.com/photo-1506377295352-e3154d43ea9e?q=80&w=200&auto=format&fit=crop", 
+        name: { en: "Solid Wood Door", ar: "باب خشب صلب" }, 
+        img: "https://images.unsplash.com/photo-1506377295352-e3154d43ea9e?q=80&w=400&auto=format&fit=crop", 
         date: "01-01-2025", 
         sort: 25, 
-        status: "All Products" 
+        status: { en: "All Products", ar: "جميع المنتجات" } 
     },
     { 
         id: 2, 
         number: 2, 
-        name: "Industrial Paint Mixer", 
-        img: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=200&auto=format&fit=crop", 
+        name: { en: "Industrial Paint Mixer", ar: "خلاط طلاء صناعي" }, 
+        img: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=400&auto=format&fit=crop", 
         date: "05-01-2025", 
         sort: 10, 
-        status: "Featured Products" 
+        status: { en: "Featured Products", ar: "منتجات مميزة" } 
     },
     { 
         id: 3, 
         number: 3, 
-        name: "Solar Panel 400W", 
-        img: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=200&auto=format&fit=crop", 
+        name: { en: "Solar Panel 400W", ar: "لوح شمسي ٤٠٠ واط" }, 
+        img: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=400&auto=format&fit=crop", 
         date: "10-01-2025", 
         sort: 50, 
-        status: "Out of Stock" 
+        status: { en: "Out of Stock", ar: "نفذت الكمية" } 
     },
     { 
         id: 4, 
         number: 4, 
-        name: "Fire Extinguisher 5kg", 
-        img: "https://images.unsplash.com/photo-1628151015968-3a4429e9ef04?q=80&w=200&auto=format&fit=crop", 
+        name: { en: "Fire Extinguisher 5kg", ar: "طفاية حريق ٥ كجم" }, 
+        img: "https://images.unsplash.com/photo-1628151015968-3a4429e9ef04?q=80&w=400&auto=format&fit=crop", 
         date: "12-01-2025", 
         sort: 15, 
-        status: "Reduced" 
+        status: { en: "Reduced", ar: "مخفض" } 
     },
     { 
         id: 5, 
         number: 5, 
-        name: "CCTV Outdoor Camera", 
-        img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=200&auto=format&fit=crop", 
+        name: { en: "CCTV Outdoor Camera", ar: "كاميرا مراقبة خارجية" }, 
+        img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=400&auto=format&fit=crop", 
         date: "15-01-2025", 
         sort: 30, 
-        status: "Featured Products" 
+        status: { en: "Featured Products", ar: "منتجات مميزة" } 
     },
     { 
         id: 6, 
         number: 6, 
-        name: "Steel Hinge Set", 
-        img: "https://images.unsplash.com/photo-1621905252507-b35220adcfba?q=80&w=200&auto=format&fit=crop", 
+        name: { en: "Steel Hinge Set", ar: "طقم مفصلات فولاذية" }, 
+        img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=400&auto=format&fit=crop", 
         date: "18-01-2025", 
         sort: 100, 
-        status: "All Products" 
+        status: { en: "All Products", ar: "جميع المنتجات" } 
     },
     { 
         id: 7, 
         number: 7, 
-        name: "Concrete Vibrator", 
-        img: "https://images.unsplash.com/photo-1541888946425-d81bb19480c5?q=80&w=200&auto=format&fit=crop", 
+        name: { en: "Concrete Vibrator", ar: "هزاز خرسانة" }, 
+        img: "https://images.unsplash.com/photo-1628151015968-3a4429e9ef04?q=80&w=400&auto=format&fit=crop", 
         date: "20-01-2025", 
         sort: 5, 
-        status: "Out of Stock" 
+        status: { en: "Out of Stock", ar: "نفذت الكمية" } 
     },
     { 
         id: 8, 
         number: 8, 
-        name: "LED Floodlight 100W", 
-        img: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?q=80&w=200&auto=format&fit=crop", 
+        name: { en: "LED Floodlight 100W", ar: "كشاف ليد ١٠٠ واط" }, 
+        img: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?q=80&w=400&auto=format&fit=crop", 
         date: "22-01-2025", 
         sort: 45, 
-        status: "Reduced" 
+        status: { en: "Reduced", ar: "مخفض" } 
     },
 ];
 

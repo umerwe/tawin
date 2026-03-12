@@ -9,13 +9,13 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Pagination } from "./Pagination";
 
 type DataTableProps<T> = {
     data: T[];
     cols: string[];
-    row: (row: T, index: number) => React.ReactNode;
+    row: (row: T, index: number, locale: "en" | "ar") => React.ReactNode;
     tableClassName?: string;
     bodyClassName?: string;
     headClassName?: string;
@@ -27,6 +27,7 @@ type DataTableProps<T> = {
         limit: number | undefined;
         setPage: (page: number) => void;
     };
+    showPagination?: boolean
 };
 
 export function DataTable<T>({
@@ -44,8 +45,10 @@ export function DataTable<T>({
         limit: 10,
         setPage: () => { },
     },
+    showPagination = true
 }: DataTableProps<T>) {
-    const t = useTranslations("translation");
+    const t = useTranslations("table");
+    const locale = useLocale() as "en" | "ar";
     const { total = 0, page = 1, limit = 10, setPage } = pagination || {};
 
     useEffect(() => {
@@ -74,7 +77,7 @@ export function DataTable<T>({
                                         className={cn("capitalize", headClassName)}
                                         key={i}
                                     >
-                                        {col}
+                                        {t(`columns.${col}`)}
                                     </TableHead>
                                 ))}
                             </TableRow>
@@ -82,14 +85,14 @@ export function DataTable<T>({
                         <TableBody className={cn("", bodyClassName)}>
                             {data.map((r, i) => (
                                 <TableRow className={cn("", rowClassName)} key={i}>
-                                    {row(r, i)}
+                                    {row(r, i, locale)}
                                 </TableRow>
                             ))}
                         </TableBody>
                     </>
                 </Table>
             )}
-            {pagination && (
+            {(showPagination && pagination) && (
                 <Pagination
                     pagination={{
                         total,

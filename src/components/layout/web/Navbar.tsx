@@ -14,7 +14,7 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import CartSheet from "@/components/CartSheet"
 import SearchDialog from "@/components/dialog/SearchDialog"
-import Image from "next/image"
+import Image from "@/components/MyImage"
 import { ShopDropdown } from "@/components/ShopDropdown"
 
 

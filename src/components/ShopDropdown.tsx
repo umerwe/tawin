@@ -60,7 +60,7 @@ export function ShopDropdown({ isMain }: { isMain: boolean }) {
 
                     {category.subcategories.map((sub: any) => (
                       <DropdownMenuItem key={sub._id} asChild>
-                        <Link href={`/shop?category=${category.slug}&sub=${sub.slug}`}>
+                        <Link href={`/shop?category=${category.slug}`}>
                           {sub?.name?.[locale]}
                         </Link>
                       </DropdownMenuItem>

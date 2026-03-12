@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import StarRating from "@/components/StarRating"
 import { Review } from "@/types/product"
 import { useLocale, useTranslations } from "next-intl"
-import Image from "next/image"
+import Image from "@/components/MyImage"
 
 interface ReviewHeaderProps {
   rating?: number

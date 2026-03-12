@@ -1,12 +1,34 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SearchInput from "@/components/ui/searchInput";
-import Image from "next/image";
+import Image from "@/components/MyImage";
 
 const categories = [
-  { name: "Doors", id: "#FXZ-4567", price: "$999.00", img: "/door.png" },
-  { name: "Lamps", id: "#FXZ-4567", price: "$72.40", img: "/lamp.png" },
-  { name: "Electrical", id: "#FXZ-4567", price: "$72.40", img: "/cable.png" },
-  { name: "Measuring Tools", id: "#FXZ-4567", price: "$72.40", img: "/meter.png" },
+ {
+    name: "Doors",
+    id: "#FXZ-4567",
+    price: "$999.00",
+    // NEW: Robust, high-availability door link
+    img: "https://images.unsplash.com/photo-1515516089376-88db1e26e9c0?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    name: "Lamps",
+    id: "#FXZ-4567",
+    price: "$72.40",
+    img: "https://images.unsplash.com/photo-1534073828943-f801091bb18c?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    name: "Electrical",
+    id: "#FXZ-4567",
+    price: "$72.40",
+    img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    name: "Measuring Tools",
+    id: "#FXZ-4567",
+    price: "$72.40",
+    // NEW: High-availability professional tools
+    img: "https://images.unsplash.com/photo-1581092162384-8987c1d64718?q=80&w=400&auto=format&fit=crop"
+  },
 ];
 
 const TopCategories = () => {
@@ -21,21 +43,21 @@ const TopCategories = () => {
         <div className="divide-y">
           {categories.map((item, i) => (
             <div key={i} className="flex items-center gap-4 py-3">
-              {/* Fixed Image Container */}
-              <div className="h-10 w-10 shrink-0 rounded-md bg-gray-100 overflow-hidden">
-                <Image 
-                  src={item.img} 
+              <div className="relative h-10 w-10 shrink-0 rounded-md overflow-hidden">
+                <Image
+                  src={item.img}
                   alt={item.name}
                   fill
-                  className="object-cover" 
+                  sizes="40px"
+                  className="object-cover"
                 />
               </div>
-              
+
               <div className="flex flex-1 flex-col">
                 <span className="text-sm font-semibold">{item.name}</span>
                 <span className="text-xs text-muted-foreground">Item: {item.id}</span>
               </div>
-              
+
               <span className="font-bold text-sm shrink-0">{item.price}</span>
             </div>
           ))}

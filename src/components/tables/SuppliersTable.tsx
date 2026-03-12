@@ -8,36 +8,59 @@ import { MessageSquare, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const suppliers = [
-  { id: 1, code: "#CUST001", name: "National Computer Company", phone: "+1234567890", revenue: "3,450.00", status: "Active" },
-  { id: 2, code: "#CUST001", name: "National Computer Company", phone: "+1234567890", revenue: "3,450.00", status: "Closed" },
-  { id: 3, code: "#CUST001", name: "National Computer Company", phone: "+1234567890", revenue: "3,450.00", status: "Active" },
+  { 
+    id: 1, 
+    code: "#CUST001", 
+    name: { en: "National Computer Company", ar: "شركة الكمبيوتر الوطنية" }, 
+    phone: "+1234567890", 
+    revenue: "3,450.00", 
+    status: { en: "Active", ar: "نشط" } 
+  },
+  { 
+    id: 2, 
+    code: "#CUST001", 
+    name: { en: "National Computer Company", ar: "شركة الكمبيوتر الوطنية" }, 
+    phone: "+1234567890", 
+    revenue: "3,450.00", 
+    status: { en: "Closed", ar: "مغلق" } 
+  },
+  { 
+    id: 3, 
+    code: "#CUST001", 
+    name: { en: "National Computer Company", ar: "شركة الكمبيوتر الوطنية" }, 
+    phone: "+1234567890", 
+    revenue: "3,450.00", 
+    status: { en: "Active", ar: "نشط" } 
+  },
 ];
 
 const SuppliersTable = ({ activeTab }: { activeTab: string }) => {
   const [page, setPage] = useState(1);
-  const cols = ["Supplier code", "Supplier name", "Phone", "Total revenues", "Status", "Process"];
+  
+  const cols = ["supplierCode", "supplierName", "phone", "totalRevenues", "status", "process"];
 
-  // Note: Filtered data is prepared for future search integration here
+  // Filter Logic matching against English status for the tab logic
   const filteredData = suppliers.filter((item) => {
-    const matchesTab = activeTab === "All Suppliers" || item.status === activeTab;
+    const matchesTab = activeTab === "All Suppliers" || item.status.en === activeTab;
     return matchesTab;
   });
 
-  const row = (item: typeof suppliers[0]) => (
+  // Updated row function signature to accept index and locale from DataTable
+  const row = (item: any, index: number, locale: "en" | "ar") => (
     <>
       <TableCell>{item.code}</TableCell>
-      <TableCell className="font-medium">{item.name}</TableCell>
+      <TableCell className="font-medium">{item.name[locale]}</TableCell>
       <TableCell>{item.phone}</TableCell>
       <TableCell className="font-semibold">{item.revenue}</TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
           <span className={cn("h-1.5 w-1.5 rounded-full", 
-            item.status === "Active" ? "bg-aqua" : "bg-red-500")} 
+            item.status.en === "Active" ? "bg-aqua" : "bg-red-500")} 
           />
           <span className={cn("text-xs font-medium capitalize", 
-            item.status === "Active" ? "text-aqua" : "text-red-600")}
+            item.status.en === "Active" ? "text-aqua" : "text-red-600")}
           >
-            {item.status}
+            {item.status[locale]}
           </span>
         </div>
       </TableCell>

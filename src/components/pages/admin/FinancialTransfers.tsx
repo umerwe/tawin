@@ -7,17 +7,19 @@ import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 
 const transfers = [
-  { id: "1", user: "#6545", date: "01 Oct | 11:29 am", status: "Paid", amount: "$64", color: "bg-emerald-500" },
-  { id: "2", user: "#5412", date: "01 Oct | 11:29 am", status: "Pending", amount: "$557", color: "bg-yellow-500" },
-  { id: "3", user: "#6545", date: "01 Oct | 11:29 am", status: "Paid", amount: "$64", color: "bg-emerald-500" },
-  { id: "4", user: "#6545", date: "01 Oct | 11:29 am", status: "Paid", amount: "$64", color: "bg-emerald-500" },
-  { id: "5", user: "#6545", date: "01 Oct | 11:29 am", status: "Paid", amount: "$64", color: "bg-emerald-500" },
+  { id: "1", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-emerald-500" },
+  { id: "2", user: "#5412", date: "01 Oct | 11:29 am", status: { en: "Pending", ar: "قيد الانتظار" }, amount: "$557", color: "bg-yellow-500" },
+  { id: "3", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-emerald-500" },
+  { id: "4", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-emerald-500" },
+  { id: "5", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-emerald-500" },
 ];
 
 const FinancialTransfers = () => {
+  // These keys must match your translation file keys
   const cols = ["no", "userCode", "orderDate", "status", "total"];
 
-  const row = (item: typeof transfers[0]) => (
+  // row function updated to receive locale from DataTable
+  const row = (item: typeof transfers[0], index: number, locale: "en" | "ar") => (
     <>
       <TableCell>{item.id}.</TableCell>
       <TableCell>{item.user}</TableCell>
@@ -25,7 +27,8 @@ const FinancialTransfers = () => {
       <TableCell>
         <div className="flex items-center gap-2">
           <span className={`h-2 w-2 rounded-full ${item.color}`} />
-          <span>{item.status}</span>
+          {/* Displaying translated status based on locale */}
+          <span>{item.status[locale]}</span>
         </div>
       </TableCell>
       <TableCell>{item.amount}</TableCell>
@@ -54,10 +57,11 @@ const FinancialTransfers = () => {
             data={transfers}
             row={row}
             headerClassName="bg-aqua/5 border-none"
+            showPagination={false}
           />
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-4">
           <Button
             variant="default"
             size="xs"

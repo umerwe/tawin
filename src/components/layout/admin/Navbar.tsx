@@ -10,7 +10,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 export default function Navbar() {
   const t = useTranslations("translation");
   return (
-    <nav className="w-full bg-white border-b border-gray-50 sticky top-0 z-50">
+    <nav className="w-full bg-white border-b border-gray-50 sticky top-0 z-50 mb-2">
       <div className="py-1 px-6 flex items-center justify-between">
 
         <div className="font-semibold text-lg flex items-center gap-1">

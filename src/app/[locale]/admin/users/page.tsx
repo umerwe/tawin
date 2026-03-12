@@ -8,9 +8,27 @@ import { OrderStatCard } from "@/components/card/OrderStatsCard";
 import FilterSection from "@/components/pages/admin/orders/FilterSection";
 
 const stats = [
-  { title: "Total Users", value: "11,040", trend: "+14.4%", isUp: true, time: "Last 7 days" },
-  { title: "New Users", value: "240", trend: "+14.4%", isUp: true, time: "Last 7 days" },
-  { title: "Visitors", value: "11,040", trend: "+14.4%", isUp: true, time: "Last 7 days" },
+  { 
+    title: { en: "Total Users", ar: "إجمالي المستخدمين" }, 
+    value: "11,040", 
+    trend: "+14.4%", 
+    isUp: true, 
+    time: { en: "Last 7 days", ar: "آخر 7 أيام" } 
+  },
+  { 
+    title: { en: "New Users", ar: "مستخدمون جدد" }, 
+    value: "240", 
+    trend: "+14.4%", 
+    isUp: true, 
+    time: { en: "Last 7 days", ar: "آخر 7 أيام" } 
+  },
+  { 
+    title: { en: "Visitors", ar: "الزوار" }, 
+    value: "11,040", 
+    trend: "+14.4%", 
+    isUp: true, 
+    time: { en: "Last 7 days", ar: "آخر 7 أيام" } 
+  },
 ];
 
 const tableStats = [

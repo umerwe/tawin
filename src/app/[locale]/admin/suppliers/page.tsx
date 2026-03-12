@@ -6,11 +6,28 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { OrderStatCard } from "@/components/card/OrderStatsCard";
 import FilterSection from "@/components/pages/admin/orders/FilterSection";
 import SuppliersTable from "@/components/tables/SuppliersTable";
-
 const stats = [
-    { title: "Total suppliers", value: "11,040", trend: "+14.4%", isUp: true, time: "Last 7 days" },
-    { title: "New suppliers", value: "240", trend: "+14.4%", isUp: true, time: "Last 7 days" },
-    { title: "Efficiency", value: "11,040", trend: "+14.4%", isUp: true, time: "Last 7 days" },
+    { 
+        title: { en: "Total suppliers", ar: "إجمالي الموردين" }, 
+        value: "11,040", 
+        trend: "+14.4%", 
+        isUp: true, 
+        time: { en: "Last 7 days", ar: "آخر 7 أيام" } 
+    },
+    { 
+        title: { en: "New suppliers", ar: "موردون جدد" }, 
+        value: "240", 
+        trend: "+14.4%", 
+        isUp: true, 
+        time: { en: "Last 7 days", ar: "آخر 7 أيام" } 
+    },
+    { 
+        title: { en: "Efficiency", ar: "الكفاءة" }, 
+        value: "98.2%", // Adjusted value to fit "Efficiency" context
+        trend: "+14.4%", 
+        isUp: true, 
+        time: { en: "Last 7 days", ar: "آخر 7 أيام" } 
+    },
 ];
 
 const tableStats = [

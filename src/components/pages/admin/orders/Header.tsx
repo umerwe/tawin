@@ -5,10 +5,34 @@ import { Button } from "@/components/ui/button";
 import { OrderStatCard } from "@/components/card/OrderStatsCard";
 
 const stats = [
-    { title: "Total Orders", value: "1,240", trend: "+14.4%", isUp: true, time: "Last 7 days" },
-    { title: "New Orders", value: "240", trend: "+20%", isUp: true, time: "Last 7 days" },
-    { title: "Completed Orders", value: "960", trend: "+85%", isUp: true, time: "Last 7 days" },
-    { title: "Cancelled Orders", value: "87", trend: "-5%", isUp: false, time: "Last 7 days" },
+    { 
+        title: { en: "Total Orders", ar: "إجمالي الطلبات" }, 
+        value: "1,240", 
+        trend: "+14.4%", 
+        isUp: true, 
+        time: { en: "Last 7 days", ar: "آخر 7 أيام" } 
+    },
+    { 
+        title: { en: "New Orders", ar: "طلبات جديدة" }, 
+        value: "240", 
+        trend: "+20%", 
+        isUp: true, 
+        time: { en: "Last 7 days", ar: "آخر 7 أيام" } 
+    },
+    { 
+        title: { en: "Completed Orders", ar: "طلبات مكتملة" }, 
+        value: "960", 
+        trend: "+85%", 
+        isUp: true, 
+        time: { en: "Last 7 days", ar: "آخر 7 أيام" } 
+    },
+    { 
+        title: { en: "Cancelled Orders", ar: "طلبات ملغاة" }, 
+        value: "87", 
+        trend: "-5%", 
+        isUp: false, 
+        time: { en: "Last 7 days", ar: "آخر 7 أيام" } 
+    },
 ];
 
 const OrderStatsHeader = () => {

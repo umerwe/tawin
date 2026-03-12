@@ -243,9 +243,12 @@
     "constructionManagement": "Construction Management",
     "cm": "CM",
     "confirm": "Confirm",
-    "search" : "Search",
-    "viewAllProducts" : "View All Products",
-    "manager" : "Manager" 
+    "search": "Search",
+    "viewAllProducts": "View All Products",
+    "manager": "Manager",
+    "mainMenu": "Main Menu",
+    "products": "Products",
+    "administrator": "Administrator"
   },
   "confirm": {
     "logout": {
@@ -267,5 +270,36 @@
     "clearAll": "Clear All",
     "noProductsFound": "No products found",
     "showMore": "Show More"
+  },
+  "table": {
+    "columns": {
+      "product": "Product",
+      "totalOrders": "Total Orders",
+      "status": "Status",
+      "price": "Price",
+      "user": "User",
+      "userCode": "User Code",
+      "orderDate": "Order Date",
+      "total": "Total",
+      "date": "Date",
+      "amount": "Amount",
+      "orderId": "Order ID",
+      "payment": "Payment",
+      "no": "No.",
+      "name": "Name",
+      "sort": "Sort",
+      "phone": "Phone",
+      "orderCount": "Order Count",
+      "totalSpending": "Total Spending",
+      "actions": "Actions",
+      "supplierCode": "Supplier Code",
+      "supplierName": "Supplier Name",
+      "totalRevenues": "Total Revenues",
+      "process": "Process",
+      "paymentMethod": "Payment Method",
+      "transactions": "Transactions",
+      "dateCreated": "Date Created",
+      "operations": "Operations"
+    }
   }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import Image from "@/components/MyImage";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 import { cn } from "@/lib/utils";
@@ -14,38 +14,37 @@ interface OrderTableProps {
 const OrderTable = ({ activeTab, data }: OrderTableProps) => {
     const [page, setPage] = useState(1);
 
-    // Filter Logic
-    const filteredData = data.filter((order: typeof data[0]) => {
-        const matchesTab = activeTab === "All Orders" || order.status === activeTab;
-
+    // Filter Logic - Using .en for the tab matching logic
+    const filteredData = data.filter((order) => {
+        const matchesTab = activeTab === "All Orders" || order.status.en === activeTab;
         return matchesTab;
     });
 
-    const cols = ["no", "order id", "product", "date", "price", "payment", "status"];
+    const cols = ["no", "orderId", "product", "date", "price", "payment", "status"];
 
-    const row = (item: typeof data[0]) => (
+    const row = (item: any, index: number, locale: "en" | "ar") => (
         <>
             <TableCell>{item.id}</TableCell>
             <TableCell>{item.orderId}</TableCell>
             <TableCell>
                 <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 relative rounded-full overflow-hidden bg-slate-100 border">
-                        <Image src={item.img} alt="product" fill className="object-cover" />
+                    <div className="h-8 w-8 relative overflow-hidden rounded">
+                        <Image src={item.img} alt={item.product[locale]} fill className="object-cover" />
                     </div>
-                    <span className="text-sm font-medium line-clamp-1">{item.product}</span>
+                    <span className="text-sm font-medium line-clamp-1">{item.product[locale]}</span>
                 </div>
             </TableCell>
             <TableCell>{item.date}</TableCell>
             <TableCell>${item.price}</TableCell>
             <TableCell>
                 <div className="flex items-center gap-2 text-sm">
-                    <span className={cn("h-2 w-2 rounded-full", item.payment === "Paid" ? "bg-emerald-500" : "bg-red-500")} />
-                    <span>{item.payment}</span>
+                    <span className={cn("h-2 w-2 rounded-full", item.payment.en === "Paid" ? "bg-emerald-500" : "bg-red-500")} />
+                    <span>{item.payment[locale]}</span>
                 </div>
             </TableCell>
             <TableCell>
                 <div className={cn("flex items-center gap-2 font-medium text-xs px-2 py-1 rounded-full w-fit", item.color, "bg-opacity-10")}>
-                    <span>{item.status}</span>
+                    <span>{item.status[locale]}</span>
                 </div>
             </TableCell>
         </>

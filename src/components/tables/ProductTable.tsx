@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import Image from "@/components/MyImage";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 import { Trash2, Edit3 } from "lucide-react";
@@ -14,28 +14,27 @@ interface ProductTableProps {
 
 const ProductTable = ({ activeTab, data }: ProductTableProps) => {
     const [page, setPage] = useState(1);
-    const cols = ["Number", "Product", "Date Created", "Sort", "Operations"];
+    const cols = ["no", "product", "dateCreated", "sort", "operations"];
 
-    // Filtering logic matching the tabs in FilterSection
     const filteredData = data.filter((item) => {
         if (activeTab === "All Products") return true;
-        return item.status === activeTab;
+        return item.status.en === activeTab;
     });
 
-    const row = (item: any) => (
+    const row = (item: any, index: number, locale: "en" | "ar") => (
         <>
             <TableCell className="text-muted-foreground">{item.number}</TableCell>
             <TableCell>
                 <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 relative border rounded bg-gray-50 overflow-hidden">
-                        <Image 
-                            src={item.img} 
-                            alt={item.name} 
-                            fill 
-                            className="object-contain p-1" 
+                    <div className="h-8 w-8 relative overflow-hidden">
+                        <Image
+                            src={item.img}
+                            alt={item.name[locale]}
+                            fill
+                            className="object-cover"
                         />
                     </div>
-                    <span className="font-medium text-sm">{item.name}</span>
+                    <span className="font-medium text-sm">{item.name[locale]}</span>
                 </div>
             </TableCell>
             <TableCell className="text-sm">{item.date}</TableCell>
@@ -59,11 +58,11 @@ const ProductTable = ({ activeTab, data }: ProductTableProps) => {
             cols={cols}
             row={row}
             headerClassName="bg-aqua/5 border-none"
-            pagination={{ 
-                total: filteredData.length, 
-                page, 
-                limit: 10, 
-                setPage 
+            pagination={{
+                total: filteredData.length,
+                page,
+                limit: 10,
+                setPage
             }}
         />
     );
