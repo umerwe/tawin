@@ -3,6 +3,10 @@ import Navbar from "@/components/layout/admin/Navbar";
 import Sidebar from "@/components/layout/admin/Sidebar";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
+export const metadata: Metadata = {
+  title: "Dashboard"
+};
+
 export default function WebLayout({
     children,
 }: Readonly<{

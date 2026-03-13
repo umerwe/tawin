@@ -35,7 +35,7 @@ const stats = [
         value: "87",
         trend: "-5%",
         isUp: false,
-        time: { en: "Last 7 days", ar: "آخر 7 أيام" }
+        footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" }
     },
 ];
 
