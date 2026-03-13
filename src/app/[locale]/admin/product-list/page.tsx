@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Plus, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import FilterSection from "@/components/pages/admin/orders/FilterSection";
+import FilterSection from "@/components/FilterSection";
 import ProductTable from "@/components/tables/ProductTable";
 import { ProductListCard } from "@/components/card/ProductListCard";
 

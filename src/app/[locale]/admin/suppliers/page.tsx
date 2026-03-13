@@ -4,7 +4,7 @@ import { useState } from "react";
 import WeeklyReportChart from "@/components/charts/WeeklyReportChart";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { OrderStatCard } from "@/components/card/OrderStatsCard";
-import FilterSection from "@/components/pages/admin/orders/FilterSection";
+import FilterSection from "@/components/FilterSection";
 import SuppliersTable from "@/components/tables/SuppliersTable";
 const stats = [
     { 

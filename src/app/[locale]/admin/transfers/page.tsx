@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { OrderStatCard } from "@/components/card/OrderStatsCard";
-import FilterSection from "@/components/pages/admin/orders/FilterSection";
+import FilterSection from "@/components/FilterSection";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FinancialTable from "@/components/tables/FinancialTable";
 import { FinancialCard } from "@/components/card/FinancialCard";

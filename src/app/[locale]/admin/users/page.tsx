@@ -5,7 +5,7 @@ import WeeklyReportChart from "@/components/charts/WeeklyReportChart";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import UserTable from "@/components/tables/UserTable";
 import { OrderStatCard } from "@/components/card/OrderStatsCard";
-import FilterSection from "@/components/pages/admin/orders/FilterSection";
+import FilterSection from "@/components/FilterSection";
 
 const stats = [
   { 
