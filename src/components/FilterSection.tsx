@@ -30,7 +30,7 @@ const FilterSection = ({ activeTab, setActiveTab, data, type = "order" }: Filter
             { id: "Cancelled", label: t("cancelled") }
         ];
     };
-    
+
     const tabs = getTabs();
 
     const actions = [
@@ -96,6 +96,9 @@ const FilterSection = ({ activeTab, setActiveTab, data, type = "order" }: Filter
                             {action.icon}
                         </Button>
                     ))}
+                </div>
+
+                <div className="flex">
 
                     {type !== "order" && (
                         <Button

@@ -44,7 +44,6 @@ const Suppliers = () => {
     return (
         <div className="space-y-6 p-1" dir="ltr">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Chart Section - Left (2/3) */}
                 <div className="lg:col-span-2">
                     <WeeklyReportChart
                         data={tableStats}
@@ -61,7 +60,7 @@ const Suppliers = () => {
             </div>
 
             <Card className="border shadow-none overflow-hidden">
-                <CardHeader className="flex flex-row items-center justify-between pb-6">
+                <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between pb-6">
                     <FilterSection
                         activeTab={activeTab}
                         setActiveTab={setActiveTab}
