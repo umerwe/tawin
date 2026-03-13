@@ -28,7 +28,7 @@ export const sidebarMenu = [
     { title: "users", icon: Users, path: "/admin/users" },
     { title: "suppliers", icon: Truck, path: "/admin/suppliers" },
     { title: "couponCodes", icon: Tag, path: "/admin/coupons" },
-    { title: "financialTransfers", icon: DollarSign, path: "/admin/transfers" },
+    { title: "financialTransfers", icon: DollarSign, path: "/admin/financial-transfers" },
     { title: "brand", icon: Building, path: "/admin/brand" },
 
     // Products

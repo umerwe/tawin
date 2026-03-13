@@ -1,12 +1,12 @@
 interface CardProps {
-  title: string;
-  subtitle: string;
+  title: LocalizedString;
+  subtitle: LocalizedString;
   value?: string;
   change: string;
-  changeLabel?: string;
+  changeLabel?: LocalizedString;
   changeType: 'increase' | 'decrease';
   footerValue?: string;
-  footerLabel?: string;
+  footerLabel?: LocalizedString;
 }
 interface LocalizedString {
   en: string;

@@ -1,77 +1,105 @@
 "use client";
 
-import { ListFilter } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { TableCell } from "@/components/ui/table";
-import { DataTable } from "@/components/DataTable";
+import { useState } from "react";
+import FilterSection from "@/components/FilterSection";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import FinancialTable from "@/components/tables/FinancialTable";
+import { FinancialCard } from "@/components/card/FinancialCard";
+import StatsCard from "@/components/card/StatsCard";
 
-const transfers = [
-  { id: "1", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-emerald-500" },
-  { id: "2", user: "#5412", date: "01 Oct | 11:29 am", status: { en: "Pending", ar: "قيد الانتظار" }, amount: "$557", color: "bg-yellow-500" },
-  { id: "3", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-emerald-500" },
-  { id: "4", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-emerald-500" },
-  { id: "5", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-emerald-500" },
+const transferStats = [
+    {
+        title: { en: "Transfers in Progress", ar: "تحويلات قيد التنفيذ" },
+        value: "150",
+        trend: "85%",
+        isUp: true,
+        footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" }
+    },
+    {
+        title: { en: "Total Transfers", ar: "إجمالي التحويلات" },
+        value: "3,150",
+        trend: "20%",
+        isUp: true,
+        footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" }
+    },
+    {
+        title: { en: "Completed Transfers", ar: "التحويلات المكتملة" },
+        value: "150",
+        trend: "85%",
+        isUp: true,
+        footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" }
+    },
+    {
+        title: { en: "Cancelled Transfers", ar: "التحويلات الملغاة" },
+        value: "75",
+        trend: "15%",
+        isUp: false,
+        footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" }
+    },
+];
+
+const financialData = [
+    {
+        id: 1,
+        userCode: "#CUST001",
+        name: "John Doe",
+        date: "01-01-2025",
+        total: "$2,904",
+        method: { en: "Debit Card", ar: "بطاقة مدى" },
+        status: { en: "Completed", ar: "مكتمل" }
+    },
+    {
+        id: 2,
+        userCode: "#CUST001",
+        name: "John Doe",
+        date: "01-01-2025",
+        total: "$2,904",
+        method: { en: "Visa Card", ar: "بطاقة فيزا" },
+        status: { en: "Cancelled", ar: "ملغى" }
+    },
+    {
+        id: 3,
+        userCode: "#CUST001",
+        name: "John Doe",
+        date: "01-01-2025",
+        total: "$2,904",
+        method: { en: "Visa Card", ar: "بطاقة فيزا" },
+        status: { en: "In Progress", ar: "قيد التنفيذ" }
+    },
 ];
 
 const FinancialTransfers = () => {
-  // These keys must match your translation file keys
-  const cols = ["no", "userCode", "orderDate", "status", "total"];
+    const [activeTab, setActiveTab] = useState("All Orders");
 
-  // row function updated to receive locale from DataTable
-  const row = (item: typeof transfers[0], index: number, locale: "en" | "ar") => (
-    <>
-      <TableCell>{item.id}.</TableCell>
-      <TableCell>{item.user}</TableCell>
-      <TableCell>{item.date}</TableCell>
-      <TableCell>
-        <div className="flex items-center gap-2">
-          <span className={`h-2 w-2 rounded-full ${item.color}`} />
-          {/* Displaying translated status based on locale */}
-          <span>{item.status[locale]}</span>
+    return (
+        <div className="space-y-6 p-1">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {transferStats.map((stat, i) => (
+                        <StatsCard key={i} data={stat} />
+                    ))}
+                </div>
+
+                <div className="lg:col-span-2">
+                    <FinancialCard />
+                </div>
+            </div>
+
+            <Card className="border shadow-none overflow-hidden">
+                <CardHeader className="flex flex-row items-center justify-between pb-6">
+                    <FilterSection
+                        activeTab={activeTab}
+                        setActiveTab={setActiveTab}
+                        data={financialData}
+                        type="order"
+                    />
+                </CardHeader>
+                <CardContent>
+                    <FinancialTable data={financialData} activeTab={activeTab} />
+                </CardContent>
+            </Card>
         </div>
-      </TableCell>
-      <TableCell>{item.amount}</TableCell>
-    </>
-  );
-
-  return (
-    <Card className="h-full border shadow-none">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle>
-          Financial Transfers
-        </CardTitle>
-        <Button
-          variant="primary"
-          size="sm"
-          className="w-24"
-        >
-          <ListFilter className="h-4 w-4" /> Filter
-        </Button>
-      </CardHeader>
-
-      <CardContent>
-        <div className="overflow-hidden">
-          <DataTable
-            cols={cols}
-            data={transfers}
-            row={row}
-            headerClassName="bg-aqua/5 border-none"
-            showPagination={false}
-          />
-        </div>
-
-        <div className="flex justify-end mt-4">
-          <Button
-            variant="default"
-            size="xs"
-          >
-            Details
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
+    );
 };
 
 export default FinancialTransfers;

@@ -4,7 +4,7 @@ import AlertBanner from "../../Banner";
 import WeeklyReportChart from "@/components/charts/WeeklyReportChart";
 import SalesByRegion from "@/components/charts/SalesByRegion";
 import TopCategories from "./TopCategories";
-import FinancialTransfers from "./FinancialTransfers";
+import FinancialTransfers from "../../FinancialTransfers";
 import AddNewProduct from "./AddNewProduct";
 import TopSellingProducts from "./TopSellingProducts";
 
@@ -23,7 +23,7 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {statsData.map((stat, index) => (
-          <StatsCard key={index} {...stat} />
+          <StatsCard key={index} data={stat} isHome={true} />
         ))}
       </div>
 
