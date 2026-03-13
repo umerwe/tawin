@@ -38,7 +38,7 @@ const OrderTable = ({ activeTab, data }: OrderTableProps) => {
             <TableCell>${item.price}</TableCell>
             <TableCell>
                 <div className="flex items-center gap-2 text-sm">
-                    <span className={cn("h-2 w-2 rounded-full", item.payment.en === "Paid" ? "bg-emerald-500" : "bg-red-500")} />
+                    <span className={cn("h-2 w-2 rounded-full", item.payment.en === "Paid" ? "bg-aqua" : "bg-red-500")} />
                     <span>{item.payment[locale]}</span>
                 </div>
             </TableCell>

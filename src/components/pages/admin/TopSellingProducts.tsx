@@ -16,8 +16,8 @@ const products = [
     status: { en: "In Stock", ar: "متوفر" },
     price: "$999.00",
     img: "https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=800&auto=format&fit=crop",
-    color: "bg-emerald-500",
-    textColor: "text-emerald-600"
+    color: "bg-aqua",
+    textColor: "text-aqua"
   },
   {
     id: "2",
@@ -38,8 +38,8 @@ const products = [
     status: { en: "In Stock", ar: "متوفر" },
     price: "$999.00",
     img: "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=800&auto=format&fit=crop",
-    color: "bg-emerald-500",
-    textColor: "text-emerald-600"
+    color: "bg-aqua",
+    textColor: "text-aqua"
   },
   {
     id: "4",
@@ -49,8 +49,8 @@ const products = [
     status: { en: "In Stock", ar: "متوفر" },
     price: "$999.00",
     img: "https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?q=80&w=800&auto=format&fit=crop",
-    color: "bg-emerald-500",
-    textColor: "text-emerald-600"
+    color: "bg-aqua",
+    textColor: "text-aqua"
   },
 ];
 

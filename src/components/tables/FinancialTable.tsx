@@ -17,7 +17,7 @@ const FinancialTable = ({ data, activeTab }: { data: any[], activeTab: string })
       <TableCell>
         <span className={cn(
           "text-xs font-bold",
-          item.status.en === "Completed" ? "text-emerald-500" : 
+          item.status.en === "Completed" ? "text-aqua" : 
           item.status.en === "Cancelled" ? "text-red-500" : "text-amber-500"
         )}>
           {item.status[locale]}

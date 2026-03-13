@@ -7,11 +7,11 @@ import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 
 const transfers = [
-  { id: "1", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-emerald-500" },
+  { id: "1", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-aqua" },
   { id: "2", user: "#5412", date: "01 Oct | 11:29 am", status: { en: "Pending", ar: "قيد الانتظار" }, amount: "$557", color: "bg-yellow-500" },
-  { id: "3", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-emerald-500" },
-  { id: "4", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-emerald-500" },
-  { id: "5", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-emerald-500" },
+  { id: "3", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-aqua" },
+  { id: "4", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-aqua" },
+  { id: "5", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-aqua" },
 ];
 
 const FinancialTransfers = () => {

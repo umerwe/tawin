@@ -63,7 +63,7 @@ export function Pagination({ pagination, changePage }: PaginationProps) {
                 className={cn(
                   "h-8 w-8 p-0 text-sm font-medium transition-colors",
                   page === p
-                    ? "bg-emerald-100 text-emerald-600 hover:bg-emerald-200 hover:text-emerald-700"
+                    ? "bg-aqua/50 text-aqua hover:bg-aqua/50 hover:text-aqua"
                     : "text-gray-500 hover:bg-gray-100"
                 )}
               >

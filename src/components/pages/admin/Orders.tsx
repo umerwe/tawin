@@ -49,8 +49,8 @@ const orders = [
         price: "49.99",
         payment: { en: "Paid", ar: "تم الدفع" },
         status: { en: "Completed", ar: "مكتمل" },
-        color: "text-emerald-500",
-        dot: "bg-emerald-500"
+        color: "text-aqua",
+        dot: "bg-aqua"
     },
     {
         id: 2,
@@ -73,8 +73,8 @@ const orders = [
         price: "49.99",
         payment: { en: "Paid", ar: "تم الدفع" },
         status: { en: "Completed", ar: "مكتمل" },
-        color: "text-emerald-500",
-        dot: "bg-emerald-500"
+        color: "text-aqua",
+        dot: "bg-aqua"
     },
     {
         id: 4,

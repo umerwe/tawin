@@ -50,7 +50,7 @@ const FilterSection = ({ activeTab, setActiveTab, data, type = "order" }: Filter
                                     "h-8 px-4 text-xs font-medium transition-all",
                                     activeTab === tab
                                         ? "bg-white shadow-sm text-gray-900 border border-gray-100 hover:bg-white"
-                                        : "text-muted-foreground hover:bg-emerald-100/30"
+                                        : "text-muted-foreground hover:bg-aqua/50/30"
                                 )}
                             >
                                 {tab}

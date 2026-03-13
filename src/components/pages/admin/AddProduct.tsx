@@ -128,9 +128,9 @@ const AddProduct = () => {
                                 <div className="space-y-2">
                                     <Label>Select Available Colors</Label>
                                     <div className="flex gap-2.5">
-                                        {["bg-emerald-100", "bg-red-100", "bg-slate-200", "bg-amber-100", "bg-zinc-800"].map((color, i) => (
+                                        {["bg-aqua/50", "bg-red-100", "bg-slate-200", "bg-amber-100", "bg-zinc-800"].map((color, i) => (
                                             <div key={i} className={cn("h-10 w-10 rounded-md cursor-pointer border hover:ring-2 ring-aqua/20 transition-all flex items-center justify-center", color)}>
-                                                {i === 0 && <Check size={12} className="text-emerald-600" />}
+                                                {i === 0 && <Check size={12} className="text-aqua" />}
                                             </div>
                                         ))}
                                     </div>

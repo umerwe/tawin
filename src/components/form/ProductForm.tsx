@@ -63,7 +63,7 @@ const ProductForm = () => {
                             <Label>Reduced Price (Optional)</Label>
                             <div className="flex gap-4">
                                 <Input placeholder="900.89 Discount" className="flex-1 rounded-md" />
-                                <div className="h-[52px] px-6 bg-emerald-50 rounded-md flex items-center justify-center text-aqua font-bold border border-emerald-100">
+                                <div className="h-[52px] px-6 bg-emerald-50 rounded-md flex items-center justify-center text-aqua font-bold border border-aqua/50">
                                     $99
                                 </div>
                             </div>
