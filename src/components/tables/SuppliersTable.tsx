@@ -49,9 +49,9 @@ const SuppliersTable = ({ activeTab }: { activeTab: string }) => {
   const row = (item: any, index: number, locale: "en" | "ar") => (
     <>
       <TableCell>{item.code}</TableCell>
-      <TableCell className="font-medium">{item.name[locale]}</TableCell>
+      <TableCell>{item.name[locale]}</TableCell>
       <TableCell>{item.phone}</TableCell>
-      <TableCell className="font-semibold">{item.revenue}</TableCell>
+      <TableCell>{item.revenue}</TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
           <span className={cn("h-1.5 w-1.5 rounded-full", 

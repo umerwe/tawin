@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
+import { useTranslations } from "next-intl";
 
 const transfers = [
   { id: "1", user: "#6545", date: "01 Oct | 11:29 am", status: { en: "Paid", ar: "مدفوع" }, amount: "$64", color: "bg-aqua" },
@@ -15,6 +16,7 @@ const transfers = [
 ];
 
 const FinancialTransfers = () => {
+  const t = useTranslations("translation");
   const cols = ["no", "userCode", "orderDate", "status", "total"];
 
   const row = (item: typeof transfers[0], index: number, locale: "en" | "ar") => (
@@ -36,14 +38,14 @@ const FinancialTransfers = () => {
     <Card className="h-full border shadow-none">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle>
-          Financial Transfers
+          {t("financialTransfers")}
         </CardTitle>
         <Button
           variant="primary"
           size="sm"
           className="w-24"
         >
-          <ListFilter className="h-4 w-4" /> Filter
+          <ListFilter className="h-4 w-4" /> {t("filter")}
         </Button>
       </CardHeader>
 
@@ -63,7 +65,7 @@ const FinancialTransfers = () => {
             variant="default"
             size="xs"
           >
-            Details
+            {t("details")}
           </Button>
         </div>
       </CardContent>

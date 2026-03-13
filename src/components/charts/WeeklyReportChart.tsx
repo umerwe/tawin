@@ -3,6 +3,7 @@
 import { MoreVertical } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslations, useLocale } from "next-intl";
 
 const daysData = [
     { day: "Sun", value: 15000 },
@@ -14,19 +15,22 @@ const daysData = [
     { day: "Sat", value: 30000 },
 ];
 
-export default function WeeklyReportChart({ data, title = "Weekly Report" }: { data: any, title?: string }) {
+export default function WeeklyReportChart({ data, title }: { data: any, title?: string }) {
+    const t = useTranslations("translation");
+    const locale = useLocale() as "en" | "ar";
+
     return (
         <Card className="border">
             <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>{title}</CardTitle>
+                <CardTitle>{t(title || "weeklyReport")}</CardTitle>
                 <div className="flex items-center gap-3">
                     <div className="flex bg-[#f8f9fa] p-1 rounded-lg border border-gray-100">
                         <button
                             className="px-4 py-2 text-xs bg-white shadow-sm rounded-md text-aqua">
-                            This Week
+                            {t("thisWeek")}
                         </button>
                         <button className="px-4 py-2 text-xs text-gray-400 hover:text-gray-600 transition-colors">
-                            Last Week
+                            {t("lastWeek")}
                         </button>
                     </div>
                     <button className="text-gray-400">
@@ -40,7 +44,9 @@ export default function WeeklyReportChart({ data, title = "Weekly Report" }: { d
                     {data?.map((stat: any, i: any) => (
                         <div key={i} className="text-center relative cursor-pointer">
                             <div className="text-2xl font-semibold text-black">{stat.value}</div>
-                            <div className="text-xs text-gray-400 mt-1 uppercase tracking-wider">{stat.label}</div>
+                            <div className="text-xs text-gray-400 mt-1 uppercase tracking-wider">
+                                {typeof stat.label === 'object' ? stat.label[locale] : t(stat.label)}
+                            </div>
                             {stat.active && (
                                 <div className="absolute -bottom-[14px] left-0 right-0 h-[3px] bg-aqua rounded-full" />
                             )}
@@ -64,6 +70,7 @@ export default function WeeklyReportChart({ data, title = "Weekly Report" }: { d
                                 axisLine={false}
                                 tickLine={false}
                                 tick={{ fill: '#9ca3af', fontSize: 12 }}
+                                tickFormatter={(value) => t(value.toLowerCase())}
                                 dy={10}
                             />
                             <YAxis
@@ -78,7 +85,7 @@ export default function WeeklyReportChart({ data, title = "Weekly Report" }: { d
                                     if (active && payload && payload.length) {
                                         return (
                                             <div className="bg-[#c2e9e0] border border-aqua/20 px-4 py-2 rounded-xl text-center shadow-sm relative mb-4">
-                                                <p className="text-[10px] font-semibold text-gray-600">{label}</p>
+                                                <p className="text-[10px] font-semibold text-gray-600">{t((label as string)?.toLowerCase() || '')}</p>
                                                 <p className="text-sm font-semibold text-black">{payload[0].value / 1000}k</p>
                                                 <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#c2e9e0] rotate-45 border-r border-b border-aqua/10" />
                                             </div>

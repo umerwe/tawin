@@ -9,11 +9,11 @@ import AddNewProduct from "./AddNewProduct";
 import TopSellingProducts from "./TopSellingProducts";
 
 const tableStats = [
-  { label: "Users", value: "52k", active: true },
-  { label: "Total Products", value: "3.5k" },
-  { label: "Available Products", value: "2.5k" },
-  { label: "Out of Stock", value: "0.5k" },
-  { label: "Revenue", value: "250k" },
+  { label: { en: "Users", ar: "المستخدمين" }, value: "52k", active: true },
+  { label: { en: "Total Products", ar: "إجمالي المنتجات" }, value: "3.5k" },
+  { label: { en: "Available Products", ar: "المنتجات المتوفرة" }, value: "2.5k" },
+  { label: { en: "Out of Stock", ar: "نفدت الكمية" }, value: "0.5k" },
+  { label: { en: "Revenue", ar: "الإيرادات" }, value: "250k" },
 ];
 
 const Dashboard = () => {

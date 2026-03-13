@@ -14,13 +14,13 @@ const SearchInput = ({ className, containerClassName, placeholder, ...props }: S
             <Input
                 placeholder={placeholder}
                 className={cn(
-                    "pr-12",
+                    "rtl:pl-12 ltr:pr-12",
                     className
                 )}
                 {...props}
             />
             <Search
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                className="absolute rtl:left-4 ltr:right-4 top-1/2 -translate-y-1/2 text-gray-400"
                 size={20}
             />
         </div>

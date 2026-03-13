@@ -7,6 +7,7 @@ import FilterSection from "@/components/FilterSection";
 import { MoreVertical, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StatsCard from "@/components/card/StatsCard";
+import { useTranslations } from "next-intl";
 
 const stats = [
     {
@@ -91,6 +92,7 @@ const orders = [
 ];
 
 const Orders = () => {
+    const t = useTranslations("translation")
     const [activeTab, setActiveTab] = useState("All Orders");
 
     return (
@@ -101,7 +103,7 @@ const Orders = () => {
                     className="w-32"
                     size="sm"
                 >
-                    <Plus className="h-4 w-4 mr-2" /> Add Order
+                    <Plus className="h-4 w-4 mr-2" /> {t("addOrder")}
                 </Button>
 
                 <Button
@@ -109,7 +111,7 @@ const Orders = () => {
                     size="sm"
                     className="w-32"
                 >
-                    <MoreVertical className="h-4 w-4 mr-2" /> More
+                    <MoreVertical className="h-4 w-4 mr-2" /> {t("more")}
                 </Button>
             </div>
 

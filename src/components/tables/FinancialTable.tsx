@@ -9,11 +9,11 @@ const FinancialTable = ({ data, activeTab }: { data: any[], activeTab: string })
 
   const row = (item: any, index: number, locale: "en" | "ar") => (
     <>
-      <TableCell className="text-muted-foreground font-medium">{item.userCode}</TableCell>
-      <TableCell>{item.name}</TableCell>
-      <TableCell className="text-sm">{item.date}</TableCell>
-      <TableCell className="font-bold">{item.total}</TableCell>
-      <TableCell className="text-sm">{item.method[locale]}</TableCell>
+      <TableCell>{item.userCode}</TableCell>
+      <TableCell>{item.name[locale]}</TableCell>
+      <TableCell>{item.date}</TableCell>
+      <TableCell>{item.total}</TableCell>
+      <TableCell>{item.method[locale]}</TableCell>
       <TableCell>
         <span className={cn(
           "text-xs font-bold",

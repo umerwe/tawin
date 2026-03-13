@@ -3,20 +3,14 @@
 import Image from "@/components/MyImage";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SearchInput from "@/components/ui/searchInput";
 import {
     Plus,
     RotateCcw,
     Image as ImageIcon,
-    Calendar,
-    Wand2,
-    Edit3,
     Check
 } from "lucide-react";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import {
     Select,
@@ -26,13 +20,16 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import ProductForm from "@/components/form/ProductForm";
+import { useTranslations } from "next-intl";
 
 const AddProduct = () => {
+    const t = useTranslations("translation");
+
     return (
         <div className="space-y-6 p-1 mb-10">
             <div className="flex items-center justify-end gap-3">
                 <SearchInput
-                    placeholder="Search for a product to add"
+                    placeholder={t("searchProductPlaceholder")}
                     className="h-12 rounded-md bg-white border-gray-200 focus:bg-gray-50"
                     containerClassName="max-w-md"
                 />
@@ -52,11 +49,11 @@ const AddProduct = () => {
                 <div className="lg:col-span-3 space-y-6">
                     <Card className="border shadow-none h-full">
                         <CardHeader>
-                            <CardTitle className="text-lg font-bold text-gray-700">Upload Product Image</CardTitle>
+                            <CardTitle className="text-lg font-bold text-gray-700">{t("uploadProductImage")}</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <div className="space-y-2">
-                                <Label>Product Image</Label>
+                                <Label>{t("productImage")}</Label>
 
                                 <div className="relative aspect-video w-full rounded-2xl border border-dashed border-gray-200 flex items-center justify-center overflow-hidden">
                                     <Image
@@ -67,10 +64,10 @@ const AddProduct = () => {
                                     />
                                     <div className="absolute bottom-4 left-4 right-4 flex justify-between">
                                         <Button variant="outline" size="sm" className="bg-white/90 backdrop-blur-sm gap-2 rounded-lg">
-                                            <ImageIcon size={14} /> Browse
+                                            <ImageIcon size={14} /> {t("browse")}
                                         </Button>
                                         <Button variant="outline" size="sm" className="bg-white/90 backdrop-blur-sm gap-2 rounded-lg">
-                                            Replace <RotateCcw size={14} />
+                                            {t("replace")} <RotateCcw size={14} />
                                         </Button>
                                     </div>
                                 </div>
@@ -93,40 +90,40 @@ const AddProduct = () => {
                                 ))}
                                 <div className="aspect-square border border-dashed border-aqua/40 rounded-xl flex flex-col items-center justify-center text-aqua cursor-pointer hover:bg-aqua/5 transition-colors">
                                     <Plus size={20} />
-                                    <span className="text-sm mt-1">Add Image</span>
+                                    <span className="text-sm mt-1">{t("addImage")}</span>
                                 </div>
                             </div>
 
                             {/* Bottom Fields of Right Card */}
                             <div className="space-y-4 pt-2">
                                 <div className="space-y-2">
-                                    <Label>Product Category</Label>
+                                    <Label>{t("productCategory")}</Label>
                                     <Select>
                                         <SelectTrigger className="rounded-md">
-                                            <SelectValue placeholder="Select Category" />
+                                            <SelectValue placeholder={t("selectCategory")} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="electronics">Electronics</SelectItem>
-                                            <SelectItem value="clothing">Clothing</SelectItem>
-                                            <SelectItem value="home">Home & Garden</SelectItem>
+                                            <SelectItem value="electronics">{t("electronics")}</SelectItem>
+                                            <SelectItem value="clothing">{t("clothing")}</SelectItem>
+                                            <SelectItem value="home">{t("homeGarden")}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Subcategories</Label>
+                                    <Label>{t("subcategories")}</Label>
                                     <Select>
                                         <SelectTrigger className="rounded-md">
-                                            <SelectValue placeholder="Select Subcategory" />
+                                            <SelectValue placeholder={t("selectSubcategory")} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="smartphones">Smartphones</SelectItem>
-                                            <SelectItem value="laptops">Laptops</SelectItem>
-                                            <SelectItem value="accessories">Accessories</SelectItem>
+                                            <SelectItem value="smartphones">{t("smartphones")}</SelectItem>
+                                            <SelectItem value="laptops">{t("laptops")}</SelectItem>
+                                            <SelectItem value="accessories">{t("accessories")}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Select Available Colors</Label>
+                                    <Label>{t("selectAvailableColors")}</Label>
                                     <div className="flex gap-2.5">
                                         {["bg-aqua/50", "bg-red-100", "bg-slate-200", "bg-amber-100", "bg-zinc-800"].map((color, i) => (
                                             <div key={i} className={cn("h-10 w-10 rounded-md cursor-pointer border hover:ring-2 ring-aqua/20 transition-all flex items-center justify-center", color)}>

@@ -32,12 +32,11 @@ const stats = [
 ];
 
 const tableStats = [
-  { label: "Active customers", value: "25k", active: true },
-  { label: "Repeat customers", value: "5.6k" },
-  { label: "Store visitors", value: "250k" },
-  { label: "Conversion rate", value: "5.5%" },
+  { label: { en: "Active customers", ar: "العملاء النشطون" }, value: "25k", active: true },
+  { label: { en: "Repeat customers", ar: "العملاء المتكررون" }, value: "5.6k" },
+  { label: { en: "Store visitors", ar: "زوار المتجر" }, value: "250k" },
+  { label: { en: "Conversion rate", ar: "معدل التحويل" }, value: "5.5%" },
 ];
-
 const Users = () => {
   const [activeTab, setActiveTab] = useState("All Users");
 
@@ -47,7 +46,7 @@ const Users = () => {
 
         <div className="lg:col-span-2">
           <WeeklyReportChart
-            title="User Statistics"
+            title="userStatistics"
             data={tableStats}
           />
         </div>

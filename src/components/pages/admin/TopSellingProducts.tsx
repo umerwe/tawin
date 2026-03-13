@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
+import { useTranslations } from "next-intl";
 
 const products = [
   {
@@ -55,21 +56,19 @@ const products = [
 ];
 
 const TopSellingProducts = () => {
+  const t = useTranslations("translation");
   const cols = ["product", "totalOrders", "status", "price"];
 
-  // Updated row function to accept locale from DataTable
   const row = (product: typeof products[0], index: number, locale: "en" | "ar") => (
     <>
       <TableCell>
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 shrink-0 relative rounded bg-gray-100 overflow-hidden">
-            {/* Added proper alt translation */}
             <Image src={product.img} alt={product.name[locale]} fill className="object-cover" />
           </div>
           <div className="flex flex-col">
-            {/* Displaying name based on locale */}
             <span className="font-semibold text-sm">{product.name[locale]}</span>
-            <span className="text-xs text-muted-foreground">Item: {product.code}</span>
+            <span className="text-xs text-muted-foreground">{t('productCode')}: {product.code}</span>
           </div>
         </div>
       </TableCell>
@@ -78,7 +77,6 @@ const TopSellingProducts = () => {
         <div className="flex items-center gap-2">
           <span className={`h-1.5 w-1.5 rounded-full ${product.color}`} />
           <span className={`${product.textColor}`}>
-            {/* Displaying status based on locale */}
             {product.status[locale]}
           </span>
         </div>
@@ -90,9 +88,9 @@ const TopSellingProducts = () => {
   return (
     <Card className="h-full border shadow-none">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle>Top Selling Products</CardTitle>
+        <CardTitle>{t("topSellingProducts")}</CardTitle>
         <Button variant="primary" size="sm" className="w-24">
-          <ListFilter className="h-4 w-4" /> Filter
+          <ListFilter className="h-4 w-4" /> {t("filter")}
         </Button>
       </CardHeader>
 
@@ -109,7 +107,7 @@ const TopSellingProducts = () => {
 
         <div className="flex justify-end mt-4">
           <Button variant="default" size="xs">
-            Details
+            {t("details")}
           </Button>
         </div>
       </CardContent>

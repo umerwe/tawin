@@ -68,7 +68,10 @@ export function DataTable<T>({
                     {t(`search.noData`)}
                 </div>
             ) : (
-                <Table className={cn("h-full", tableClassName)}>
+                <Table 
+                    className={cn("h-full", tableClassName)} 
+                    dir={locale === "ar" ? "rtl" : "ltr"}
+                >
                     <>
                         <TableHeader className={cn("", headerClassName)}>
                             <TableRow className={cn("", rowClassName)}>

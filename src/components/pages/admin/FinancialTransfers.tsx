@@ -42,7 +42,7 @@ const financialData = [
     {
         id: 1,
         userCode: "#CUST001",
-        name: "John Doe",
+        name: { en: "John Doe", ar: "جون دو" },
         date: "01-01-2025",
         total: "$2,904",
         method: { en: "Debit Card", ar: "بطاقة مدى" },
@@ -51,7 +51,7 @@ const financialData = [
     {
         id: 2,
         userCode: "#CUST001",
-        name: "John Doe",
+        name: { en: "John Doe", ar: "جون دو" },
         date: "01-01-2025",
         total: "$2,904",
         method: { en: "Visa Card", ar: "بطاقة فيزا" },
@@ -60,7 +60,7 @@ const financialData = [
     {
         id: 3,
         userCode: "#CUST001",
-        name: "John Doe",
+        name: { en: "John Doe", ar: "جون دو" },
         date: "01-01-2025",
         total: "$2,904",
         method: { en: "Visa Card", ar: "بطاقة فيزا" },

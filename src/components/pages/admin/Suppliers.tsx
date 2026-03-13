@@ -32,10 +32,10 @@ const stats = [
 ];
 
 const tableStats = [
-    { label: "Active suppliers", value: "25k", active: true },
-    { label: "New suppliers", value: "5.6k" },
-    { label: "Top 10 Suppliers Sales", value: "250k" },
-    { label: "Conversion rate", value: "5.5%" },
+    { label: { en: "Active suppliers", ar: "الموردون النشطون" }, value: "25k", active: true },
+    { label: { en: "New suppliers", ar: "موردون جدد" }, value: "5.6k" },
+    { label: { en: "Top 10 Suppliers Sales", ar: "مبيعات أفضل 10 موردين" }, value: "250k" },
+    { label: { en: "Conversion rate", ar: "معدل التحويل" }, value: "5.5%" },
 ];
 
 const Suppliers = () => {
@@ -48,7 +48,7 @@ const Suppliers = () => {
                 <div className="lg:col-span-2">
                     <WeeklyReportChart
                         data={tableStats}
-                        title="Supplier statistics"
+                        title="supplierStatistics"
                     />
                 </div>
 

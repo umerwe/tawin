@@ -11,7 +11,7 @@ const users = [
     {
         id: 1,
         userCode: "#CUST001",
-        name: "Ahmed Shaker",
+        name: { en: "Ahmed Shaker", ar: "أحمد شاكر" },
         phone: "+1234567890",
         orders: 25,
         spending: "3,450.00",
@@ -20,7 +20,7 @@ const users = [
     {
         id: 2,
         userCode: "#CUST002",
-        name: "Ahmed Shaker",
+        name: { en: "Ahmed Shaker", ar: "أحمد شاكر" },
         phone: "+1234567890",
         orders: 12,
         spending: "1,200.00",
@@ -29,7 +29,7 @@ const users = [
     {
         id: 3,
         userCode: "#CUST003",
-        name: "Ahmed Shaker",
+        name: { en: "Ahmed Shaker", ar: "أحمد شاكر" },
         phone: "+1234567890",
         orders: 45,
         spending: "8,900.00",
@@ -50,7 +50,7 @@ const UserTable = ({ activeTab }: { activeTab: string }) => {
     const row = (item: any, index: number, locale: "en" | "ar") => (
         <>
             <TableCell>{item.userCode}</TableCell>
-            <TableCell>{item.name}</TableCell>
+            <TableCell>{item.name[locale]}</TableCell>
             <TableCell>{item.phone}</TableCell>
             <TableCell>{item.orders}</TableCell>
             <TableCell>{item.spending}</TableCell>

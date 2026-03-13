@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import SearchInput from "@/components/ui/searchInput";
 import { FileText, MoreHorizontal, ArrowUpDown, Filter, RefreshCcw, CirclePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface FilterSectionProps {
     activeTab: string;
@@ -13,10 +14,23 @@ interface FilterSectionProps {
 }
 
 const FilterSection = ({ activeTab, setActiveTab, data, type = "order" }: FilterSectionProps) => {
+    const t = useTranslations("translation");
+
     const getTabs = () => {
-        if (type === "product") return ["All Products", "Featured Products", "Reduced", "Out of Stock"];
-        return ["All Orders", "Completed", "Processing", "Cancelled"];
+        if (type === "product") return [
+            { id: "All Products", label: t("allProducts") },
+            { id: "Featured Products", label: t("featuredProducts") },
+            { id: "Reduced", label: t("reduced") },
+            { id: "Out of Stock", label: t("outOfStock") }
+        ];
+        return [
+            { id: "All Orders", label: t("allOrders") },
+            { id: "Completed", label: t("completed") },
+            { id: "Processing", label: t("processing") },
+            { id: "Cancelled", label: t("cancelled") }
+        ];
     };
+    
     const tabs = getTabs();
 
     const actions = [
@@ -27,34 +41,32 @@ const FilterSection = ({ activeTab, setActiveTab, data, type = "order" }: Filter
         { icon: <FileText className="h-4 w-4" />, color: "text-red-500" },
     ];
 
-    // Dynamic Title Logic
     const getTitle = () => {
-        if (type === "user") return "Users List";
-        if (type === "supplier") return "Suppliers List";
+        if (type === "user") return t("usersList");
+        if (type === "supplier") return t("suppliersList");
         return "";
     };
 
     return (
         <>
-            {/* LEFT SIDE: Order Tabs or Dynamic Title */}
             <div className="flex items-center">
                 {type === "order" || type === "product" ? (
                     <div className="flex items-center gap-1 bg-emerald-50/40 p-1 rounded-lg border border-gray-100">
                         {tabs.map((tab) => (
                             <Button
-                                key={tab}
+                                key={tab.id}
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => setActiveTab(tab)}
+                                onClick={() => setActiveTab(tab.id)}
                                 className={cn(
                                     "h-8 px-4 text-xs font-medium transition-all",
-                                    activeTab === tab
+                                    activeTab === tab.id
                                         ? "bg-white shadow-sm text-gray-900 border border-gray-100 hover:bg-white"
                                         : "text-muted-foreground hover:bg-aqua/50/30"
                                 )}
                             >
-                                {tab}
-                                {tab === "All Orders" || tab === "All Products" && (
+                                {tab.label}
+                                {(tab.id === "All Orders" || tab.id === "All Products") && (
                                     <span className="ml-1 text-aqua font-bold">({data.length})</span>
                                 )}
                             </Button>
@@ -67,10 +79,9 @@ const FilterSection = ({ activeTab, setActiveTab, data, type = "order" }: Filter
                 )}
             </div>
 
-            {/* RIGHT SIDE: Search & Actions */}
             <div className="flex items-center gap-2">
                 <SearchInput
-                    placeholder={`Search ${type}s...`}
+                    placeholder={`${t("search")} ${t(type)}s...`}
                     className="w-[240px]"
                 />
 
@@ -86,14 +97,13 @@ const FilterSection = ({ activeTab, setActiveTab, data, type = "order" }: Filter
                         </Button>
                     ))}
 
-                    {/* Show Add Button for non-order types */}
                     {type !== "order" && (
                         <Button
                             variant="primary"
-                            size="xs"
-                            className="w-32 gap-2"
+                            size="sm"
+                            className="w-40 gap-2"
                         >
-                            Add {type === "user" ? "User" : "Supplier"}
+                            {type === "user" ? t("addUser") : t("addSupplier")}
                             <CirclePlus className="h-3 w-3" />
                         </Button>
                     )}

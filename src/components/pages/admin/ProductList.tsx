@@ -7,38 +7,39 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FilterSection from "@/components/FilterSection";
 import ProductTable from "@/components/tables/ProductTable";
 import { ProductListCard } from "@/components/card/ProductListCard";
+import { useTranslations, useLocale } from "next-intl";
 
 const categories = [
     { 
-        title: "Electrical", 
+        title: { en: "Electrical", ar: "كهربائيات" }, 
         image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=200&auto=format&fit=crop" 
     },
     { 
-        title: "Paints", 
+        title: { en: "Paints", ar: "أصباغ" }, 
         image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=200&auto=format&fit=crop" 
     },
     { 
-        title: "Fire Systems", 
+        title: { en: "Fire Systems", ar: "أنظمة الحريق" }, 
         image: "https://images.unsplash.com/photo-1628151015968-3a4429e9ef04?q=80&w=200&auto=format&fit=crop" 
     },
     { 
-        title: "Cleaning Machines", 
+        title: { en: "Cleaning Machines", ar: "آلات التنظيف" }, 
         image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=200&auto=format&fit=crop" 
     },
     { 
-        title: "Solar Energy", 
+        title: { en: "Solar Energy", ar: "الطاقة الشمسية" }, 
         image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=200&auto=format&fit=crop" 
     },
     { 
-        title: "Building Materials", 
+        title: { en: "Building Materials", ar: "مواد البناء" }, 
         image: "https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?q=80&w=200&auto=format&fit=crop" 
     },
     { 
-        title: "Doors", 
+        title: { en: "Doors", ar: "أبواب" }, 
         image: "https://images.unsplash.com/photo-1506377295352-e3154d43ea9e?q=80&w=200&auto=format&fit=crop" 
     },
     { 
-        title: "Cameras", 
+        title: { en: "Cameras", ar: "كاميرات" }, 
         image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=200&auto=format&fit=crop" 
     },
 ];
@@ -120,23 +121,29 @@ const productsData = [
 
 const ProductList = () => {
     const [activeTab, setActiveTab] = useState("All Products");
+    const t = useTranslations("translation");
+    const locale = useLocale() as "en" | "ar";
 
     return (
-        <div className="space-y-6 p-1" dir="ltr">
+        <div className="space-y-6 p-1">
             {/* Action Buttons Top Right */}
             <div className="flex items-center justify-end gap-3">
                 <Button variant="outline" size="sm" className="w-32">
-                    <MoreVertical className="h-4 w-4 mr-2" /> More
+                    <MoreVertical className="h-4 w-4 mr-2" /> {t('more')}
                 </Button>
                 <Button variant="primary" className="w-32" size="sm">
-                    <Plus className="h-4 w-4 mr-2" /> Add Product
+                    <Plus className="h-4 w-4 mr-2" /> {t('addProduct')}
                 </Button>
             </div>
 
             {/* Categories Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {categories.map((cat, i) => (
-                    <ProductListCard key={i} {...cat} />
+                    <ProductListCard 
+                        key={i} 
+                        image={cat.image} 
+                        title={cat.title[locale]} 
+                    />
                 ))}
             </div>
 

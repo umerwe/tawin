@@ -23,7 +23,7 @@ const ProductTable = ({ activeTab, data }: ProductTableProps) => {
 
     const row = (item: any, index: number, locale: "en" | "ar") => (
         <>
-            <TableCell className="text-muted-foreground">{item.number}</TableCell>
+            <TableCell>{item.number}</TableCell>
             <TableCell>
                 <div className="flex items-center gap-3">
                     <div className="h-8 w-8 relative overflow-hidden">
