@@ -74,7 +74,7 @@ const AddNewProduct = () => {
                             <Button
                                 variant="primary"
                                 size="xs"
-                                className="w-20"
+                                className="w-20 text-xs"
                             >
                                 {t("apply")}
                                 <CirclePlus className="h-3 w-3" />
