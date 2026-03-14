@@ -332,13 +332,16 @@
     "order": "Order",
     "user": "User",
     "supplier": "Supplier",
-    "iPhone15" : "IPhone 15",
+    "iPhone15": "IPhone 15",
     "iphone15Description": "The iPhone 15 delivers cutting-edge performance with the A16 Bionic chip, an immersive Super Retina XDR display, advanced dual-camera system, and exceptional battery life, all encased in stunning aerospace-grade aluminum.",
-    "ahmed" : "Ahmed",
+    "ahmed": "Ahmed",
     "addOrder": "Add Order",
     "userStatistics": "User Statistics",
-    "supplierStatistics" : "Supplier Statistics",
-    "complete" : "Complete"
+    "supplierStatistics": "Supplier Statistics",
+    "complete": "Complete",
+    "brandsList": "Brands List",
+    "addBrand": "Add Brand",
+    "allBrands": "All Brands"
   },
   "confirm": {
     "logout": {
@@ -389,7 +392,14 @@
       "paymentMethod": "Payment Method",
       "transactions": "Transactions",
       "dateCreated": "Date Created",
-      "operations": "Operations"
+      "operations": "Operations",
+      "staffCode": "Staff Code",
+      "permission": "Permission",
+      "category" : "Category",
+      "brandCode": "Brand Code",
+      "brandName": "Brand Name",
+      "registrationDate": "Registration Date",
+      "brandLogo": "Logo"
     }
   }
 }

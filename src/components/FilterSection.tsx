@@ -10,7 +10,7 @@ interface FilterSectionProps {
     activeTab: string;
     setActiveTab: (val: string) => void;
     data: any[];
-    type?: "order" | "user" | "supplier" | "product";
+    type?: "order" | "user" | "supplier" | "product" | "lowStock" | "brand";
 }
 
 const FilterSection = ({ activeTab, setActiveTab, data, type = "order" }: FilterSectionProps) => {
@@ -44,13 +44,14 @@ const FilterSection = ({ activeTab, setActiveTab, data, type = "order" }: Filter
     const getTitle = () => {
         if (type === "user") return t("usersList");
         if (type === "supplier") return t("suppliersList");
+        if (type === "brand") return t("brandsList"); // Added for brands
         return "";
     };
 
     return (
         <>
             <div className="flex items-center">
-                {type === "order" || type === "product" ? (
+                {type === "order" || type === "product" || type === "lowStock" ? (
                     <div className="flex items-center gap-1 bg-emerald-50/40 p-1 rounded-lg border border-gray-100">
                         {tabs.map((tab) => (
                             <Button
@@ -100,13 +101,9 @@ const FilterSection = ({ activeTab, setActiveTab, data, type = "order" }: Filter
 
                 <div className="flex">
 
-                    {type !== "order" && (
-                        <Button
-                            variant="primary"
-                            size="sm"
-                            className="w-40 gap-2"
-                        >
-                            {type === "user" ? t("addUser") : t("addSupplier")}
+                    {type !== "order" && type !== "lowStock" && (
+                        <Button variant="primary" size="sm" className="w-40 gap-2">
+                            {type === "user" ? t("addUser") : type === "supplier" ? t("addSupplier") : t("addBrand")}
                             <CirclePlus className="h-3 w-3" />
                         </Button>
                     )}
