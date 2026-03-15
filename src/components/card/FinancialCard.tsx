@@ -27,39 +27,9 @@ export const FinancialCard = () => {
 
         {/* Responsive Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          
-          {/* LEFT COLUMN: Card + Add Button */}
-          <div className="flex flex-col gap-4">
-            <div className="relative h-40 w-full rounded-2xl overflow-hidden shadow-sm bg-aqua p-5 text-white flex flex-col justify-between">
-              <div className="flex justify-between items-start">
-                <span className="text-[10px] font-bold opacity-90 uppercase tracking-widest">{t("financial")}</span>
-                <div className="flex -space-x-3 opacity-90">
-                  <div className="w-7 h-7 rounded-full bg-white/30 backdrop-blur-sm" />
-                  <div className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-sm" />
-                </div>
-              </div>
-              
-              <div className="text-xl tracking-[0.25em] font-semibold">
-                **** **** **** 2345
-              </div>
-              
-              <div className="flex justify-between items-end">
-                <div className="space-y-0.5">
-                  <p className="text-[9px] uppercase opacity-70 leading-none">{t("cardHolder")}</p>
-                  <p className="text-xs font-bold">{cardData.holder[locale]}</p>
-                </div>
-                <div className="text-right space-y-0.5">
-                  <p className="text-[9px] uppercase opacity-70 leading-none">{t("expires")}</p>
-                  <p className="text-xs font-bold">02/30</p>
-                </div>
-              </div>
-            </div>
 
-            {/* Aligned Add Button */}
-            <Button variant="outline" size="sm" className="w-full gap-2 border-gray-100 bg-white hover:bg-gray-50 text-gray-600 font-semibold h-11 rounded-xl">
-                {t("addNewCard")} <Plus size={18} className="text-aqua" />
-            </Button>
-          </div>
+          {/* LEFT COLUMN: Card + Add Button */}
+
 
           {/* RIGHT COLUMN: Info + Deactivate Button */}
           <div className="flex flex-col justify-between">
@@ -71,12 +41,12 @@ export const FinancialCard = () => {
                 {t("viewDetails")}
               </button>
             </div>
-            
+
             {/* The Deactivate button is now pushed to the bottom to match the Add button level */}
-            <div className="mt-4 md:mt-0">
-              <Button 
-                variant="destructive" 
-                size="sm" 
+            <div className="mt-14">
+              <Button
+                variant="destructive"
+                size="sm"
                 className="w-full md:w-fit px-8 rounded-xl bg-red-50 text-red-500 border-none hover:bg-red-100 h-11 transition-colors"
               >
                 {t("deactivate")}

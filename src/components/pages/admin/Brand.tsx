@@ -8,6 +8,7 @@ import FilterSection from "@/components/FilterSection";
 import BrandsTable from "@/components/tables/BrandsTable";
 import { ProductListCard } from "@/components/card/ProductListCard";
 import { useTranslations, useLocale } from "next-intl";
+import AddBrandDialog from "@/components/dialog/AddBrandDialog";
 
 const categories = [
     { title: { en: "Cleaning Machines", ar: "مكائن تنظيف" }, image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=200&auto=format" },
@@ -21,11 +22,10 @@ const categories = [
 ];
 
 const brandsData = [
-    { id: 1, brandCode: "#C001", name: "Lenovo", registrationDate: "01-01-2025", logo: "/logos/lenovo.png", status: { en: "Active", ar: "نشط" } },
-    { id: 2, brandCode: "#CUST001", name: "Apple", registrationDate: "01-01-2025", logo: "/logos/apple.png", status: { en: "Closed", ar: "مغلق" } },
-    { id: 3, brandCode: "#CUST001", name: "Lava", registrationDate: "01-01-2025", logo: "/logos/lava.png", status: { en: "Closed", ar: "مغلق" } },
-    { id: 4, brandCode: "#CUST001", name: "Nilkamal", registrationDate: "01-01-2025", logo: "/logos/nilkamal.png", status: { en: "Active", ar: "نشط" } },
-    // ... duplicate as per image
+    { id: 1, brandCode: "#C001", name: "Ta3win Construction", registrationDate: "01-01-2026", logo: "/iphone.webp", status: { en: "Active", ar: "نشط" } },
+    { id: 2, brandCode: "#CUST001", name: "Steel Foundries", registrationDate: "15-01-2026", logo: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=200&h=200", status: { en: "Closed", ar: "مغلق" } },
+    { id: 3, brandCode: "#CUST002", name: "Timber Masters", registrationDate: "02-02-2026", logo: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&q=80&w=200&h=200", status: { en: "Closed", ar: "مغلق" } },
+    { id: 4, brandCode: "#CUST003", name: "Stone Craft", registrationDate: "10-02-2026", logo: "https://images.unsplash.com/photo-1523413555809-0fb1d4da238d?auto=format&fit=crop&q=80&w=200&h=200", status: { en: "Active", ar: "نشط" } }
 ];
 
 const Brand = () => {
@@ -33,13 +33,21 @@ const Brand = () => {
     const t = useTranslations("translation");
     const locale = useLocale() as "en" | "ar";
 
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+
     return (
         <div className="space-y-6 p-1">
             <div className="flex items-center justify-end gap-3">
                 <Button variant="outline" size="sm" className="w-32">
                     <MoreVertical className="h-4 w-4 mr-2" /> {t('more')}
                 </Button>
-                <Button variant="primary" className="w-44" size="sm">
+                {/* Trigger open state here */}
+                <Button
+                    variant="primary"
+                    className="w-44"
+                    size="sm"
+                    onClick={() => setIsAddDialogOpen(true)}
+                >
                     <Plus className="h-4 w-4 mr-2" /> {t('addBrand')}
                 </Button>
             </div>
@@ -63,6 +71,12 @@ const Brand = () => {
                     <BrandsTable activeTab={activeTab} data={brandsData} />
                 </CardContent>
             </Card>
+
+            {/* The Add Dialog */}
+            <AddBrandDialog
+                open={isAddDialogOpen}
+                onOpenChange={setIsAddDialogOpen}
+            />
         </div>
     );
 };

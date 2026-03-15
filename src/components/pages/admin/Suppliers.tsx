@@ -42,7 +42,7 @@ const Suppliers = () => {
     const [activeTab, setActiveTab] = useState("All Suppliers");
 
     return (
-        <div className="space-y-6 p-1" dir="ltr">
+        <div className="space-y-6 p-1">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2">
                     <WeeklyReportChart

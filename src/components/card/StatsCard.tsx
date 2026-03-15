@@ -22,8 +22,8 @@ const StatsCard = ({ data, isHome = false }: StatCardProps) => {
 
   if (isHome) {
     return (
-      <Card className="relative border shadow-sm">
-        <div className="absolute right-4 top-6 text-gray-400 hover:text-gray-600">
+      <Card className="relative border shadow-sm text-start">
+        <div className="absolute ltr:right-4 rtl:left-4 top-6 text-gray-400 hover:text-gray-600">
           <MoreVertical size={20} />
         </div>
 
@@ -39,17 +39,20 @@ const StatsCard = ({ data, isHome = false }: StatCardProps) => {
               "flex items-center gap-1 text-sm font-medium",
               isUp ? "text-aqua" : "text-red-500"
             )}>
-              {isUp ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+              {/* Use scale-x-[-1] for icons in RTL if they should be mirrored */}
+              <div className={cn(locale === 'ar' && "rtl:scale-x-[-1]")}>
+                {isUp ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+              </div>
               <span>{trend}</span>
               {data.changeLabel && (
-                <span className="text-black ml-1 font-normal">{data.changeLabel[locale]}</span>
+                <span className="text-black mx-1 font-normal">{data.changeLabel[locale]}</span>
               )}
             </div>
           </div>
           {data.footerLabel && (
             <div className="text-xs text-gray-400 font-medium mt-1">
               {data.footerLabel[locale]}
-              <span className="ml-1 text-purple font-bold">{data.footerValue}</span>
+              <span className="mx-1 text-purple font-bold">{data.footerValue}</span>
             </div>
           )}
         </CardContent>
@@ -78,7 +81,9 @@ const StatsCard = ({ data, isHome = false }: StatCardProps) => {
               "text-xs font-medium flex items-center gap-1",
               isUp ? "text-aqua" : "text-red-500"
             )}>
-              {isUp ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+               <div className={cn(locale === 'ar' && "rtl:scale-x-[-1]")}>
+                {isUp ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+              </div>
               {trend}
             </span>
           </div>

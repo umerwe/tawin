@@ -1,13 +1,10 @@
 "use client";
 
-import {
-  ChevronLeft,
-  ChevronRight,
-  MoreHorizontal,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import React from "react";
+import { useTranslations, useLocale } from "next-intl";
 
 type PaginationProps = {
   pagination: {
@@ -21,8 +18,15 @@ type PaginationProps = {
 export function Pagination({ pagination, changePage }: PaginationProps) {
   const { total, page, limit } = pagination;
   const totalPages = Math.ceil(total / limit);
+  const t = useTranslations("translation");
+  const locale = useLocale();
+  const isRtl = locale === "ar";
 
-  // Helper to generate page numbers
+  // In RTL (ar): Previous → ArrowRight on right side, Next → ArrowLeft on left side
+  // In LTR (en): Previous → ArrowLeft on left side, Next → ArrowRight on right side
+  const PrevIcon = isRtl ? ArrowRight : ArrowLeft;
+  const NextIcon = isRtl ? ArrowLeft : ArrowRight;
+
   const getPages = () => {
     const pages = [];
     if (totalPages <= 7) {
@@ -37,14 +41,23 @@ export function Pagination({ pagination, changePage }: PaginationProps) {
     <div className="flex items-center justify-between w-full mt-4 bg-white p-2 rounded-lg">
       {/* Previous Button */}
       <Button
-        variant="ghost"
+        variant="outline"
         size="sm"
         onClick={() => changePage(Math.max(1, page - 1))}
         disabled={page === 1}
-        className="gap-1 text-gray-500 font-medium"
+        className="gap-1 text-gray-700 font-medium border border-gray-200"
       >
-        <ChevronLeft className="h-4 w-4" />
-        السابق
+        {isRtl ? (
+          <>
+          <PrevIcon className="h-4 w-4" />
+            {t("previous")}
+          </>
+        ) : (
+          <>
+            <PrevIcon className="h-4 w-4" />
+            {t("previous")}
+          </>
+        )}
       </Button>
 
       {/* Page Numbers */}
@@ -52,19 +65,19 @@ export function Pagination({ pagination, changePage }: PaginationProps) {
         {getPages().map((p, i) => (
           <React.Fragment key={i}>
             {p === "..." ? (
-              <span className="px-2 text-muted-foreground">
+              <span className="h-8 w-8 flex items-center justify-center border border-gray-200 rounded-md text-gray-700 text-sm">
                 <MoreHorizontal className="h-4 w-4" />
               </span>
             ) : (
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => changePage(Number(p))}
                 className={cn(
-                  "h-8 w-8 p-0 text-sm font-medium transition-colors",
+                  "h-8 w-8 p-0 text-sm font-medium border border-gray-200 transition-colors",
                   page === p
-                    ? "bg-aqua/50 text-aqua hover:bg-aqua/50 hover:text-aqua"
-                    : "text-gray-500 hover:bg-gray-100"
+                    ? "bg-aqua text-black border-aqua hover:bg-aqua hover:text-black"
+                    : "text-gray-700 bg-white hover:bg-gray-50"
                 )}
               >
                 {p}
@@ -76,14 +89,23 @@ export function Pagination({ pagination, changePage }: PaginationProps) {
 
       {/* Next Button */}
       <Button
-        variant="ghost"
+        variant="outline"
         size="sm"
         onClick={() => changePage(Math.min(totalPages, page + 1))}
         disabled={page === totalPages}
-        className="gap-1 text-gray-500 font-medium"
+        className="gap-1 text-gray-700 font-medium border border-gray-200"
       >
-        التالي
-        <ChevronRight className="h-4 w-4" />
+        {isRtl ? (
+          <>
+            {t("next")}
+            <NextIcon className="h-4 w-4" />
+          </>
+        ) : (
+          <>
+            {t("next")}
+            <NextIcon className="h-4 w-4" />
+          </>
+        )}
       </Button>
     </div>
   );

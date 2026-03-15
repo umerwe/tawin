@@ -96,7 +96,7 @@ const Orders = () => {
     const [activeTab, setActiveTab] = useState("All Orders");
 
     return (
-        <div className="space-y-6 p-1" dir="ltr">
+        <div className="space-y-6 p-1">
             <div className="flex items-center justify-end gap-3">
                 <Button
                     variant="primary"
