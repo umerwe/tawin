@@ -57,13 +57,15 @@ export default function Navbar() {
     >
       <div className="h-14 flex items-center">
 
-        <Link href="/" className="flex items-center flex-1">
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={60}
-            height={60}
-          />
+        <Link href="/" className="flex items-center gap-2 flex-1">
+          <div>
+            <Image
+              src="/logo.png"
+              alt="Logo"
+              width={60}
+              height={60}
+            />
+          </div>
           {
             !isMain &&
             <h2 className="text-xs sm:text-sm font-semibold text-[#2D3E50]">
@@ -186,19 +188,41 @@ export default function Navbar() {
             </div>
 
             <nav className="flex flex-col gap-6">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className={cn(
-                    "text-lg font-medium transition-colors py-2 border-b border-gray-50",
-                    pathname === link.href ? "text-aqua" : "text-gray-600"
+             {navLinks.map((link) => {
+            // If it's the shop link, use the dropdown
+            if (link.label.toLowerCase() === "shop") {
+              return (
+                <div key={link.href} className="relative">
+                  <ShopDropdown isMain={isMain} />
+                  {/* Keep your active indicator line if needed */}
+                  {normalizedPath.startsWith("/shop") && (
+                    <span className="absolute bottom-[-2px] left-0 w-full h-0.5 bg-aqua" />
                   )}
-                >
-                  {t(`${link.label.toLowerCase()}`)}
-                </Link>
-              ))}
+                </div>
+              )
+            }
+
+            // Standard links
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "text-sm font-medium transition-all relative pb-1",
+                  normalizedPath === link.href
+                    ? "text-aqua"
+                    : isMain
+                      ? "text-white/80 hover:text-white"
+                      : "text-gray-500 hover:text-gray:900"
+                )}
+              >
+                {t(`${link.label.toLowerCase()}`)}
+                {normalizedPath === link.href && (
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-aqua" />
+                )}
+              </Link>
+            )
+          })}
             </nav>
 
             {!isMain && (

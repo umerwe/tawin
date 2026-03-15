@@ -87,11 +87,13 @@ const FilterSection = ({
 
   return (
     <>
-      <div className="flex items-center justify-between w-full gap-4">
-        {/* Left Side */}
-        <div className="flex items-center">
+      {/* Container: Stacks on mobile (flex-col), Rows on desktop (md:flex-row) */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between w-full gap-4">
+        
+        {/* Left Side: Title or Tabs */}
+        <div className="flex items-center overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
           {type === "review" ? (
-            <div className="flex items-center gap-1 bg-emerald-50/40 p-1 rounded-lg border border-gray-100 flex-wrap">
+            <div className="flex items-center gap-1 bg-emerald-50/40 p-1 rounded-lg border border-gray-100 flex-nowrap whitespace-nowrap">
               <Button
                 variant="ghost"
                 size="sm"
@@ -125,7 +127,7 @@ const FilterSection = ({
               ))}
             </div>
           ) : isTabType ? (
-            <div className="flex items-center gap-1 bg-emerald-50/40 p-1 rounded-lg border border-gray-100">
+            <div className="flex items-center gap-1 bg-emerald-50/40 p-1 rounded-lg border border-gray-100 flex-nowrap whitespace-nowrap">
               {tabs.map((tab) => (
                 <Button
                   key={tab.id}
@@ -147,58 +149,60 @@ const FilterSection = ({
               ))}
             </div>
           ) : isTitleType ? (
-            <h1 className="text-lg font-bold text-gray-800">{getTitle()}</h1>
+            <h1 className="text-lg font-bold text-gray-800 whitespace-nowrap">{getTitle()}</h1>
           ) : null}
         </div>
 
-        {/* Right Side */}
-        <div className="flex items-center gap-2">
-          <SearchInput
-            placeholder={`${t("search")}...`}
-            className="w-[240px]"
-          />
-          <div className="flex items-center gap-2">
-            {actions.map((action, idx) => (
-              <Button
-                key={idx}
-                variant="outline"
-                size="icon"
-                className={cn("h-9 w-9 border-gray-200 bg-white", action.color)}
-              >
-                {action.icon}
-              </Button>
-            ))}
+        {/* Right Side: Search, Actions, and Add Button */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          
+          <div className="flex items-center gap-2 w-full">
+            {/* Search Input: Grows to fill space on mobile */}
+            <SearchInput
+              placeholder={`${t("search")}...`}
+              className="flex-1 md:w-[240px] md:flex-none"
+            />
+            
+            {/* Action Buttons: Grouped on mobile */}
+            <div className="flex items-center gap-1 shrink-0">
+              {actions.map((action, idx) => (
+                <Button
+                  key={idx}
+                  variant="outline"
+                  size="icon"
+                  className={cn("h-9 w-9 border-gray-200 bg-white", action.color)}
+                >
+                  {action.icon}
+                </Button>
+              ))}
+            </div>
           </div>
+
+          {/* Add Button: Full width on tiny screens, w-40 on desktop */}
           {hasAddButton && (
-            <div className="flex">
-              <Button
-                variant="primary"
-                size="sm"
-                className="w-40 gap-2"
-                onClick={() => setIsAddDialogOpen(true)}
-              >
+            <Button
+              variant="primary"
+              size="sm"
+              className="w-full sm:w-40 gap-2 shrink-0"
+              onClick={() => setIsAddDialogOpen(true)}
+            >
+              <span className="truncate">
                 {type === "user"
                   ? t("addUser")
                   : type === "supplier"
                   ? t("addSupplier")
                   : t("addBrand")}
-                <CirclePlus className="h-3 w-3" />
-              </Button>
-            </div>
+              </span>
+              <CirclePlus className="h-3 w-3" />
+            </Button>
           )}
         </div>
       </div>
 
-      {type === "user" && (
-        <AddUserDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />
-      )}
-
-      {type === "supplier" && (
-        <AddSupplierDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />
-      )}
-      {type === "brand" && (
-        <AddBrandDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />
-      )}
+      {/* Dialogs */}
+      {type === "user" && <AddUserDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />}
+      {type === "supplier" && <AddSupplierDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />}
+      {type === "brand" && <AddBrandDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />}
     </>
   );
 };

@@ -25,7 +25,7 @@
     "send": "Send",
     "add": "Add",
     "browse": "Browse",
-    "brandName": "Brand Name",
+    "brandName": "Tawin",
     "website": "Website",
     "image": "Image",
     "userInfo": "User Information",
@@ -436,7 +436,9 @@
     "next": "Next",
     "employeeInfo": "Employee Information",
     "permission": "Permission",
-    "cancelAccount": "Cancel Account"
+    "cancelAccount": "Cancel Account",
+    "adminSignin" : "Admin Sign In",
+    "invalidCredentials": "Invalid email or password."
   },
   "confirm": {
     "logout": {

@@ -15,7 +15,7 @@ import getDirection from "@/utils/getDirection";
 import { Power } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { sidebarMenu } from "@/constants/sidebar";
 import ConfirmDialog from "@/components/dialog/ConfirmDialog";
@@ -24,6 +24,7 @@ export default function Sidebar({ className }: { className?: string }) {
   const t = useTranslations("translation");
   const t2 = useTranslations("confirm");
 
+  const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale();
   const { openMobile, setOpenMobile, isMobile } = useSidebar();
@@ -44,7 +45,7 @@ export default function Sidebar({ className }: { className?: string }) {
   }, [pathname]);
 
   const handleConfirm = () => {
-    // logout logic
+   router.push("/auth/admin")
   };
 
   // UPDATED: Sections partitioning

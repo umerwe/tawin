@@ -22,7 +22,7 @@ const ProductDetails = ({ params }: ProductDetailsProps) => {
 
     if (!product) {
         return (
-            <div className="container mx-auto px-4 py-20 text-center">
+            <div className="min-h-screen flex flex-col items-center justify-center container mx-auto px-4 py-20 text-center">
                 <h1 className="text-2xl font-bold mb-4">{t("productNotFound")}</h1>
                 <p className="text-muted-foreground">{t("productNotFoundDescription")}</p>
             </div>
