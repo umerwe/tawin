@@ -53,7 +53,7 @@ const AdminLoginForm = () => {
 
     return (
         <section className="flex w-full flex-col items-center justify-center px-8 lg:w-1/2 xl:px-24">
-            <div className="w-full max-w-sm space-y-10">
+            <div className="w-full max-w-sm space-y-6">
                 <div className="space-y-1">
                     <h1 className="text-3xl font-medium tracking-tight text-foreground">
                         {t("adminSignin")}
@@ -96,29 +96,6 @@ const AdminLoginForm = () => {
                     {authError && (
                         <p className="text-xs text-red-500 -mt-3">{authError}</p>
                     )}
-
-                    <div className="flex items-center justify-between">
-                        <Link
-                            href="#"
-                            className="text-xs text-muted-foreground hover:text-aqua transition-colors"
-                        >
-                            {t("forgotPassword")}
-                        </Link>
-
-                        <div className="flex items-center gap-2">
-                            <Checkbox
-                                id="remember"
-                                checked={rememberMe}
-                                onCheckedChange={(checked) => setRememberMe(!!checked)}
-                            />
-                            <Label
-                                htmlFor="remember"
-                                className="text-xs text-muted-foreground cursor-pointer"
-                            >
-                                {t("rememberMe")}
-                            </Label>
-                        </div>
-                    </div>
 
                     <Button type="submit" variant="primary">
                         {t("signin")}
