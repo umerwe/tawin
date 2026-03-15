@@ -189,12 +189,10 @@ export default function Navbar() {
 
             <nav className="flex flex-col gap-6">
               {navLinks.map((link) => {
-                // If it's the shop link, use the dropdown
                 if (link.label.toLowerCase() === "shop") {
                   return (
                     <div key={link.href} className="relative">
-                      <ShopDropdown isMain={isMain} />
-                      {/* Keep your active indicator line if needed */}
+                      <ShopDropdown isMain={false} />
                       {normalizedPath.startsWith("/shop") && (
                         <span className="absolute bottom-[-2px] left-0 w-full h-0.5 bg-aqua" />
                       )}
@@ -211,9 +209,7 @@ export default function Navbar() {
                       "text-sm font-medium transition-all relative pb-1",
                       normalizedPath === link.href
                         ? "text-aqua"
-                        : isMain
-                          ? "text-white/80 hover:text-white"
-                          : "text-gray-500 hover:text-gray:900"
+                        : "text-gray-500"
                     )}
                   >
                     {t(`${link.label.toLowerCase()}`)}
