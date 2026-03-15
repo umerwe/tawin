@@ -21,7 +21,7 @@ export default function Navbar() {
         </div>
 
         {/* Right Side Container */}
-        <div className="flex items-center gap-3 md:gap-4 ml-auto">
+        <div className="flex items-center gap-3 md:gap-4">
           
           {/* SearchInput: Hidden on mobile/small screens, shows on large */}
           <div className="hidden lg:block">
