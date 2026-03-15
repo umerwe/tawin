@@ -8,98 +8,134 @@ import { FinancialCard } from "@/components/card/FinancialCard";
 import StatsCard from "@/components/card/StatsCard";
 
 const transferStats = [
-    {
-        title: { en: "Transfers in Progress", ar: "تحويلات قيد التنفيذ" },
-        value: "150",
-        trend: "85%",
-        isUp: true,
-        footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" }
-    },
-    {
-        title: { en: "Total Transfers", ar: "إجمالي التحويلات" },
-        value: "3,150",
-        trend: "20%",
-        isUp: true,
-        footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" }
-    },
-    {
-        title: { en: "Completed Transfers", ar: "التحويلات المكتملة" },
-        value: "150",
-        trend: "85%",
-        isUp: true,
-        footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" }
-    },
-    {
-        title: { en: "Cancelled Transfers", ar: "التحويلات الملغاة" },
-        value: "75",
-        trend: "15%",
-        isUp: false,
-        footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" }
-    },
+  {
+    title: { en: "Transfers in Progress", ar: "تحويلات قيد التنفيذ" },
+    value: "150",
+    trend: "85%",
+    isUp: true,
+    footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" },
+  },
+  {
+    title: { en: "Total Transfers", ar: "إجمالي التحويلات" },
+    value: "3,150",
+    trend: "20%",
+    isUp: true,
+    footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" },
+  },
+  {
+    title: { en: "Completed Transfers", ar: "التحويلات المكتملة" },
+    value: "150",
+    trend: "85%",
+    isUp: true,
+    footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" },
+  },
+  {
+    title: { en: "Cancelled Transfers", ar: "التحويلات الملغاة" },
+    value: "75",
+    trend: "15%",
+    isUp: false,
+    footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" },
+  },
 ];
 
 const financialData = [
-    {
-        id: 1,
-        userCode: "#CUST001",
-        name: { en: "John Doe", ar: "جون دو" },
-        date: "01-01-2025",
-        total: "$2,904",
-        method: { en: "Debit Card", ar: "بطاقة مدى" },
-        status: { en: "Completed", ar: "مكتمل" }
-    },
-    {
-        id: 2,
-        userCode: "#CUST001",
-        name: { en: "John Doe", ar: "جون دو" },
-        date: "01-01-2025",
-        total: "$2,904",
-        method: { en: "Visa Card", ar: "بطاقة فيزا" },
-        status: { en: "Cancelled", ar: "ملغى" }
-    },
-    {
-        id: 3,
-        userCode: "#CUST001",
-        name: { en: "John Doe", ar: "جون دو" },
-        date: "01-01-2025",
-        total: "$2,904",
-        method: { en: "Visa Card", ar: "بطاقة فيزا" },
-        status: { en: "In Progress", ar: "قيد التنفيذ" }
-    },
+  {
+    id: 1,
+    userCode: "#CUST001",
+    name: { en: "John Doe", ar: "جون دو" },
+    date: "01-01-2025",
+    total: "$2,904",
+    method: { en: "Debit Card", ar: "بطاقة مدى" },
+    status: { en: "Completed", ar: "مكتمل" },
+  },
+  {
+    id: 2,
+    userCode: "#CUST002",
+    name: { en: "Jane Smith", ar: "جين سميث" },
+    date: "03-01-2025",
+    total: "$1,250",
+    method: { en: "Visa Card", ar: "بطاقة فيزا" },
+    status: { en: "Cancelled", ar: "ملغى" },
+  },
+  {
+    id: 3,
+    userCode: "#CUST003",
+    name: { en: "Ali Hassan", ar: "علي حسن" },
+    date: "05-01-2025",
+    total: "$3,600",
+    method: { en: "Visa Card", ar: "بطاقة فيزا" },
+    status: { en: "In Progress", ar: "قيد التنفيذ" },
+  },
+  {
+    id: 4,
+    userCode: "#CUST004",
+    name: { en: "Sarah Lee", ar: "سارة لي" },
+    date: "08-01-2025",
+    total: "$780",
+    method: { en: "Debit Card", ar: "بطاقة مدى" },
+    status: { en: "Completed", ar: "مكتمل" },
+  },
+  {
+    id: 5,
+    userCode: "#CUST005",
+    name: { en: "Omar Khalid", ar: "عمر خالد" },
+    date: "10-01-2025",
+    total: "$5,100",
+    method: { en: "Visa Card", ar: "بطاقة فيزا" },
+    status: { en: "In Progress", ar: "قيد التنفيذ" },
+  },
+  {
+    id: 6,
+    userCode: "#CUST006",
+    name: { en: "Emily Clark", ar: "إيملي كلارك" },
+    date: "12-01-2025",
+    total: "$430",
+    method: { en: "Debit Card", ar: "بطاقة مدى" },
+    status: { en: "Cancelled", ar: "ملغى" },
+  },
+  {
+    id: 7,
+    userCode: "#CUST007",
+    name: { en: "Nour Mahmoud", ar: "نور محمود" },
+    date: "15-01-2025",
+    total: "$2,200",
+    method: { en: "Visa Card", ar: "بطاقة فيزا" },
+    status: { en: "Completed", ar: "مكتمل" },
+  },
 ];
 
 const FinancialTransfers = () => {
-    const [activeTab, setActiveTab] = useState("All Orders");
+  const [activeTab, setActiveTab] = useState("All Orders");
 
-    return (
-        <div className="space-y-6 p-1">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {transferStats.map((stat, i) => (
-                        <StatsCard key={i} data={stat} />
-                    ))}
-                </div>
-
-                <div className="lg:col-span-2">
-                    <FinancialCard />
-                </div>
-            </div>
-
-            <Card className="border shadow-none overflow-hidden">
-                <CardHeader className="flex flex-row items-center justify-between pb-6">
-                    <FilterSection
-                        activeTab={activeTab}
-                        setActiveTab={setActiveTab}
-                        data={financialData}
-                        type="order"
-                    />
-                </CardHeader>
-                <CardContent>
-                    <FinancialTable data={financialData} activeTab={activeTab} />
-                </CardContent>
-            </Card>
+  return (
+    <div className="space-y-6 p-1">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+          {transferStats.map((stat, i) => (
+            <StatsCard key={i} data={stat} />
+          ))}
         </div>
-    );
+
+        <div className="lg:col-span-2">
+          <FinancialCard />
+        </div>
+      </div>
+
+      <Card className="border shadow-none overflow-hidden">
+        <CardHeader className="flex flex-row items-center justify-between pb-6">
+          <FilterSection
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            data={financialData}
+            type="order"
+          />
+        </CardHeader>
+        <CardContent>
+          <FinancialTable data={financialData} activeTab={activeTab} />
+        </CardContent>
+      </Card>
+    </div>
+  );
 };
 
 export default FinancialTransfers;
