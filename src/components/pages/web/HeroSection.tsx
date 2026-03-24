@@ -24,7 +24,7 @@ const HeroSection = () => {
     return (
         <section className="relative h-[400px] md:h-[600px] w-full overflow-hidden">
             <Image
-                src="/main-bg.png"
+                src="/main-hero-bg.webp"
                 alt="Construction scaffolding background"
                 fill
                 className="object-cover"

@@ -19,9 +19,11 @@ const MyImage = ({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setImgSrc(src);
-    setIsLoading(true);
-  }, [src]);
+    if (imgSrc !== src) {
+      setImgSrc(src);
+      setIsLoading(true);
+    }
+  }, [src, imgSrc]);
 
   const imageEl = (
     <Image
