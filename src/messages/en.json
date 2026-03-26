@@ -438,7 +438,18 @@
     "permission": "Permission",
     "cancelAccount": "Cancel Account",
     "adminSignin" : "Admin Sign In",
-    "invalidCredentials": "Invalid email or password."
+    "invalidCredentials": "Invalid email or password.",
+    "addApplication": "Add Application",
+    "allApplications": "All Applications",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "constructionBasketDetails": "Construction Basket Details",
+    "propertyInformation": "Property Information",
+    "applicationStatus": "Application Status",
+    "applied": "Applied",
+    "yes": "Yes",
+    "no": "No"
   },
   "confirm": {
     "logout": {
@@ -508,7 +519,12 @@
       "couponCode": "Coupon Code",
       "startDate": "Start Date",
       "endDate": "End Date",
-      "discountRate": "Discount Rate"
+      "discountRate": "Discount Rate",
+      "basketCode": "Registration Code",
+      "fullName": "Full Name",
+      "phoneNumber": "Phone Number",
+      "occupation": "Occupation",
+      "propertyType": "Property Type"
     }
   }
 }

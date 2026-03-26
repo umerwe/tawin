@@ -41,7 +41,7 @@ function SelectTrigger({
         "h-[52px] px-4 rounded-full bg-gray-50 border-transparent border",
         "flex w-full items-center justify-between gap-2 text-sm transition-all outline-none",
         "placeholder:text-gray-400 selection:bg-purple-100",
-        "focus:ring focus:ring-purple-100 focus:border-aqua",
+        "focus:ring focus:ring-purple-100",
         "disabled:cursor-not-allowed disabled:opacity-50",
         // Keeping logic for icons
         "[&_svg:not([class*='text-'])]:text-muted-foreground",

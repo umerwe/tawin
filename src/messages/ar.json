@@ -438,7 +438,18 @@
     "permission": "الصلاحية",
     "cancelAccount": "إلغاء الحساب",
     "adminSignin": "تسجيل الدخول كمسؤول",
-    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة."
+    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+    "allApplications": "جميع الطلبات",
+    "pending": "قيد الانتظار",
+    "approved": "تمت الموافقة",
+    "rejected": "مرفوض",
+    "addApplication": "إضافة طلب",
+    "constructionBasketDetails": "تفاصيل سلة الإنشاءات",
+    "propertyInformation": "معلومات العقار",
+    "applicationStatus": "حالة الطلب",
+    "applied": "تم التقديم",
+    "yes": "نعم",
+    "no": "لا"
   },
   "confirm": {
     "logout": {
@@ -508,7 +519,12 @@
       "couponCode": "رمز الكوبون",
       "startDate": "تاريخ البدء",
       "endDate": "تاريخ الانتهاء",
-      "discountRate": "نسبة الخصم"
+      "discountRate": "نسبة الخصم",
+      "basketCode": "رمز التسجيل",
+      "fullName": "الاسم الكامل",
+      "phoneNumber": "رقم الهاتف",
+      "occupation": "المهنة",
+      "propertyType": "نوع العقار"
     }
   }
 }

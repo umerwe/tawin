@@ -50,11 +50,11 @@ export default function Sidebar({ className }: { className?: string }) {
 
   // UPDATED: Sections partitioning
   // 1-7: items 0 to 6
-  const mainMenu = sidebarMenu.slice(0, 7); 
+  const mainMenu = sidebarMenu.slice(0, 8); 
   // 8-11: items 7 to 11
-  const productsMenu = sidebarMenu.slice(7, 11); 
-  // 12+: items 11 onwards
-  const adminMenu = sidebarMenu.slice(11); 
+  const productsMenu = sidebarMenu.slice(8, 12); 
+  // 12+: items 12 onwards
+  const adminMenu = sidebarMenu.slice(12); 
 
   const SectionHeader = ({ title }: { title: string }) => (
     <div className="px-2 py-2 text-sm font-semibold text-gray-400 group-data-[collapsible=icon]:hidden">

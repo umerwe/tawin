@@ -22,7 +22,7 @@ interface FilterSectionProps {
   activeTab: string;
   setActiveTab: (val: string) => void;
   data: any[];
-  type?: "order" | "user" | "supplier" | "product" | "lowStock" | "brand" | "review" | "coupon";
+  type?: "order" | "user" | "supplier" | "product" | "lowStock" | "brand" | "review" | "coupon" | "constructionBasket";
   ratingFilter?: number | null;
   setRatingFilter?: (val: number | null) => void;
   reviewsTotal?: number;
@@ -75,22 +75,24 @@ const FilterSection = ({
     if (type === "user") return t("usersList");
     if (type === "supplier") return t("suppliersList");
     if (type === "brand") return t("brandsList");
+    if (type === "constructionBasket") return t("constructionBasket");
     return "";
   };
 
-  const isTitleType = type === "user" || type === "supplier" || type === "brand";
+  // UPDATED: Added constructionBasket to Title Types
+  const isTitleType = type === "user" || type === "supplier" || type === "brand" || type === "constructionBasket";
+
   const isTabType = type === "order" || type === "product" || type === "lowStock" || type === "coupon";
-  const hasAddButton = !["order", "lowStock", "review", "coupon"].includes(type);
+
+  const hasAddButton = !["order", "lowStock", "review", "coupon", "constructionBasket"].includes(type);
 
   const isAllTabId = (id: string) =>
     id === "All Orders" || id === "All Products" || id === "All Coupons";
 
   return (
     <>
-      {/* Container: Stacks on mobile (flex-col), Rows on desktop (md:flex-row) */}
       <div className="flex flex-col md:flex-row md:items-center justify-between w-full gap-4">
-        
-        {/* Left Side: Title or Tabs */}
+
         <div className="flex items-center overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
           {type === "review" ? (
             <div className="flex items-center gap-1 bg-emerald-50/40 p-1 rounded-lg border border-gray-100 flex-nowrap whitespace-nowrap">
@@ -149,21 +151,17 @@ const FilterSection = ({
               ))}
             </div>
           ) : isTitleType ? (
-            <h1 className="text-lg font-bold text-gray-800 whitespace-nowrap">{getTitle()}</h1>
+            <h1 className="text-lg font-bold text-gray-800 whitespace-nowrap overflow-hidden">{getTitle()}</h1>
           ) : null}
         </div>
 
-        {/* Right Side: Search, Actions, and Add Button */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-          
           <div className="flex items-center gap-2 w-full">
-            {/* Search Input: Grows to fill space on mobile */}
             <SearchInput
               placeholder={`${t("search")}...`}
               className="flex-1 md:w-[240px] md:flex-none"
             />
-            
-            {/* Action Buttons: Grouped on mobile */}
+
             <div className="flex items-center gap-1 shrink-0">
               {actions.map((action, idx) => (
                 <Button
@@ -178,7 +176,6 @@ const FilterSection = ({
             </div>
           </div>
 
-          {/* Add Button: Full width on tiny screens, w-40 on desktop */}
           {hasAddButton && (
             <Button
               variant="primary"
@@ -190,8 +187,10 @@ const FilterSection = ({
                 {type === "user"
                   ? t("addUser")
                   : type === "supplier"
-                  ? t("addSupplier")
-                  : t("addBrand")}
+                    ? t("addSupplier")
+                    : type === "brand"
+                      ? t("addBrand")
+                      : t("addApplication")}
               </span>
               <CirclePlus className="h-3 w-3" />
             </Button>
@@ -200,9 +199,13 @@ const FilterSection = ({
       </div>
 
       {/* Dialogs */}
-      {type === "user" && <AddUserDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />}
-      {type === "supplier" && <AddSupplierDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />}
-      {type === "brand" && <AddBrandDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />}
+      {isAddDialogOpen && (
+        <>
+          {type === "user" && <AddUserDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />}
+          {type === "supplier" && <AddSupplierDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />}
+          {type === "brand" && <AddBrandDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />}
+        </>
+      )}
     </>
   );
 };

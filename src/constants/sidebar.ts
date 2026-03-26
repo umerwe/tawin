@@ -13,6 +13,7 @@ import {
     Shield,
     Settings,
     type LucideIcon,
+    HardHat,
 } from 'lucide-react';
 
 export interface MenuItem {
@@ -30,6 +31,7 @@ export const sidebarMenu = [
     { title: "couponCodes", icon: Tag, path: "/admin/coupons" },
     { title: "financialTransfers", icon: DollarSign, path: "/admin/financial-transfers" },
     { title: "brand", icon: Building, path: "/admin/brand" },
+    { title: "constructionBasket", icon: HardHat, path: "/admin/construction-basket" },
 
     // Products
     { title: "addProduct", icon: Package, path: "/admin/products/add" },

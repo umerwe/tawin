@@ -16,9 +16,9 @@ export default function ColorSelector({ colors = DEFAULT_COLORS }: { colors?: Co
         <span className="text-sm font-medium text-foreground">{selected}</span>
       </div>
       <div className="flex items-center gap-2">
-        {colors.map((color) => (
+        {colors.map((color,i) => (
           <button
-            key={color.name}
+            key={i}
             onClick={() => setSelected(color.name)}
             aria-label={color.name}
             className={cn(
