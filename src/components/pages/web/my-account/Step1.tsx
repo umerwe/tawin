@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 
 export default function AccountInfo() {
   const t = useTranslations("translation");
-  const { data: userProfile, isLoading, refetch } = useUserProfile();
+  const { data: userProfile, isLoading,isFetching, refetch } = useUserProfile();
   const {mutate: updateUserProfile,isPending: isUpdatingProfile} = useUpdateUserProfile();
 
   const {
@@ -90,7 +90,6 @@ export default function AccountInfo() {
             {errors.username && (
               <p className="text-red-500 text-sm">{errors.username.message}</p>
             )}
-            <p className="text-[10px] text-gray-400">{t("usernameNotice")}</p>
           </div>
           <div className="space-y-2">
             <Label>{t("emailLabel")}*</Label>
@@ -102,7 +101,6 @@ export default function AccountInfo() {
               disabled={true}
               readOnly
             />
-            <p className="text-[10px] text-gray-400">Email cannot be changed</p>
           </div>
         </form>
       </section>

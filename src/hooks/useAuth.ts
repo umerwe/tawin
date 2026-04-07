@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { loginUser, signUpUser, getUserProfile, updateUserProfile } from "@/services/auth";
 import { toast } from "sonner";
@@ -44,16 +44,18 @@ export const useUserProfile = () => {
   return useQuery({
     queryKey: ["userProfile"],
     queryFn: getUserProfile,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
     retry: 1,
   });
 };
 
 export const useUpdateUserProfile = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateUserProfile,
     onSuccess: () => {
       toast("Profile updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to update profile.");
