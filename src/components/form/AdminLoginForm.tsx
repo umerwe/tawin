@@ -23,26 +23,22 @@ const AdminLoginForm = () => {
     const locale = useLocale();
 
     const [showPassword, setShowPassword] = useState(false);
-    const [rememberMe, setRememberMe] = useState(false);
     const [authError, setAuthError] = useState("");
 
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
     } = useForm<Login>({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
-            identifier: "",
+            email: "",
             password: "",
         },
     });
 
-    const identifierValue = watch("identifier");
-
     const onSubmit = (data: Login) => {
-        if (data.identifier !== ADMIN_EMAIL || data.password !== ADMIN_PASSWORD) {
+        if (data.email !== ADMIN_EMAIL || data.password !== ADMIN_PASSWORD) {
             setAuthError(t("invalidCredentials"));
             return;
         }
@@ -62,13 +58,13 @@ const AdminLoginForm = () => {
 
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     <Input
-                        id="identifier"
-                        type="text"
-                        placeholder={t("loginIdentifierPlaceholder")}
+                        id="email"
+                        type="email"
+                        placeholder={t("loginPlaceholder")}
                         variant="auth"
-                        error={!!errors.identifier}
-                        errorMessage={errors.identifier?.message}
-                        {...register("identifier")}
+                        error={!!errors.email}
+                        errorMessage={errors.email?.message}
+                        {...register("email")}
                     />
 
                     {/* Password */}
