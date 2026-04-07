@@ -63,6 +63,7 @@ const ProductDetails = ({ params }: ProductDetailsProps) => {
                 <Button
                     variant="destructive"
                     size="sm"
+                    className="bg-destructive/40"
                 >
                     {t("remaining")}: {product.remainingPieces} {t("pieces")}
                 </Button>

@@ -11,7 +11,7 @@ const buttonVariants = cva(
       variant: {
         default: "border border-purple-500 text-purple-500 rounded-full text-base font-medium hover:bg-purple-50 transition-colors",
         destructive:
-          "bg-destructive/40 text-white dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-destructive text-white dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
           "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
         primary:

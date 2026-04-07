@@ -51,11 +51,11 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           </DialogHeader>
 
          <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-2 sm:space-x-0">
-
             <Button
               variant="outline"
               onClick={() => setOpen(false)}
               disabled={loading}
+              className="h-10"
             >
               {t(`translation.cancel`)}
             </Button>
@@ -63,6 +63,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
               variant={variant}
               onClick={() => onConfirm?.(closeDialog)}
               disabled={loading}
+              className="h-10"
             >
               {loading ? t("translation.pleaseWait") : `${confirmText}`}
             </Button>
