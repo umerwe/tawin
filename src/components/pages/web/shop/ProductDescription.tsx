@@ -17,16 +17,16 @@ export function ProductDetailItem({ label, value }: ProductDetailItemProps) {
 }
 
 interface ProductDescriptionProps {
-  productKey?: string
-  productCode?: string
-  category?: string
+  productKey: string
+  productCode: string
+  category: string
   className?: string
 }
 
 export function ProductDescription({ 
-  productKey = "1117", 
-  productCode = "1117", 
-  category = "MCP Doors",
+  productKey, 
+  productCode, 
+  category, 
   className = ""
 }: ProductDescriptionProps) {
   const t = useTranslations("translation");

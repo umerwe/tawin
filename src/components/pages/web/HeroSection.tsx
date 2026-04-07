@@ -18,7 +18,7 @@ const HeroSection = () => {
     }, [])
 
     function handleClick() {
-        router.push("/auth/login")
+        router.push("/auth/signin")
     }
 
     return (

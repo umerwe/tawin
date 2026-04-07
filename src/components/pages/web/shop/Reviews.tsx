@@ -14,7 +14,7 @@ import { useTranslations } from "next-intl"
 
 const mockReviews: Review[] = [
   {
-    id: 1,
+    _id: "1",
     name: {
       en: "Maryam Ahmed",
       ar: "مريم أحمد"
@@ -29,7 +29,7 @@ const mockReviews: Review[] = [
   }
 ];
 
-export default function Reviews( { productName }: { productName: string } ) {
+export default function Reviews( { product }: { product: any } ) {
   const t = useTranslations("translation");
   const [activeTab, setActiveTab] = useState("reviews")
 
@@ -58,8 +58,8 @@ export default function Reviews( { productName }: { productName: string } ) {
 
       {activeTab === "reviews" && (
         <div className="space-y-8">
-          <ReviewHeader productName={productName} />
-          <WriteReviewButton />
+          <ReviewHeader product={product} />
+          <WriteReviewButton /> 
 
           <div className="flex justify-between items-center pt-2">
             <Select>
@@ -78,7 +78,7 @@ export default function Reviews( { productName }: { productName: string } ) {
 
           <div className="space-y-10 pt-4">
             {mockReviews.map((review) => (
-              <ReviewCard key={review.id} review={review} />
+              <ReviewCard key={review._id} review={review} />
             ))}
           </div>
 

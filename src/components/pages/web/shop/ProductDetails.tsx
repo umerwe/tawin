@@ -6,25 +6,47 @@ import { ProductInfo } from "@/components/pages/web/shop/ProductInfo"
 import { ProductDescription } from "@/components/pages/web/shop/ProductDescription"
 import Reviews from "@/components/pages/web/shop/Reviews"
 import Breadcrumb from "@/components/ui/breadcrumb"
-import { products } from "@/constants/products"
 import { useLocale, useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
+import { useProductBySlug } from "@/hooks/useProducts"
+import { SpinnerLoader } from "@/components/common/SpinnerLoader"
 
 interface ProductDetailsProps {
-    params: { id: string }
+    params: string
 }
 
 const ProductDetails = ({ params }: ProductDetailsProps) => {
     const locale = useLocale() as "en" | "ar";
     const t = useTranslations("translation");
+    
 
-    const product = products.find(p => p.id.toString() === params.id)
+    const { data: product, isLoading, error } = useProductBySlug(params);
 
-    if (!product) {
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center container mx-auto px-4 py-20">
+                <SpinnerLoader />
+            </div>
+        )
+    }
+
+    if (error || !product) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center container mx-auto px-4 py-20 text-center">
+                <div className="bg-red-100 p-6 rounded-full mb-4">
+                    <svg className="w-12 h-12 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
                 <h1 className="text-2xl font-bold mb-4">{t("productNotFound")}</h1>
                 <p className="text-muted-foreground">{t("productNotFoundDescription")}</p>
+                <Button
+                    variant="link"
+                    className="mt-4 text-aqua"
+                    onClick={() => window.location.href = '/shop'}
+                >
+                    {t("viewAllProducts")}
+                </Button>
             </div>
         )
     }
@@ -42,14 +64,14 @@ const ProductDetails = ({ params }: ProductDetailsProps) => {
                     variant="destructive"
                     size="sm"
                 >
-                    {t("remaining")}: 4 {t("pieces")}
+                    {t("remaining")}: {product.remainingPieces} {t("pieces")}
                 </Button>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 <ProductImageGallery
                     images={[product.image]}
-                    isNew={product.isNew}
+                    isNew={product.isNewArrival || false}
                     discount={product.discount}
                 />
 
@@ -59,12 +81,12 @@ const ProductDetails = ({ params }: ProductDetailsProps) => {
             </div>
 
             <ProductDescription
-                productKey={product.id.toString()}
-                productCode={product.id.toString()}
-                category={product.category[locale] || "MCP Doors"}
+                productKey={product._id}
+                productCode={product.slug}
+                category={product.category.name[locale]}
             />
 
-            <Reviews productName={product.title[locale]} />
+            <Reviews product={product} />
         </Container>
     )
 }

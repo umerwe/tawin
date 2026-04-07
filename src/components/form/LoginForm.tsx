@@ -12,11 +12,12 @@ import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Login, LoginSchema } from "@/validations/auth";
-import { useRouter } from "next/navigation";
+import { useLogin } from "@/hooks/useAuth";
+import { SpinnerLoader } from "@/components/common/SpinnerLoader";
 
 const LoginForm = () => {
     const t = useTranslations("translation");
-    const router = useRouter();
+    const { mutate: login, isPending } = useLogin();
 
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
@@ -28,15 +29,13 @@ const LoginForm = () => {
     } = useForm<Login>({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
-            identifier: "",
+            email: "",
             password: "",
         },
     });
 
     const onSubmit = (data: Login) => {
-        const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
-        localStorage.setItem("token", token);
-        router.push("/");
+        login({ email: data.email, password: data.password });
     };
 
     return (
@@ -46,13 +45,13 @@ const LoginForm = () => {
 
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     <Input
-                        id="identifier"
+                        id="email"
                         type="text"
-                        placeholder={t("loginIdentifierPlaceholder")}
+                        placeholder={t("loginPlaceholder")}
                         variant="auth"
-                        error={!!errors.identifier}
-                        errorMessage={errors.identifier?.message}
-                        {...register("identifier")}
+                        error={!!errors.email}
+                        errorMessage={errors.email?.message}
+                        {...register("email")}
                     />
 
                     {/* Password */}
@@ -99,8 +98,12 @@ const LoginForm = () => {
                         </div>
                     </div>
 
-                    <Button type="submit" variant="primary">
-                        {t("signin")}
+                    <Button type="submit" variant="primary" disabled={isPending}>
+                        {isPending ? (
+                            <SpinnerLoader />
+                        ) : (
+                            t("signin")
+                        )}
                     </Button>
                 </form>
             </div>

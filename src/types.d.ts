@@ -12,24 +12,6 @@ interface LocalizedString {
   en: string;
   ar: string;
 }
-
-interface ProductCardProps {
-  id: number;
-  title: LocalizedString;
-  category: LocalizedString;
-  price: number;
-  originalPrice?: number;
-  rating: number;
-  image: string;
-  isNew?: boolean;
-  discount?: number;
-  description?: LocalizedString;
-  measurements?: string;
-  colors?: string[];
-  reviews?: number;
-  isListView?: boolean;
-}
-
 interface Subcategory {
   _id: string | number;
   parentId: number;

@@ -5,27 +5,22 @@ import StarRating from "@/components/StarRating"
 import { Review } from "@/types/product"
 import { useLocale, useTranslations } from "next-intl"
 import Image from "@/components/MyImage"
-
-interface ReviewHeaderProps {
-  rating?: number
-  reviewCount?: number
-  productName?: string
-}
+import { Product } from "@/types/product"
 
 export function ReviewHeader({
-  reviewCount = 11,
-  productName = "Wooden Door"
-}: ReviewHeaderProps) {
+  product
+}: { product: Product }) {
   const t = useTranslations("translation");
+  const locale = useLocale() as "en" | "ar";
 
   return (
     <div className="flex flex-col items-start space-y-1">
       <span className="text-sm text-gray-500">{t("customerExperience")}</span>
       <div className="flex items-center space-x-3 rtl:space-x-reverse">
         <StarRating />
-        <span className="text-sm font-bold text-gray-900">{reviewCount} {t("reviewsCount")}</span>
+        <span className="text-sm font-bold text-gray-900">{product.reviewCount} {t("reviewsCount")}</span>
       </div>
-      <span className="text-sm text-gray-500 font-medium">{productName}</span>
+      <span className="text-sm text-gray-500 font-medium">{product.title[locale]}</span>
     </div>
   )
 }
@@ -53,7 +48,7 @@ export function WriteReviewButton({ onClick }: WriteReviewButtonProps) {
 export function ReviewCard({ review }: { review: Review }) {
   const t = useTranslations("translation");
   const locale = useLocale() as "en" | "ar";
-  
+
   const reviewerName = review.name[locale];
   const reviewerComment = review.comment[locale];
 

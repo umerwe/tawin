@@ -11,10 +11,13 @@ import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Signup, SignupSchema } from "@/validations/auth";
+import { useSignup } from "@/hooks/useAuth";
+import { SpinnerLoader } from "@/components/common/SpinnerLoader";
 
 const SignupForm = () => {
     const t = useTranslations("translation");
     const [showPassword, setShowPassword] = useState(false);
+    const { mutate: signup, isPending } = useSignup();
 
     const {
         register,
@@ -30,6 +33,7 @@ const SignupForm = () => {
             username: "",
             email: "",
             password: "",
+            country: "PK",
             agreeTerms: undefined,
         },
     });
@@ -37,7 +41,7 @@ const SignupForm = () => {
     const agreeTerms = watch("agreeTerms");
 
     const onSubmit = (data: Signup) => {
-        console.log(data);
+        signup({ ...data, country: "PK" });
     };
 
     return (
@@ -46,7 +50,7 @@ const SignupForm = () => {
                 <AuthHeader type="signup" />
 
                 {/* Form */}
-                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+                <form className="space-y-6" onSubmit={handleSubmit(onSubmit,(err) => console.error(err))}>
                     <Input
                         id="firstName"
                         type="text"
@@ -128,8 +132,12 @@ const SignupForm = () => {
                         )}
                     </div>
 
-                    <Button type="submit" variant="primary">
-                        {t("registerAccount")}
+                    <Button type="submit" variant="primary" disabled={isPending}>
+                        {isPending ? (
+                            <SpinnerLoader />
+                        ) : (
+                            t("registerAccount")
+                        )}
                     </Button>
                 </form>
             </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { Camera } from "lucide-react"
+import { Camera, Upload } from "lucide-react"
 import AccountInfo from "./Step1"
 import AddressBook from "./Step2"
 import OrderHistory from "./Step3"
@@ -9,17 +9,46 @@ import FavoritesList from "./Step4"
 import { useTranslations } from "next-intl"
 import ConstructionBasketForm from "@/components/form/ConstructionBasketForm"
 import { LogoutDialog } from "@/components/dialog/LogoutDialog"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { accountItems } from "@/constants/my-account"
 import Image from "@/components/MyImage"
+import { useUserProfile, useUpdateUserProfile } from "@/hooks/useAuth"
+import { ProfilePictureSchema } from "@/validations/auth"
+import { toast } from "sonner"
 
 export default function MyAccount() {
   const t = useTranslations("translation");
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { data: userProfile, isLoading, error, refetch } = useUserProfile();
+  const updateProfileMutation = useUpdateUserProfile();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const currentTab = searchParams.get("tab") || "account";
+
+  const handleProfilePictureUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const validation = ProfilePictureSchema.safeParse({ profilePicture: file });
+    if (!validation.success) {
+      toast.error(validation.error.issues[0].message);
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      await updateProfileMutation.mutateAsync(file);
+      refetch(); // Refresh user profile data
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.clear();
@@ -62,18 +91,43 @@ export default function MyAccount() {
             <div className="relative mb-4">
               <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white shadow-sm">
                 <Image
-                  src="/profile.jpg"
+                  src={userProfile?.data?.profileImage || "/profile.jpg"}
                   alt="Profile"
                   width={96}
                   height={96}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <button className="absolute z-40 bottom-0 right-0 bg-black text-white p-1.5 rounded-full border-2 border-white hover:bg-gray-800 transition-colors">
-                <Camera className="w-4 h-4" />
-              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleProfilePictureUpload}
+                className="hidden"
+                id="sidebar-profile-upload"
+              />
+              <label
+                htmlFor="sidebar-profile-upload"
+                className="absolute z-40 bottom-0 right-0 bg-black text-white p-1.5 rounded-full border-2 border-white hover:bg-gray-800 transition-colors cursor-pointer"
+              >
+                {isUploading ? (
+                  <div className="w-4 h-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                ) : (
+                  <Camera className="w-4 h-4" />
+                )}
+              </label>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-8">{t("maryamAhmed")}</h3>
+            <h3 className="font-semibold text-gray-900 mb-8">
+              {isLoading ? (
+                "Loading..."
+              ) : error ? (
+                "Error loading profile"
+              ) : userProfile?.data ? (
+                `${userProfile.data.firstName} ${userProfile.data.lastName}`
+              ) : (
+                t("maryamAhmed")
+              )}
+            </h3>
 
             <nav className="w-full space-y-1">
               {accountItems.map((item) => (

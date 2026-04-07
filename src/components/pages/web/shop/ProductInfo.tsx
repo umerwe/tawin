@@ -7,15 +7,15 @@ import CountdownTimer from "./CountdownTimer"
 import ColorSelector from "./ColorSelector"
 import QuantitySelector from "./QuantitySelector"
 import StarRating from "@/components/StarRating"
-import { DEFAULT_COLORS } from "@/constants/colors"
 import { useLocale, useTranslations } from "next-intl"
 // --- REDUX IMPORTS ---
 import { useDispatch, useSelector } from "react-redux"
 import { addToCart } from "@/store/cartSlice"
 import { RootState } from "@/store/store"
+import { Product } from "@/types/product"
 
 interface ProductInfoProps {
-  product: any
+  product: Product
 }
 
 export function ProductInfo({ product }: ProductInfoProps) {
@@ -24,27 +24,32 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const dispatch = useDispatch();
 
   const {
-    id, // Ensure id is destructured
+    _id,
     title,
     description,
     price,
     originalPrice,
-    reviews = 0,
     measurements = "",
-    colors = DEFAULT_COLORS,
-    image, // Ensure image is available in the product object
+    colors = [],
+    image,
   } = product;
+
+  // Convert colors array to objects with name and value
+  const colorObjects = colors.map((colorName) => ({
+    name: colorName,
+    value: colorName.toLowerCase() === "black" ? "#000000" : colorName
+  }));
 
   // Check if item is already in cart
   const isInCart = useSelector((state: RootState) =>
-    state.cart.items.some((item: any) => item.id === id)
+    state.cart.items.some((item: any) => item.id === _id)
   );
 
   const handleAddToCart = () => {
     if (!isInCart) {
       dispatch(addToCart({ 
-        id, 
-        image: image || product.images?.[0], // Fallback if image structure varies
+        id: _id, 
+        image: image || product.images?.[0],
         title, 
         price 
       }));
@@ -56,14 +61,14 @@ export function ProductInfo({ product }: ProductInfoProps) {
       {/* Stars + Reviews */}
       <div className="flex items-center gap-2">
         <StarRating />
-        <span className="text-sm text-muted-foreground">{reviews} {t("reviews")}</span>
+        <span className="text-sm text-muted-foreground">{product.reviewCount} {t("reviews")}</span>
       </div>
 
       {/* Title */}
       <h1 className="text-2xl font-semibold text-foreground">{title[locale]}</h1>
 
       {/* Description */}
-      <p className="text-sm text-muted-foreground leading-relaxed">{description[locale]}</p>
+      <p className="text-sm text-muted-foreground leading-relaxed">{description?.[locale]}</p>
 
       <Separator />
 
@@ -96,7 +101,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       {/* Color Selector */}
-      <ColorSelector colors={colors} />
+      <ColorSelector colors={colorObjects} />
 
       {/* Quantity + Action buttons */}
       <div className="flex items-center gap-3">

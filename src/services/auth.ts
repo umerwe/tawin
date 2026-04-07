@@ -1,0 +1,41 @@
+import api from "@/lib/axios";
+import { Login, Signup } from "@/validations/auth";
+
+export const loginUser = async (credentials: Login) => {
+  const { data } = await api.post("/api/auth/login", credentials);
+  return data.data;
+};
+
+export const signUpUser = async (credentials: Signup) => {
+  const { data } = await api.post("/api/auth/register", credentials);
+  return data.data;
+};
+
+export const getUserProfile = async () => {
+  const { data } = await api.get("/api/users/me");
+  return data;
+};
+
+export const updateUserProfile = async (data: File | { firstName: string; lastName: string; username: string }) => {
+  if (data instanceof File) {
+    const formData = new FormData();
+    formData.append('profileImage', data);
+    const response = await api.patch("/api/users/profile-picture", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } else {
+    const formData = new FormData();
+    formData.append('firstName', data.firstName);
+    formData.append('lastName', data.lastName);
+    formData.append('username', data.username);
+    const response = await api.patch("/api/users/profile-picture", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  }
+};

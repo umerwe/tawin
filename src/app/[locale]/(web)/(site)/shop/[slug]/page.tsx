@@ -3,11 +3,11 @@ import ProductDetails from '@/components/pages/web/shop/ProductDetails'
 const ProductDetailsPage = async ({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }) => {
-  const { id } = await params;
+  const { slug } = await params;
 
-  return <ProductDetails params={{ id }} />;
+  return <ProductDetails params={slug} />;
 };
 
 export default ProductDetailsPage;

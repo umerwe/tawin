@@ -1,26 +1,38 @@
 export interface Product {
-  id: number
+  _id: string
   title: LocalizedString;
-  category: LocalizedString;
-  description?: string
+  category: Category;
+  slug: string;
+  description?: LocalizedString;
   price: number
   originalPrice?: number
   image: string
+  images?: string[]
   reviews?: number
   measurements?: string
   colors?: string[]
   remainingPieces?: number
-  isNew?: boolean
+  isNewArrival?: boolean
   discount?: number
-  rating?: number,
+  reviewCount?: number
   isListView?: boolean,
 }
 
 export interface Review {
-  id: number
+  _id: string
   name: LocalizedString
   rating: number
   date: string
   comment: LocalizedString
   avatar: string
+}
+
+export interface ProductsResponse {
+  data: Product[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }

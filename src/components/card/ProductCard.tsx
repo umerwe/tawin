@@ -17,14 +17,14 @@ import { RootState } from "@/store/store"
 import { LoginDialog } from "../dialog/LoginDialog"
 
 export function ProductCard({
-    id,
     image,
     title,
     price,
     originalPrice,
     isNew = false,
     discount,
-}: ProductCardProps) {
+    slug,
+}: any) {
     const locale = useLocale();
     const router = useRouter();
     const t = useTranslations("translation");
@@ -35,7 +35,7 @@ export function ProductCard({
     const hasBadge = isNew || !!discount
 
     const isInCart = useSelector((state: RootState) =>
-        state.cart.items.some((item: any) => item.id === id)
+        state.cart.items.some((item: any) => item.slug === slug)
     );
 
     const handleAddToCart = (e: React.MouseEvent) => {
@@ -46,7 +46,7 @@ export function ProductCard({
             return
         }
         if (!isInCart) {
-            dispatch(addToCart({ id, image, title, price }));
+            dispatch(addToCart({ id: slug, image, title, price }));
         }
     };
 
@@ -55,7 +55,7 @@ export function ProductCard({
             <Card className="relative overflow-hidden rounded-xl border-0 shadow-none">
                 <CardContent className="p-0">
                     <div
-                        onClick={() => router.push(`/shop/${id}`)}
+                        onClick={() => router.push(`/shop/${slug}`)}
                         className="group relative aspect-square w-full overflow-hidden cursor-pointer">
                         <Image
                             src={image}
@@ -100,7 +100,7 @@ export function ProductCard({
                     <div className="flex flex-col items-start gap-1 bg-background pt-4">
                         <StarRating />
 
-                        <Link href={`/shop/${id}`} className="line-clamp-1 text-sm font-medium text-foreground cursor-pointer">
+                        <Link href={`/shop/${slug}`} className="line-clamp-1 text-sm font-medium text-foreground cursor-pointer">
                             {locale === "en" ? title.en : title.ar}
                         </Link>
 

@@ -1,66 +1,75 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Image, { ImageProps } from "next/image";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import Image, { ImageProps, StaticImageData } from "next/image";
+import { getImageUrl } from "@/utils/getImageUrl";
 
-interface MyImageProps extends ImageProps {
+interface MyImageProps extends Omit<ImageProps, "src"> {
+  src?: string | StaticImageData | File | null;
+  alt: string;
+  className?: string;
   fallbackSrc?: string;
+  fallbackText?: string;
 }
+
+const normalizeUrl = (url: string) => {
+  return url.replace(/([^:]\/)\/+/g, "$1");
+};
 
 const MyImage = ({
   src,
   alt,
-  fallbackSrc = "/fallback.png",
   className,
-  fill,
-  ...props
+  fallbackSrc = "/fallback.png",
+  fallbackText,
+  ...rest
 }: MyImageProps) => {
-  const [imgSrc, setImgSrc] = useState(src);
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(!src);
 
-  useEffect(() => {
-    if (imgSrc !== src) {
-      setImgSrc(src);
-      setIsLoading(true);
+  let resolvedSrc = getImageUrl(src as string | File | null);
+
+  if (typeof resolvedSrc === "string") {
+    resolvedSrc = normalizeUrl(resolvedSrc);
+  }
+
+  if (isError || !resolvedSrc) {
+    if (fallbackText) {
+      return (
+        <div
+          className={cn(
+            "flex items-center justify-center bg-gray-200 text-gray-600 font-medium",
+            className
+          )}
+        >
+          {fallbackText}
+        </div>
+      );
     }
-  }, [src, imgSrc]);
 
-  const imageEl = (
-    <Image
-      {...props}
-      src={imgSrc}
-      alt={alt}
-      fill={fill}
-      onLoad={() => setIsLoading(false)}
-      onError={() => {
-        setImgSrc(fallbackSrc);
-        setIsLoading(false);
-      }}
-      className={`transition-opacity duration-500 ${
-        isLoading ? "opacity-0" : "opacity-100"
-      } ${className ?? ""}`}
-    />
-  );
-
-  if (fill) {
     return (
-      <>
-        {isLoading && (
-          <div className="absolute inset-0 z-10 animate-pulse bg-linear-to-r from-gray-200 via-gray-300 to-gray-300" />
-        )}
-        {imageEl}
-      </>
+      <Image
+        src={fallbackSrc}
+        alt={alt}
+        className={cn("object-cover", className)}
+        {...rest}
+      />
     );
   }
 
-  // normal mode — wrap in relative container with skeleton
   return (
-    <div className="relative w-full h-full overflow-hidden">
-      {isLoading && (
-        <div className="absolute inset-0 z-10 animate-pulse bg-linear-to-r from-gray-200 via-gray-300 to-gray-300" />
-      )}
-      {imageEl}
-    </div>
+    <Image
+      src={resolvedSrc}
+      alt={alt}
+      className={cn("object-cover", className)}
+      onLoadingComplete={() => setIsLoading(false)}
+      onError={() => {
+        setIsError(true);
+        setIsLoading(false);
+      }}
+      {...rest}
+    />
   );
 };
 
