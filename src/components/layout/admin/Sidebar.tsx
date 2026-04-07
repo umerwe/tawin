@@ -48,7 +48,7 @@ export default function Sidebar({ className }: { className?: string }) {
    router.push("/auth/admin")
   };
 
-  // UPDATED: Sections partitioning
+  // Sections partitioning
   // 1-7: items 0 to 6
   const mainMenu = sidebarMenu.slice(0, 8); 
   // 8-11: items 7 to 11
