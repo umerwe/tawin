@@ -18,7 +18,7 @@ import { useTranslations } from "next-intl";
 import getStatusColor from "@/utils/getStatusColor";
 
 export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
-  const [currentStatus, setCurrentStatus] = useState(item.status.en);
+  const [currentStatus, setCurrentStatus] = useState(item.constructionBasket.status);
 
   return (
     <Select 
@@ -59,7 +59,7 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
   );
 };
 
-const ConstructionBasketTable = ({ data, activeTab }: { data: any[]; activeTab: string }) => {
+const ConstructionBasketTable = ({ data, activeTab, isLoading }: { data: any[]; activeTab: string; isLoading?: boolean }) => {
   const t = useTranslations("translation");
   const [page, setPage] = useState(1);
   const [selectedBasket, setSelectedBasket] = useState<any | null>(null);
@@ -68,7 +68,7 @@ const ConstructionBasketTable = ({ data, activeTab }: { data: any[]; activeTab: 
   const cols = ["basketCode", "fullName", "phoneNumber", "occupation", "propertyType", "status", "process"];
 
   const filteredData = data.filter((item) => {
-    const matchesTab = activeTab === "All Applications" || item.status.en === activeTab;
+    const matchesTab = activeTab === "All Applications" || item.constructionBasket.status === activeTab;
     return matchesTab;
   });
 
@@ -77,38 +77,38 @@ const ConstructionBasketTable = ({ data, activeTab }: { data: any[]; activeTab: 
     setDialogOpen(true);
   };
 
-  const row = (item: any, index: number, locale: "en" | "ar") => (
+  const row = (item: any, index: number) => (
     <>
       <TableCell
         className="text-muted-foreground cursor-pointer"
         onClick={() => handleRowClick(item)}
       >
-        {item.basketCode}
+        #{item._id.slice(-6)}
       </TableCell>
       <TableCell
-        className="font-medium cursor-pointer"
+        className="font-medium cursor-pointer capitalize"
         onClick={() => handleRowClick(item)}
       >
-        {item.fullRegistrationName[locale]}
+        {item.constructionBasket.fullRegistrationName}
       </TableCell>
       <TableCell
         className="cursor-pointer text-sm"
         onClick={() => handleRowClick(item)}
       >
-        <span dir="ltr">{item.phoneNumber}</span>
+        <span dir="ltr">{item.constructionBasket.phoneNumber}</span>
       </TableCell>
       <TableCell
-        className="cursor-pointer"
+        className="cursor-pointer capitalize"
         onClick={() => handleRowClick(item)}
       >
-        {item.occupation[locale]}
+        {item.constructionBasket.occupation}
       </TableCell>
       <TableCell
-        className="cursor-pointer"
+        className="cursor-pointer capitalize"
         onClick={() => handleRowClick(item)}
       >
         <span className="text-sm font-medium">
-          {item.propertyType[locale]}
+          {item.constructionBasket.propertyType}
         </span>
       </TableCell>
 
@@ -149,6 +149,7 @@ const ConstructionBasketTable = ({ data, activeTab }: { data: any[]; activeTab: 
         cols={cols}
         row={row}
         headerClassName="bg-aqua/5 border-none"
+        isLoading={isLoading}
         pagination={{ total: data.length, page, limit: 10, setPage }}
       />
 

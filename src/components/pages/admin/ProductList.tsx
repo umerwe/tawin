@@ -6,123 +6,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FilterSection from "@/components/FilterSection";
 import ProductTable from "@/components/tables/ProductTable";
-import { ProductListCard } from "@/components/card/ProductListCard";
+import MiniCard from "@/components/card/MiniCard";
 import { useTranslations, useLocale } from "next-intl";
-
-const categories = [
-    { 
-        title: { en: "Electrical", ar: "كهربائيات" }, 
-        image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=200&auto=format&fit=crop" 
-    },
-    { 
-        title: { en: "Paints", ar: "أصباغ" }, 
-        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=200&auto=format&fit=crop" 
-    },
-    { 
-        title: { en: "Fire Systems", ar: "أنظمة الحريق" }, 
-        image: "https://images.unsplash.com/photo-1628151015968-3a4429e9ef04?q=80&w=200&auto=format&fit=crop" 
-    },
-    { 
-        title: { en: "Cleaning Machines", ar: "آلات التنظيف" }, 
-        image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=200&auto=format&fit=crop" 
-    },
-    { 
-        title: { en: "Solar Energy", ar: "الطاقة الشمسية" }, 
-        image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=200&auto=format&fit=crop" 
-    },
-    { 
-        title: { en: "Building Materials", ar: "مواد البناء" }, 
-        image: "https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?q=80&w=200&auto=format&fit=crop" 
-    },
-    { 
-        title: { en: "Doors", ar: "أبواب" }, 
-        image: "https://images.unsplash.com/photo-1506377295352-e3154d43ea9e?q=80&w=200&auto=format&fit=crop" 
-    },
-    { 
-        title: { en: "Cameras", ar: "كاميرات" }, 
-        image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=200&auto=format&fit=crop" 
-    },
-];
-
-const productsData = [
-    { 
-        id: 1, 
-        number: 1, 
-        name: { en: "Solid Wood Door", ar: "باب خشب صلب" }, 
-        img: "https://images.unsplash.com/photo-1506377295352-e3154d43ea9e?q=80&w=400&auto=format&fit=crop", 
-        date: "01-01-2025", 
-        sort: 25, 
-        status: { en: "All Products", ar: "جميع المنتجات" } 
-    },
-    { 
-        id: 2, 
-        number: 2, 
-        name: { en: "Industrial Paint Mixer", ar: "خلاط طلاء صناعي" }, 
-        img: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=400&auto=format&fit=crop", 
-        date: "05-01-2025", 
-        sort: 10, 
-        status: { en: "Featured Products", ar: "منتجات مميزة" } 
-    },
-    { 
-        id: 3, 
-        number: 3, 
-        name: { en: "Solar Panel 400W", ar: "لوح شمسي ٤٠٠ واط" }, 
-        img: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=400&auto=format&fit=crop", 
-        date: "10-01-2025", 
-        sort: 50, 
-        status: { en: "Out of Stock", ar: "نفذت الكمية" } 
-    },
-    { 
-        id: 4, 
-        number: 4, 
-        name: { en: "Fire Extinguisher 5kg", ar: "طفاية حريق ٥ كجم" }, 
-        img: "https://images.unsplash.com/photo-1628151015968-3a4429e9ef04?q=80&w=400&auto=format&fit=crop", 
-        date: "12-01-2025", 
-        sort: 15, 
-        status: { en: "Reduced", ar: "مخفض" } 
-    },
-    { 
-        id: 5, 
-        number: 5, 
-        name: { en: "CCTV Outdoor Camera", ar: "كاميرا مراقبة خارجية" }, 
-        img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=400&auto=format&fit=crop", 
-        date: "15-01-2025", 
-        sort: 30, 
-        status: { en: "Featured Products", ar: "منتجات مميزة" } 
-    },
-    { 
-        id: 6, 
-        number: 6, 
-        name: { en: "Steel Hinge Set", ar: "طقم مفصلات فولاذية" }, 
-        img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=400&auto=format&fit=crop", 
-        date: "18-01-2025", 
-        sort: 100, 
-        status: { en: "All Products", ar: "جميع المنتجات" } 
-    },
-    { 
-        id: 7, 
-        number: 7, 
-        name: { en: "Concrete Vibrator", ar: "هزاز خرسانة" }, 
-        img: "https://images.unsplash.com/photo-1628151015968-3a4429e9ef04?q=80&w=400&auto=format&fit=crop", 
-        date: "20-01-2025", 
-        sort: 5, 
-        status: { en: "Out of Stock", ar: "نفذت الكمية" } 
-    },
-    { 
-        id: 8, 
-        number: 8, 
-        name: { en: "LED Floodlight 100W", ar: "كشاف ليد ١٠٠ واط" }, 
-        img: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?q=80&w=400&auto=format&fit=crop", 
-        date: "22-01-2025", 
-        sort: 45, 
-        status: { en: "Reduced", ar: "مخفض" } 
-    },
-];
+import { useGetCategories } from "@/hooks/useCategories";
+import { useProducts } from "@/hooks/useProducts";
 
 const ProductList = () => {
     const [activeTab, setActiveTab] = useState("All Products");
     const t = useTranslations("translation");
-    const locale = useLocale() as "en" | "ar";
+
+    const { data: categoriesData, isLoading: categoriesLoading } = useGetCategories();
+    const { data: productsData, isLoading: productsLoading } = useProducts();
+
+    const categories = categoriesData?.data || [];
+    const products = productsData?.data || [];
 
     return (
         <div className="space-y-6 p-1">
@@ -138,13 +35,10 @@ const ProductList = () => {
 
             {/* Categories Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {categories.map((cat, i) => (
-                    <ProductListCard 
-                        key={i} 
-                        image={cat.image} 
-                        title={cat.title[locale]} 
-                    />
-                ))}
+                <MiniCard
+                    data={categories}
+                    isLoading={categoriesLoading}
+                />
             </div>
 
             {/* Main Table Card */}
@@ -153,14 +47,15 @@ const ProductList = () => {
                     <FilterSection
                         activeTab={activeTab}
                         setActiveTab={setActiveTab}
-                        data={productsData}
+                        data={products}
                         type="product"
                     />
                 </CardHeader>
                 <CardContent>
-                    <ProductTable 
-                        activeTab={activeTab} 
-                        data={productsData} 
+                    <ProductTable
+                        activeTab={activeTab}
+                        data={products}
+                        isLoading={productsLoading}
                     />
                 </CardContent>
             </Card>

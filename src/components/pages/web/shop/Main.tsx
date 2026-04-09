@@ -10,7 +10,7 @@ import Hero from "./Hero"
 import { useTranslations } from "next-intl"
 import { useSearchParams } from "next/navigation"
 import Container from "@/components/common/Container"
-import { useProducts } from "@/hooks/useProducts"
+import { useProducts, useProductsByCategory } from "@/hooks/useProducts"
 import { SpinnerLoader } from "@/components/common/SpinnerLoader"
 
 const Shop = () => {
@@ -18,7 +18,9 @@ const Shop = () => {
     const params = useSearchParams();
     const category = params.get("category");
 
-    const { data: productsData, isLoading, error } = useProducts(category || undefined);
+    const { data: productsData, isLoading, error } = category 
+        ? useProductsByCategory(category)
+        : useProducts();
     const data = productsData?.data || [];
 
     const [viewMode, setViewMode] = useState("grid4");

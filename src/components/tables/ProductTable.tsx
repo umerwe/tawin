@@ -7,7 +7,6 @@ import { DataTable } from "@/components/DataTable";
 import { Trash2, Edit3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
 
 export const productsData = [
   {
@@ -210,45 +209,45 @@ export const productsData = [
 interface ProductTableProps {
   activeTab: string;
   data: any[];
+  isLoading?: boolean;
 }
 
-const ProductTable = ({ activeTab, data }: ProductTableProps) => {
+const ProductTable = ({ activeTab, data, isLoading }: ProductTableProps) => {
   const [page, setPage] = useState(1);
   const router = useRouter();
-  const locale = useLocale();
 
   const cols = ["no", "product", "dateCreated", "sort", "operations"];
 
   const filteredData = data.filter((item) => {
     if (activeTab === "All Products") return true;
-    return item.status.en === activeTab;
+    return item.status?.en === activeTab;
   });
 
   const row = (item: any, index: number, locale: "en" | "ar") => (
     <>
-      <TableCell>{item.number}</TableCell>
+      <TableCell>{index + 1}</TableCell>
       <TableCell>
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 relative overflow-hidden">
             <Image
-              src={item.img}
-              alt={item.name[locale]}
+              src={item.image}
+              alt={item.title[locale]}
               fill
               className="object-cover"
             />
           </div>
-          <span className="font-medium text-sm">{item.name[locale]}</span>
+          <span className="font-medium text-sm">{item.title[locale]}</span>
         </div>
       </TableCell>
-      <TableCell className="text-sm">{item.date}</TableCell>
-      <TableCell className="text-sm font-medium">{item.sort}</TableCell>
+      <TableCell className="text-sm">{new Date(item.createdAt?.$date || item.createdAt).toLocaleDateString()}</TableCell>
+      <TableCell className="text-sm font-medium">${item.price}</TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-gray-400 hover:text-aqua"
-            onClick={() => router.push(`/${locale}/admin/product-list/${item.id}`)}
+            onClick={() => router.push(`/${locale}/admin/product-list/${item._id}`)}
           >
             <Edit3 size={16} />
           </Button>
@@ -270,6 +269,7 @@ const ProductTable = ({ activeTab, data }: ProductTableProps) => {
       cols={cols}
       row={row}
       headerClassName="bg-aqua/5 border-none"
+      isLoading={isLoading}
       pagination={{
         total: filteredData.length,
         page,

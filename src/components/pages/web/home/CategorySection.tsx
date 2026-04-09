@@ -1,10 +1,13 @@
 "use client"
 
 import CategoryCard from "@/components/card/CategoryCard"
-import { categories } from "@/constants/products"
 import { useTranslations } from "next-intl"
+import { useGetCategories } from "@/hooks/useCategories"
 
 export default function ShopByCategory() {
+    const { data } = useGetCategories();
+    const categoriesData = data?.data || [];
+    
     const t = useTranslations("translation")
     return (
         <section className="mt-10">
@@ -13,7 +16,7 @@ export default function ShopByCategory() {
             </h2>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-y-12 gap-x-6">
-                {categories.map((category: any) => (
+                {categoriesData?.map((category: any) => (
                     <CategoryCard key={category._id} data={category} />
                 ))}
             </div>

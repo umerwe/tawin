@@ -1,7 +1,7 @@
 "use client"
 
 import { useLocale, useTranslations } from "next-intl"
-import { categories } from "@/constants/products"
+import { useGetCategories } from "@/hooks/useCategories"
 import Breadcrumb from '@/components/ui/breadcrumb';
 import Image from '@/components/MyImage';
 
@@ -12,12 +12,13 @@ interface HeroProps {
 const Hero = ({ activeCategory }: HeroProps) => {
     const locale = useLocale() as "en" | "ar";
     const t = useTranslations("shop");
+    const { data: categoriesData } = useGetCategories();
 
-    const categoryData: any = categories.find(cat => cat?.slug === activeCategory);
+    const categoryData: any = categoriesData?.data?.find(cat => cat?._id === activeCategory);
 
     const title = categoryData?.name[locale] || t("heroTitleDefault");
     const subTitle = categoryData?.description[locale] || t("heroSubtitleDefault");
-    const backgroundImage = categoryData?.image || "/shop.png";
+    const backgroundImage = categoryData?.thumbnail || "/shop.png";
 
     return (
         <section className="relative h-[400px] md:h-[600px] overflow-hidden">

@@ -11,3 +11,8 @@ export const getProductBySlug = async (slug: string): Promise<Product> => {
   const { data } = await api.get(`/api/products/slug/${slug}`);
   return data.data;
 };
+
+export const getProductsByCategory = async (categoryId: string): Promise<ProductsResponse> => {
+  const { data } = await api.get(`/api/products/category/${categoryId}`);
+  return data;
+};

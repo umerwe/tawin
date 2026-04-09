@@ -17,3 +17,8 @@ export const applyForBasket = async (payload: BasketApplicationData) => {
   const { data } = await api.post("/api/users/apply-for-basket", payload);
   return data;
 };
+
+export const getAdminBasketRequests = async () => {
+  const { data } = await api.get("/api/admin/construction-basket-requests");
+  return data;
+};

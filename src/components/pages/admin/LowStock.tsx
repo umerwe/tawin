@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FilterSection from "@/components/FilterSection";
 import LowStockTable from "@/components/tables/LowStockTable";
-import { ProductListCard } from "@/components/card/ProductListCard";
+import MiniCard from "@/components/card/MiniCard";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 
@@ -205,7 +205,7 @@ const LowStock = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {categories.map((cat, i) => (
-                    <ProductListCard key={i} image={cat.image} title={cat.title[locale]} />
+                    <MiniCard key={i} image={cat.image} title={cat.title[locale]} />
                 ))}
             </div>
 

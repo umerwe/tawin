@@ -314,6 +314,8 @@
     "available": "متوفر",
     "preOrder": "طلب مسبق",
     "stockQuantity": "كمية المخزون",
+    "errorLoadingProducts": "خطأ في تحميل المنتجات",
+    "tryAgain": "حاول مرة أخرى",
     "unlimited": "غير محدود",
     "saveToBlog": "حفظ في المدونة",
     "shareProduct": "مشاركة المنتج",
@@ -524,6 +526,9 @@
       "phoneNumber": "رقم الهاتف",
       "occupation": "المهنة",
       "propertyType": "نوع العقار"
+    },
+    "search": {
+      "noData": "لا توجد بيانات"
     }
   }
 }

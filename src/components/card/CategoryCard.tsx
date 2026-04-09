@@ -7,7 +7,7 @@ const CategoryCard = ({ data }: { data: Category }) => {
 
     return (
         <Link
-            href={`/shop?category=${data.slug}`}
+            href={`/shop?category=${data._id}`}
             className="group flex flex-col items-center text-center"
         >
             <div className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 rounded-full overflow-hidden bg-[#F3F5F7] border-2 border-transparent group-hover:border-aqua transition-all duration-300 shadow-sm">

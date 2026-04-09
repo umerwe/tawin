@@ -9,18 +9,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Login, LoginSchema } from "@/validations/auth";
 import { useRouter } from "next/navigation";
-
-// Admin credentials
-const ADMIN_EMAIL = "admin@yopmail.com";
-const ADMIN_PASSWORD = "admin123";
+import { useLogin } from "@/hooks/useAuth";
+import { SpinnerLoader } from "../common/SpinnerLoader";
 
 const AdminLoginForm = () => {
     const t = useTranslations("translation");
     const router = useRouter();
     const locale = useLocale();
+    const { mutate: login, isPending } = useLogin();
 
     const [showPassword, setShowPassword] = useState(false);
-    const [authError, setAuthError] = useState("");
 
     const {
         register,
@@ -35,13 +33,11 @@ const AdminLoginForm = () => {
     });
 
     const onSubmit = (data: Login) => {
-        if (data.email !== ADMIN_EMAIL || data.password !== ADMIN_PASSWORD) {
-            setAuthError(t("invalidCredentials"));
-            return;
-        }
-        const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
-        localStorage.setItem("token", token);
-        router.push(`/${locale}/admin`);
+        login(data, {
+            onSuccess: () => {
+                router.push(`/${locale}/admin`);
+            }
+        });
     };
 
     return (
@@ -62,6 +58,7 @@ const AdminLoginForm = () => {
                         error={!!errors.email}
                         errorMessage={errors.email?.message}
                         {...register("email")}
+                        disabled={isPending}
                     />
 
                     {/* Password */}
@@ -74,6 +71,7 @@ const AdminLoginForm = () => {
                             error={!!errors.password}
                             errorMessage={errors.password?.message}
                             {...register("password")}
+                            disabled={isPending}
                         />
                         <Button
                             type="button"
@@ -85,13 +83,16 @@ const AdminLoginForm = () => {
                         </Button>
                     </div>
 
-                    {/* Auth Error */}
-                    {authError && (
-                        <p className="text-xs text-red-500 -mt-3">{authError}</p>
-                    )}
-
-                    <Button type="submit" variant="primary">
-                        {t("signin")}
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        disabled={isPending}
+                    >
+                        {isPending ? (
+                            <SpinnerLoader />
+                        ) : (
+                            t("signin")
+                        )}
                     </Button>
                 </form>
             </div>

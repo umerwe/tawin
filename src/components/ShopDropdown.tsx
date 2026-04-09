@@ -14,11 +14,13 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { categories } from "@/constants/products"
+import { useGetCategories } from "@/hooks/useCategories"
 
 export function ShopDropdown({ isMain }: { isMain: boolean }) {
   const locale = useLocale() as "en" | "ar"
   const t = useTranslations("translation")
+  const { data: categoriesData } = useGetCategories()
+  const categories = categoriesData?.data || []
 
   return (
     <DropdownMenu>
@@ -53,14 +55,14 @@ export function ShopDropdown({ isMain }: { isMain: boolean }) {
                   <DropdownMenuSubContent className="w-48">
                     {/* Option to view all in this category */}
                     {/* <DropdownMenuItem asChild>
-                      <Link href={`/shop?category=${category.slug}`} className="font-semibold text-aqua">
+                      <Link href={`/shop?category=${category._id}`} className="font-semibold text-aqua">
                         {t("viewAll")}
                       </Link>
                     </DropdownMenuItem> */}
 
                     {category.subcategories.map((sub: any) => (
                       <DropdownMenuItem key={sub._id} asChild>
-                        <Link href={`/shop?category=${category.slug}`}>
+                        <Link href={`/shop?category=${category._id}`}>
                           {sub?.name?.[locale]}
                         </Link>
                       </DropdownMenuItem>
@@ -74,7 +76,7 @@ export function ShopDropdown({ isMain }: { isMain: boolean }) {
           // If no subcategories, render as a direct navigation link
           return (
             <DropdownMenuItem key={category._id} asChild>
-              <Link href={`/shop?category=${category.slug}`} className="cursor-pointer w-full">
+              <Link href={`/shop?category=${category._id}`} className="cursor-pointer w-full">
                 {category?.name?.[locale]}
               </Link>
             </DropdownMenuItem>

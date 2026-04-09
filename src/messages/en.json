@@ -422,6 +422,8 @@
     "payment": "Payment",
     "inactive": "Inactive",
     "vip": "VIP",
+    "errorLoadingProducts": "Error loading products",
+    "tryAgain": "Try Again",
     "productNamePlaceholder": "e.g. iPhone 15 Pro",
     "pricePlaceholder": "0.00",
     "reducedPricePlaceholder": "Reduced price (optional)",
@@ -524,6 +526,9 @@
       "phoneNumber": "Phone Number",
       "occupation": "Occupation",
       "propertyType": "Property Type"
+    },
+    "search": {
+      "noData": "No data found"
     }
   }
 }
