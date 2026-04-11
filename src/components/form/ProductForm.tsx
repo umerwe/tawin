@@ -1,195 +1,233 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-    Calendar,
-    Wand2,
-    Edit3,
-} from "lucide-react";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select, SelectContent, SelectItem,
+  SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { useFormContext, Controller } from "react-hook-form";
 
 interface ProductFormProps {
-    product?: {
-        name?: string;
-        description?: string;
-        price?: string;
-        reducedPrice?: string;
-        expirationDate?: string;
-        productionDate?: string;
-        warehouseAvailability?: string;
-        stockQuantity?: string;
-        unlimited?: boolean;
-        featured?: boolean;
-    };
+  isEdit?: boolean;
 }
 
-const ProductForm = ({ product }: ProductFormProps) => {
-    const t = useTranslations("translation");
-    const isEdit = !!product;
+const ProductForm = ({ isEdit = false }: any) => {
+  const t = useTranslations("translation");
+  const { register, control } = useFormContext();
+  const [titleLang, setTitleLang] = useState<"en" | "ar">("en");
+  const [descLang, setDescLang] = useState<"en" | "ar">("en");
 
-    return (
-        <div className="lg:col-span-3">
-            <Card className="border shadow-none h-full">
-                <CardHeader>
-                    <CardTitle className="text-lg font-bold text-gray-700">
-                        {t("productInformation")}
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                    {/* Product Name */}
-                    <div className="space-y-2">
-                        <Label>{t("productName")}</Label>
-                        <Input
-                            placeholder={t("productNamePlaceholder")}
-                            defaultValue={isEdit ? (product.name ?? "") : ""}
-                            className="rounded-md"
-                        />
-                    </div>
+  const LangToggle = ({
+    lang, setLang,
+  }: { lang: "en" | "ar"; setLang: (l: "en" | "ar") => void }) => (
+    <div className="flex gap-1 ml-auto">
+      {(["en", "ar"] as const).map((l) => (
+        <button
+          key={l}
+          type="button"
+          onClick={() => setLang(l)}
+          className={`px-2 py-0.5 text-xs rounded font-semibold transition-colors ${
+            lang === l
+              ? "bg-aqua text-white"
+              : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+          }`}
+        >
+          {l.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  );
 
-                    {/* Description */}
-                    <div className="space-y-2">
-                        <Label>{t("productDescription")}</Label>
-                        <div className="relative">
-                            <textarea
-                                className="w-full min-h-[140px] p-4 rounded-md bg-gray-50 border border-transparent focus:border-aqua outline-none text-sm text-gray-600 transition-all resize-none"
-                                placeholder={t("describeProduct")}
-                                defaultValue={isEdit ? (product.description ?? "") : ""}
-                            />
-                            <div className="absolute bottom-4 left-4 flex gap-3 text-gray-400">
-                                <Edit3 size={18} className="cursor-pointer hover:text-aqua transition-colors" />
-                                <Wand2 size={18} className="cursor-pointer hover:text-aqua transition-colors" />
-                            </div>
-                        </div>
-                    </div>
+  return (
+    <div className="lg:col-span-3">
+      <Card className="border shadow-none h-full">
+        <CardHeader>
+          <CardTitle className="text-lg font-bold text-gray-700">
+            {isEdit ? t("editProduct") : t("productInformation")}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
 
-                    {/* Pricing */}
-                    <div className="space-y-4 pt-2">
-                        <h3 className="text-lg font-bold text-gray-700">{t("pricing")}</h3>
-                        <div className="space-y-2">
-                            <Label>{t("productPrice")}</Label>
-                            <div className="relative">
-                                <Input
-                                    placeholder={t("pricePlaceholder")}
-                                    defaultValue={isEdit ? (product.price ?? "") : ""}
-                                    className="pl-14 font-bold rounded-md"
-                                />
-                                <div className="absolute left-4 top-1/2 -translate-y-1/2 pr-2 border-r border-gray-200">
-                                    <span className="text-base">🇺🇸</span>
-                                </div>
-                            </div>
-                        </div>
+          {/* Title EN / AR - ALWAYS VISIBLE */}
+          <div className="space-y-2">
+            <div className="flex items-center">
+              <Label>{t("productName")}</Label>
+              <LangToggle lang={titleLang} setLang={setTitleLang} />
+            </div>
+            <div className={titleLang === "en" ? "block" : "hidden"}>
+              <Input
+                {...register("title.en")}
+                placeholder="Product name in English"
+                className="rounded-md"
+              />
+            </div>
+            <div className={titleLang === "ar" ? "block" : "hidden"}>
+              <Input
+                {...register("title.ar")}
+                placeholder="اسم المنتج بالعربية"
+                className="rounded-md text-right"
+                dir="rtl"
+              />
+            </div>
+          </div>
 
-                        <div className="space-y-2">
-                            <Label>{t("reducedPriceOptional")}</Label>
-                            <div className="flex gap-4">
-                                <Input
-                                    placeholder={t("reducedPricePlaceholder")}
-                                    defaultValue={isEdit ? (product.reducedPrice ?? "") : ""}
-                                    className="flex-1 rounded-md"
-                                />
-                                <div className="h-[52px] px-6 bg-emerald-50 rounded-md flex items-center justify-center text-aqua font-bold border border-aqua/50">
-                                    $99
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+          {/* Description EN / AR - ALWAYS VISIBLE */}
+          <div className="space-y-2">
+            <div className="flex items-center">
+              <Label>{t("productDescription")}</Label>
+              <LangToggle lang={descLang} setLang={setDescLang} />
+            </div>
+            <div className="relative">
+              <div className={descLang === "en" ? "block" : "hidden"}>
+                <textarea
+                  {...register("description.en")}
+                  className="w-full min-h-[140px] p-4 pb-10 rounded-md bg-gray-50 border border-transparent focus:border-aqua outline-none text-sm text-gray-600 transition-all resize-none"
+                  placeholder="Describe your product in English…"
+                />
+              </div>
+              <div className={descLang === "ar" ? "block" : "hidden"}>
+                <textarea
+                  {...register("description.ar")}
+                  className="w-full min-h-[140px] p-4 pb-10 rounded-md bg-gray-50 border border-transparent focus:border-aqua outline-none text-sm text-gray-600 transition-all resize-none text-right"
+                  placeholder="اوصف منتجك بالعربية…"
+                  dir="rtl"
+                />
+              </div>
+            </div>
+          </div>
 
-                    {/* Dates */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label>{t("expirationDate")}</Label>
-                            <div className="relative">
-                                <Input
-                                    placeholder={t("expirationDatePlaceholder")}
-                                    defaultValue={isEdit ? (product.expirationDate ?? "") : ""}
-                                    className="pl-12 rounded-md"
-                                />
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-aqua text-[10px] font-bold uppercase tracking-tighter">
-                                    {t("day")}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Label>{t("productionDate")}</Label>
-                            <div className="relative">
-                                <Input
-                                    placeholder={t("productionDatePlaceholder")}
-                                    defaultValue={isEdit ? (product.productionDate ?? "") : ""}
-                                    className="pl-12 rounded-md"
-                                />
-                                <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                            </div>
-                        </div>
-                    </div>
+          {/* Pricing - HIDDEN ON EDIT */}
+          {!isEdit && (
+            <div className="space-y-4 pt-2">
+              <h3 className="text-lg font-bold text-gray-700">{t("pricing")}</h3>
+              <div className="space-y-2">
+                <Label>{t("productPrice")}</Label>
+                <div className="relative">
+                  <Input
+                    {...register("price", { valueAsNumber: true })}
+                    type="number"
+                    placeholder="0.00"
+                    className="pl-14 font-bold rounded-md"
+                  />
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 pr-2 border-r border-gray-200">
+                    <span className="text-base">🇺🇸</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
-                    {/* Stock */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label>{t("warehouseAvailability")}</Label>
-                            <Select defaultValue={isEdit ? (product.warehouseAvailability ?? "") : ""}>
-                                <SelectTrigger className="rounded-md">
-                                    <SelectValue placeholder={t("selectAvailability")} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="available">{t("available")}</SelectItem>
-                                    <SelectItem value="out-of-stock">{t("outOfStock")}</SelectItem>
-                                    <SelectItem value="pre-order">{t("preOrder")}</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="space-y-2">
-                            <Label>{t("stockQuantity")}</Label>
-                            <Input
-                                placeholder={t("stockQuantityPlaceholder")}
-                                defaultValue={isEdit ? (product.stockQuantity ?? "") : ""}
-                                className="rounded-md"
-                            />
-                        </div>
-                    </div>
+          {/* Stock & New Arrival - HIDDEN ON EDIT */}
+          {!isEdit && (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Is New Arrival</Label>
+                <Controller
+                  control={control}
+                  name="isNewArrival"
+                  render={({ field }) => (
+                    <Select
+                      value={field.value === true ? "true" : field.value === false ? "false" : ""}
+                      onValueChange={(v) => field.onChange(v === "true")}
+                    >
+                      <SelectTrigger className="rounded-md">
+                        <SelectValue placeholder="Select…" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="true">Yes</SelectItem>
+                        <SelectItem value="false">No</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Remaining Pieces</Label>
+                <Input
+                  {...register("remainingPieces", { valueAsNumber: true })}
+                  type="number"
+                  placeholder="0"
+                  className="rounded-md"
+                />
+              </div>
+            </div>
+          )}
 
-                    {/* Controls */}
-                    <div className="flex flex-col gap-4 pt-2">
-                        <div className="flex items-center gap-3">
-                            <span className="text-sm font-medium text-gray-400">{t("unlimited")}</span>
-                            <Switch
-                                className="data-[state=checked]:bg-aqua"
-                                defaultChecked={isEdit ? (product.unlimited ?? false) : false}
-                            />
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <Checkbox
-                                className="data-[state=checked]:bg-aqua border-gray-200 h-5 w-5 rounded"
-                                defaultChecked={isEdit ? (product.featured ?? false) : false}
-                            />
-                            <span className="text-sm font-medium text-gray-400">{t("featuredProducts")}</span>
-                        </div>
-                    </div>
+          {/* Sizes - ALWAYS VISIBLE */}
+          <div className="space-y-2">
+            <Label>Sizes</Label>
+            <Controller
+              control={control}
+              name="sizes"
+              render={({ field }) => {
+                const all = ["XS", "S", "M", "L", "XL", "XXL"] as const;
+                const selected: string[] = field.value ?? [];
+                const toggle = (s: string) =>
+                  field.onChange(
+                    selected.includes(s)
+                      ? selected.filter((x) => x !== s)
+                      : [...selected, s]
+                  );
+                return (
+                  <div className="flex flex-wrap gap-2">
+                    {all.map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => toggle(s)}
+                        className={`px-3 py-1.5 text-sm rounded-md border font-medium transition-colors ${
+                          selected.includes(s)
+                            ? "bg-aqua text-white border-aqua"
+                            : "bg-white text-gray-500 border-gray-200 hover:border-aqua/50"
+                        }`}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                );
+              }}
+            />
+          </div>
 
-                    {/* Actions */}
-                    <div className="flex gap-3">
-                        <Button variant="outline" className="w-44 rounded-md">
-                            {t("saveToBlog")}
-                        </Button>
-                        <Button variant="primary" className="w-44 rounded-md">
-                            {t("shareProduct")}
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
-    );
+          {/* Weight - HIDDEN ON EDIT */}
+          {!isEdit && (
+            <div className="space-y-2">
+              <Label>Weight</Label>
+              <div className="flex gap-3">
+                <Controller
+                  control={control}
+                  name="weights.0.unit"
+                  render={({ field }) => (
+                    <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                      <SelectTrigger className="w-28 rounded-md">
+                        <SelectValue placeholder="Unit" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["g", "kg", "mg", "l", "ml"].map((u) => (
+                          <SelectItem key={u} value={u}>{u}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                <Input
+                  {...register("weights.0.value")}
+                  placeholder="e.g. 500"
+                  className="flex-1 rounded-md"
+                />
+              </div>
+            </div>
+          )}
+
+        </CardContent>
+      </Card>
+    </div>
+  );
 };
 
 export default ProductForm;

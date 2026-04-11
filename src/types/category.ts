@@ -9,17 +9,13 @@ export interface Category {
   slug: string;
   type: "category" | "subCategory";
   description: LocalizedString;
-  thumbnail: string;
-  icon: string;
+  thumbnail: string; // URL from server
+  icon: string;      // URL from server
   isActive: boolean;
-  createdAt: {
-    $date: string;
-  };
-  updatedAt: {
-    $date: string;
-  };
+  parentCategory?: string | null;
   subcategories?: Category[];
-  parentCategory?: string;
+  createdAt: { $date: string };
+  updatedAt: { $date: string };
 }
 
 export interface CategoriesResponse {

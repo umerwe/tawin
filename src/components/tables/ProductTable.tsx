@@ -7,6 +7,8 @@ import { DataTable } from "@/components/DataTable";
 import { Trash2, Edit3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import ConfirmDialog from "../dialog/ConfirmDialog";
+import { useDeleteProduct } from "@/hooks/useProducts";
 
 export const productsData = [
   {
@@ -213,6 +215,8 @@ interface ProductTableProps {
 }
 
 const ProductTable = ({ activeTab, data, isLoading }: ProductTableProps) => {
+  const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
+
   const [page, setPage] = useState(1);
   const router = useRouter();
 
@@ -230,7 +234,7 @@ const ProductTable = ({ activeTab, data, isLoading }: ProductTableProps) => {
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 relative overflow-hidden">
             <Image
-              src={item.image}
+              src={item.images?.[0] || ""}
               alt={item.title[locale]}
               fill
               className="object-cover"
@@ -247,17 +251,28 @@ const ProductTable = ({ activeTab, data, isLoading }: ProductTableProps) => {
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-gray-400 hover:text-aqua"
-            onClick={() => router.push(`/${locale}/admin/product-list/${item._id}`)}
+            onClick={() => router.push(`/${locale}/admin/product-list/${item.slug}`)}
           >
             <Edit3 size={16} />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-gray-400 hover:text-red-500"
+          <ConfirmDialog
+            title="Delete Product"
+            description={`Are you sure you want to delete ${item.title[locale]}?`}
+            variant="destructive"
+            loading={isDeleting}
+            onConfirm={(close) => {
+              deleteProduct(item._id);
+              close();
+            }}
           >
-            <Trash2 size={16} />
-          </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-gray-400 hover:text-red-500"
+            >
+              <Trash2 size={16} />
+            </Button>
+          </ConfirmDialog>
         </div>
       </TableCell>
     </>

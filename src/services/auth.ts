@@ -39,3 +39,13 @@ export const updateUserProfile = async (data: File | { firstName: string; lastNa
     return response.data;
   }
 };
+
+export const getAdminUsers = async () => {
+  const { data } = await api.get("/api/admin/users");
+  return data;
+};
+
+export const verifyUser = async (userId: string) => {
+  const { data } = await api.patch(`/api/admin/users/${userId}/verify`);
+  return data;
+};

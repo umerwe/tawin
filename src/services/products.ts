@@ -16,3 +16,26 @@ export const getProductsByCategory = async (categoryId: string): Promise<Product
   const { data } = await api.get(`/api/products/category/${categoryId}`);
   return data;
 };
+
+export const addProduct = async (formData: FormData): Promise<any> => {
+  const { data } = await api.post("/api/products", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return data;
+};
+
+export const updateProduct = async (id: string, formData: FormData): Promise<any> => {
+  const { data } = await api.patch(`/api/products/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return data;
+};
+
+export const deleteProduct = async (id: string): Promise<any> => {
+  const { data } = await api.delete(`/api/products/${id}`);
+  return data;
+};

@@ -50,11 +50,11 @@ export default function Sidebar({ className }: { className?: string }) {
 
   // Sections partitioning
   // 1-7: items 0 to 6
-  const mainMenu = sidebarMenu.slice(0, 8); 
+  const mainMenu = sidebarMenu.slice(0, 9); 
   // 8-11: items 7 to 11
-  const productsMenu = sidebarMenu.slice(8, 12); 
+  const productsMenu = sidebarMenu.slice(9, 13); 
   // 12+: items 12 onwards
-  const adminMenu = sidebarMenu.slice(12); 
+  const adminMenu = sidebarMenu.slice(13); 
 
   const SectionHeader = ({ title }: { title: string }) => (
     <div className="px-2 py-2 text-sm font-semibold text-gray-400 group-data-[collapsible=icon]:hidden">
@@ -123,7 +123,6 @@ export default function Sidebar({ className }: { className?: string }) {
           description={t2("logout.description")}
           onConfirm={handleConfirm}
           variant="destructive"
-          confirmText={t("confirm")}
           asChild
         >
           <SidebarMenuButton className="bg-red-500 hover:bg-red-600 hover:text-white text-white transition-colors">

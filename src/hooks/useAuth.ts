@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { loginUser, signUpUser, getUserProfile, updateUserProfile } from "@/services/auth";
+import { loginUser, signUpUser, getUserProfile, updateUserProfile, getAdminUsers, verifyUser } from "@/services/auth";
 import { toast } from "sonner";
 import { Signup } from "@/validations/auth";
 
@@ -59,6 +59,29 @@ export const useUpdateUserProfile = () => {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to update profile.");
+    },
+  });
+};
+
+export const useAdminUsers = () => {
+  return useQuery({
+    queryKey: ["adminUsers"],
+    queryFn: getAdminUsers,
+    staleTime: 5 * 60 * 1000,
+    retry: 1,
+  });
+};
+
+export const useVerifyUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: verifyUser,
+    onSuccess: () => {
+      toast("User verification status updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to update verification status.");
     },
   });
 };

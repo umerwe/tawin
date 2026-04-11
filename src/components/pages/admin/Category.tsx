@@ -1,0 +1,44 @@
+"use client";
+
+import { useState } from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import CategoryTable from "@/components/tables/CategoryTable";
+import { useGetCategories } from "@/hooks/useCategories";
+import CategoryFormDialog from "@/components/dialog/CategoryFormDialog";
+import { useTranslations } from "next-intl";
+
+const Categories = () => {
+  const t = useTranslations("translation");
+  const { data, isLoading } = useGetCategories();
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+
+  return (
+    <div className="space-y-6 p-1">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">{t('categoryDetails')}</h1>
+        <Button
+          variant="primary"
+          className="w-32"
+          onClick={() => setIsAddDialogOpen(true)}
+          size="sm">
+          <Plus className="h-4 w-4 mr-2" /> {t('addCategory')}
+        </Button>
+      </div>
+
+      <CategoryTable
+        data={data?.data || []}
+        isLoading={isLoading}
+      />
+
+      {/* Dialog for Adding New Category */}
+      <CategoryFormDialog
+        open={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+      />
+    </div>
+  );
+};
+
+export default Categories;

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
+import { SpinnerLoader } from "../common/SpinnerLoader";
 
 interface ConfirmDialogProps {
   title?: string;
@@ -29,7 +30,6 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   title = "Are you sure?",
   description = "This action cannot be undone.",
   confirmText = "confirm",
-  cancelText = "cancel",
   onConfirm,
   loading = false,
   variant = "default",
@@ -65,7 +65,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
               disabled={loading}
               className="h-10"
             >
-              {loading ? t("translation.pleaseWait") : `${confirmText}`}
+              {loading ? <SpinnerLoader /> : t(`translation.${confirmText}`)}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import UserTable from "@/components/tables/UserTable";
 import FilterSection from "@/components/FilterSection";
 import StatsCard from "@/components/card/StatsCard";
+import { useAdminUsers } from "@/hooks/useAuth";
 
 const stats = [
   {
@@ -37,8 +38,12 @@ const tableStats = [
   { label: { en: "Store visitors", ar: "زوار المتجر" }, value: "250k" },
   { label: { en: "Conversion rate", ar: "معدل التحويل" }, value: "5.5%" },
 ];
+
 const Users = () => {
   const [activeTab, setActiveTab] = useState("All Users");
+  const { data, isLoading } = useAdminUsers();
+
+  const usersData = data?.data || [];
 
   return (
     <div className="space-y-6 p-1">
@@ -64,12 +69,12 @@ const Users = () => {
           <FilterSection
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-            data={[]}
+            data={usersData}
             type="user"
           />
         </CardHeader>
         <CardContent>
-          <UserTable activeTab={activeTab} />
+          <UserTable activeTab={activeTab} data={usersData} isLoading={isLoading} />
         </CardContent>
       </Card>
     </div>

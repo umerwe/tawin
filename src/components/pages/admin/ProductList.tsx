@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FilterSection from "@/components/FilterSection";
 import ProductTable from "@/components/tables/ProductTable";
 import MiniCard from "@/components/card/MiniCard";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useGetCategories } from "@/hooks/useCategories";
 import { useProducts } from "@/hooks/useProducts";
 
@@ -20,10 +20,8 @@ const ProductList = () => {
 
     const categories = categoriesData?.data || [];
     const products = productsData?.data || [];
-
     return (
         <div className="space-y-6 p-1">
-            {/* Action Buttons Top Right */}
             <div className="flex items-center justify-end gap-3">
                 <Button variant="outline" size="sm" className="w-32">
                     <MoreVertical className="h-4 w-4 mr-2" /> {t('more')}

@@ -1,74 +1,150 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useTranslations, useLocale } from "next-intl";
-import SearchInput from "@/components/ui/searchInput";
+import { useTranslations } from "next-intl";
+import { useForm, FormProvider } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import ProductForm from "@/components/form/ProductForm";
 import ProductImageForm from "@/components/form/ProductImageForm";
-import { productsData } from "@/components/tables/ProductTable";
+import { SpinnerLoader } from "@/components/common/SpinnerLoader";
+import { ProductFormValues } from "@/components/pages/admin/AddProduct";
+import { useProductBySlug, useUpdateProduct } from "@/hooks/useProducts";
 
 const EditProductPage = () => {
     const { id } = useParams();
     const t = useTranslations("translation");
-    const locale = useLocale() as "en" | "ar";
     const router = useRouter();
 
-    const item = productsData.find((p) => String(p.id) === String(id));
+    const { data: productData, isLoading } = useProductBySlug(id as string);
+    const { mutate: updateProduct, isPending } = useUpdateProduct();
+    console.log({ productData })
 
-    if (!item) {
+    // Mapping the data to match the form structure exactly
+    const methods = useForm<ProductFormValues>({
+        defaultValues: {
+            title: { en: "", ar: "" },
+            description: { en: "", ar: "" },
+            price: 0,
+            category: "",
+            remainingPieces: 0,
+            isNewArrival: false,
+            colors: [],
+            sizes: [],
+            weights: [{ unit: "", value: "" }],
+            imageFiles: [],
+        },
+        // Using 'values' ensures that when productData arrives from the API, 
+        // the form updates automatically.
+        values: productData ? {
+            title: {
+                en: productData.title?.en || "",
+                ar: productData.title?.ar || "",
+            },
+            description: {
+                en: productData.description?.en || "",
+                ar: productData.description?.ar || "",
+            },
+            price: productData.price ?? 0,
+            category: productData.category?._id ?? productData.category ?? "",
+            remainingPieces: productData.remainingPieces ?? 0,
+            isNewArrival: productData.isNewArrival ?? false,
+            colors: productData.colors ?? [],
+            sizes: productData.sizes ?? [],
+            weights: productData.weights?.length
+                ? productData.weights
+                : [{ unit: "", value: "" }],
+            imageFiles: [],
+        } : undefined,
+    });
+
+    const onSubmit = (values: ProductFormValues) => {
+        const fd = new FormData();
+
+        fd.append("title[en]", values.title.en);
+        fd.append("title[ar]", values.title.ar);
+        fd.append("description[en]", values.description.en);
+        fd.append("description[ar]", values.description.ar);
+
+        values.colors.forEach((c) => fd.append("colors", c));
+        values.sizes.forEach((s) => fd.append("sizes", s));
+
+        // PROFESIONAL IMAGE SUBMISSION:
+
+        // 1. Send New Files (if any)
+        if (values.imageFiles.length > 0) {
+            values.imageFiles.forEach((f) => {
+                if (f instanceof File) {
+                    fd.append("images", f);
+                }
+            });
+        }
+
+        // 2. ALWAYS Send Existing Image URLs
+        // This tells the backend: "Keep these images in the database"
+        if (productData?.images?.length) {
+            productData.images.forEach((url: string) => {
+                fd.append("images", url);
+            });
+        }
+console.log(Object.fromEntries(fd.entries()));
+        // updateProduct({ id: productData?._id || (id as string), formData: fd });
+    };
+
+    if (isLoading) {
         return (
-            <div className="p-6 text-gray-500 text-sm">
+            <div className="flex items-center justify-center h-60">
+                <SpinnerLoader />
+            </div>
+        );
+    }
+
+    if (!productData) {
+        return (
+            <div className="p-6 text-gray-500 text-sm text-center">
                 {t("productNotFound")}
             </div>
         );
     }
 
-    const productFormData = {
-        name: item.name[locale],
-        description: item.description,
-        price: item.price,
-        reducedPrice: item.reducedPrice,
-        expirationDate: item.expirationDate,
-        productionDate: item.productionDate,
-        warehouseAvailability: item.warehouseAvailability,
-        stockQuantity: item.stockQuantity,
-        unlimited: item.unlimited,
-        featured: item.featured,
-    };
-
-    const productImageData = {
-        mainImage: item.img,
-        thumbnails: item.thumbnails,
-        category: item.category,
-        subcategory: item.subcategory,
-        selectedColors: item.selectedColors,
-    };
-
     return (
-        <div className="space-y-6 p-1 mb-10">
-            <div className="flex items-center justify-end gap-3">
-                {/* <SearchInput
-          placeholder={t("searchProductPlaceholder")}
-          className="h-12 rounded-md bg-white border-gray-200 focus:bg-gray-50"
-          containerClassName="max-w-md"
-        /> */}
-                <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-12 w-12"
-                    onClick={() => router.push("/admin/products/add")}
-                >
-                    <Plus size={24} />
-                </Button>
-            </div>
+        <FormProvider {...methods}>
+            <form
+                onSubmit={methods.handleSubmit(onSubmit)}
+                className="space-y-6 p-1 mb-10"
+            >
+                <div className="flex items-center justify-end gap-3">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        className="h-12 w-12"
+                        onClick={() => router.push("/admin/products/add")}
+                    >
+                        <Plus size={24} />
+                    </Button>
+                </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 items-start">
-                <ProductForm product={productFormData} />
-                <ProductImageForm product={productImageData} />
-            </div>
-        </div>
+                <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 items-start">
+                    <ProductForm isEdit={true} />
+                    <ProductImageForm
+                        existingImages={productData?.images ?? []}
+                        isEdit={true}
+                    />
+                </div>
+
+                <div className="flex justify-end gap-3">
+                    <Button
+                        type="submit"
+                        disabled={isPending}
+                        variant="primary"
+                        className="h-12 min-w-[140px] px-8 rounded-md"
+                    >
+                        {isPending ? <SpinnerLoader /> : t("saveProduct")}
+                    </Button>
+                </div>
+            </form>
+        </FormProvider>
     );
 };
 
