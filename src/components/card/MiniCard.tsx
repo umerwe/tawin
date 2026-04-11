@@ -10,7 +10,7 @@ interface MiniCardProps {
   isLoading?: boolean;
 }
 
-const MiniCard = ({ data, isLoading }: MiniCardProps) => {
+const MiniCard = ({ data, isLoading }: any) => {
   const locale = useLocale() as "en" | "ar";
 
   if (isLoading) {
