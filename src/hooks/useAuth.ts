@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { loginUser, signUpUser, getUserProfile, updateUserProfile, getAdminUsers, verifyUser } from "@/services/auth";
+import { loginUser, signUpUser, getUserProfile, updateUserProfile, getAdminUsers, verifyUser, addAddress, getAllAddresses, deleteAddress, updateAddress } from "@/services/auth";
 import { toast } from "sonner";
 import { Signup } from "@/validations/auth";
 
@@ -82,6 +82,57 @@ export const useVerifyUser = () => {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to update verification status.");
+    },
+  });
+};
+
+export const useAddAddress = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: addAddress,
+    onSuccess: () => {
+      toast("Address added successfully!");
+      queryClient.invalidateQueries({ queryKey: ["userAddresses"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to add address.");
+    },
+  });
+};
+
+export const useAllAddresses = () => {
+  return useQuery({
+    queryKey: ["userAddresses"],
+    queryFn: getAllAddresses,
+    staleTime: 5 * 60 * 1000,
+    retry: 1,
+  });
+};
+
+export const useDeleteAddress = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteAddress,
+    onSuccess: () => {
+      toast("Address deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["userAddresses"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to delete address.");
+    },
+  });
+};
+
+export const useUpdateAddress = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateAddress,
+    onSuccess: () => {
+      toast("Address updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["userAddresses"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to update address.");
     },
   });
 };

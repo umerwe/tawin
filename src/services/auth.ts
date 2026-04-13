@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import { Login, Signup } from "@/validations/auth";
+import { Address, Login, Signup } from "@/validations/auth";
 
 export const loginUser = async (credentials: Login) => {
   const { data } = await api.post("/api/auth/login", credentials);
@@ -48,4 +48,24 @@ export const getAdminUsers = async () => {
 export const verifyUser = async (userId: string) => {
   const { data } = await api.patch(`/api/admin/users/${userId}/verify`);
   return data;
+};
+
+export const addAddress = async (addressData: Address) => {
+  const { data } = await api.post("/api/addresses", addressData);
+  return data;
+};
+
+export const getAllAddresses = async () => {
+  const { data } = await api.get("/api/addresses");
+  return data.data;
+};
+
+export const deleteAddress = async (addressId: string) => {
+  const { data } = await api.delete(`/api/addresses/${addressId}`);
+  return data;
+};
+
+export const updateAddress = async ({ id, data }: { id: string; data: Address }) => {
+  const response = await api.patch(`/api/addresses/${id}`, data);
+  return response.data;
 };

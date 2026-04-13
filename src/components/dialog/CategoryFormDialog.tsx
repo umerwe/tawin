@@ -17,7 +17,7 @@ import MyImage from "../MyImage";
 interface CategoryFormDialogProps {
   open: boolean;
   onClose: () => void;
-  category?: Category | null;
+  category?: any;
 }
 
 const CategoryFormDialog = ({ open, onClose, category }: CategoryFormDialogProps) => {
@@ -29,10 +29,8 @@ const CategoryFormDialog = ({ open, onClose, category }: CategoryFormDialogProps
   const createMutation = useCreateCategory();
   const updateMutation = useUpdateCategory();
 
-  const [previews, setPreviews] = useState<{ thumb: string | null; icon: string | null }>({
-    thumb: null,
-    icon: null,
-  });
+  // State to hold the preview URL
+  const [thumbPreview, setThumbPreview] = useState<string | null>(null);
 
   const methods = useForm({
     defaultValues: {
@@ -53,10 +51,10 @@ const CategoryFormDialog = ({ open, onClose, category }: CategoryFormDialogProps
         reset({
           name: { en: category.name?.en || "", ar: category.name?.ar || "" },
           description: { en: category.description?.en || "", ar: category.description?.ar || "" },
-          parentCategory: category.parentCategory || "none",
+          parentCategory: category.parentCategory?._id || "none",
           type: category.type || "category",
         });
-        setPreviews({ thumb: category.thumbnail || null, icon: category.icon || null });
+        setThumbPreview(category.thumbnail || null);
       } else {
         reset({
           name: { en: "", ar: "" },
@@ -64,19 +62,20 @@ const CategoryFormDialog = ({ open, onClose, category }: CategoryFormDialogProps
           parentCategory: "none",
           type: "category",
         });
-        setPreviews({ thumb: null, icon: null });
+        setThumbPreview(null);
       }
     }
   }, [category, open, reset]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'thumb' | 'icon') => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviews(prev => ({ ...prev, [type]: reader.result as string }));
-      };
-      reader.readAsDataURL(file);
+      // Create a temporary object URL which is more reliable for previews than base64
+      const objectUrl = URL.createObjectURL(file);
+      setThumbPreview(objectUrl);
+      
+      // Cleanup memory when component unmounts or file changes
+      return () => URL.revokeObjectURL(objectUrl);
     }
   };
 
@@ -93,12 +92,8 @@ const CategoryFormDialog = ({ open, onClose, category }: CategoryFormDialogProps
     }
 
     const thumbFile = (document.getElementById("thumbnail-input") as HTMLInputElement)?.files?.[0];
-    const iconFile = (document.getElementById("icon-input") as HTMLInputElement)?.files?.[0];
-
     if (thumbFile) data.append("thumbnail", thumbFile);
-    if (iconFile) data.append("icon", iconFile);
 
-    // Separate the calls so TypeScript knows exactly which types are being used
     if (isEdit && category?._id) {
       updateMutation.mutate(
         { id: category._id, formData: data },
@@ -124,25 +119,61 @@ const CategoryFormDialog = ({ open, onClose, category }: CategoryFormDialogProps
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-2">
 
-            <div className="space-y-2">
-              <Label>{t("type")}</Label>
-              <Select
-                value={selectedType}
-                onValueChange={(v) => {
-                  setValue("type", v);
-                  if (v === "category") setValue("parentCategory", "none");
-                }}
-              >
-                <SelectTrigger className="rounded-md h-10 border-gray-200">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="category">{t("category")}</SelectItem>
-                  <SelectItem value="subCategory">{t("subCategory")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            {/* Show all fields for create mode, only name and thumbnail for edit mode */}
+            {!isEdit && (
+              <>
+                <div className="space-y-2">
+                  <Label>{t("type")}</Label>
+                  <Select
+                    value={selectedType}
+                    onValueChange={(v) => {
+                      setValue("type", v);
+                      if (v === "category") setValue("parentCategory", "none");
+                    }}
+                  >
+                    <SelectTrigger className="rounded-md h-10 border-gray-200">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="category">{t("category")}</SelectItem>
+                      <SelectItem value="subCategory">{t("subCategory")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
+                <MultilingualInput
+                  label={t("description")}
+                  name="description"
+                  type="textarea"
+                  placeholderEn={t("placeholderDescEn")}
+                  placeholderAr={t("placeholderDescAr")}
+                />
+
+                {selectedType === "subCategory" && (
+                  <div className="space-y-2">
+                    <Label>{t("parentCategory")}</Label>
+                    <Select
+                      value={currentParent}
+                      onValueChange={(v) => setValue("parentCategory", v)}
+                    >
+                      <SelectTrigger className="rounded-md h-10 border-gray-200">
+                        <SelectValue placeholder={t("selectParent")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">{t("selectParentCategory")}</SelectItem>
+                        {categoriesData?.data?.categories?.filter((cat: Category) => cat._id !== category?._id).map((cat: Category) => (
+                          <SelectItem key={cat._id} value={cat._id}>
+                            {cat.name[locale]}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Name field - always shown */}
             <MultilingualInput
               label={t("categoryName")}
               name="name"
@@ -150,89 +181,32 @@ const CategoryFormDialog = ({ open, onClose, category }: CategoryFormDialogProps
               placeholderAr={t("placeholderNameAr")}
             />
 
-            <MultilingualInput
-              label={t("description")}
-              name="description"
-              type="textarea"
-              placeholderEn={t("placeholderDescEn")}
-              placeholderAr={t("placeholderDescAr")}
-            />
-
-            {selectedType === "subCategory" && (
-              <div className="space-y-2">
-                <Label>{t("parentCategory")}</Label>
-                <Select
-                  value={currentParent}
-                  onValueChange={(v) => setValue("parentCategory", v)}
-                >
-                  <SelectTrigger className="rounded-md h-10 border-gray-200">
-                    <SelectValue placeholder={t("selectParent")} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">{t("selectParentCategory")}</SelectItem>
-                    {categoriesData?.data?.filter((cat: Category) => cat._id !== category?._id).map((cat: Category) => (
-                      <SelectItem key={cat._id} value={cat._id}>
-                        {cat.name[locale]}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
-            <div className="grid grid-cols-2 gap-6 pt-2">
-              <div className="space-y-3">
-                <Label>{t("thumbnail")}</Label>
-                <div className="relative group flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl hover:border-aqua/50 transition-colors bg-gray-50/50 overflow-hidden">
-                  {previews.thumb ? (
-                    <MyImage
-                      src={previews.thumb}
-                      alt="Preview"
-                      width={128}
-                      height={128}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center text-gray-400">
-                      <ImagePlus size={24} />
-                      <span className="text-[10px] mt-1">{t("upload")}</span>
-                    </div>
-                  )}
-                  <Input
-                    id="thumbnail-input"
-                    type="file"
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                    accept="image/*"
-                    onChange={(e) => handleFileChange(e, 'thumb')}
+            {/* Thumbnail field - always shown */}
+            <div className="space-y-3 pt-2">
+              <Label>{t("thumbnail")}</Label>
+              <div className="relative group flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-200 rounded-xl hover:border-aqua/50 transition-all bg-gray-50/50 overflow-hidden">
+                {thumbPreview ? (
+                  <MyImage
+                    src={thumbPreview}
+                    alt="Preview"
+                    width={160}
+                    height={160}
+                    className="w-full h-full object-contain"
                   />
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <Label>{t("icon")}</Label>
-                <div className="relative group flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl hover:border-aqua/50 transition-colors bg-gray-50/50 overflow-hidden">
-                  {previews.icon ? (
-                    <MyImage
-                      src={previews.icon}
-                      alt="Preview"
-                      width={48}
-                      height={48}
-                      className="w-12 h-12 object-contain"
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center text-gray-400">
-                      <ImagePlus size={24} />
-                      <span className="text-[10px] mt-1">{t("upload")}</span>
-                    </div>
-                  )}
-                  <Input
-                    id="icon-input"
-                    type="file"
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                    accept="image/*"
-                    onChange={(e) => handleFileChange(e, 'icon')}
-                  />
-                </div>
+                ) : (
+                  <div className="flex flex-col items-center text-gray-400">
+                    <ImagePlus size={32} strokeWidth={1.5} />
+                    <span className="text-xs mt-2 font-medium">{t("uploadImage")}</span>
+                    <span className="text-[10px] text-gray-300">PNG, JPG up to 5MB</span>
+                  </div>
+                )}
+                <Input
+                  id="thumbnail-input"
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
               </div>
             </div>
 
@@ -250,6 +224,7 @@ const CategoryFormDialog = ({ open, onClose, category }: CategoryFormDialogProps
                 type="submit"
                 variant="primary"
                 size="sm"
+                className="w-full rounded-full"
                 disabled={createMutation.isPending || updateMutation.isPending}
               >
                 {createMutation.isPending || updateMutation.isPending

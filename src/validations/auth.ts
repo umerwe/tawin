@@ -32,7 +32,18 @@ export const ProfilePictureSchema = z.object({
     ),
 });
 
+export const AddressSchema = z.object({
+  street: z.string().min(1, "Street is required"),
+  city: z.string().min(1, "City is required"),
+  state: z.string().min(1, "State is required"),
+  country: z.string().min(1, "Country is required"),
+  label: z.string().optional(),
+  zipCode: z.string().optional(),
+  isDefault: z.boolean().optional(),
+});
+
 export type Signup = z.infer<typeof SignupSchema>;
 export type Login = z.infer<typeof LoginSchema>;
 export type ProfileUpdate = z.infer<typeof ProfileUpdateSchema>;
 export type ProfilePicture = z.infer<typeof ProfilePictureSchema>;
+export type Address = z.infer<typeof AddressSchema>;

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import CategoryTable from "@/components/tables/CategoryTable";
@@ -11,8 +10,14 @@ import { useTranslations } from "next-intl";
 
 const Categories = () => {
   const t = useTranslations("translation");
-  const { data, isLoading } = useGetCategories();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit] = useState(10);
+  
+  const { data, isLoading } = useGetCategories({ page: currentPage, limit });
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  
+  const pagination = data?.data?.pagination;
+  const categories = data?.data?.categories || [];
 
   return (
     <div className="space-y-6 p-1">
@@ -28,8 +33,14 @@ const Categories = () => {
       </div>
 
       <CategoryTable
-        data={data?.data || []}
+        data={categories}
         isLoading={isLoading}
+        pagination={{
+          total: pagination?.total,
+          page: pagination?.page,
+          limit: pagination?.limit,
+          setPage: setCurrentPage
+        }}
       />
 
       {/* Dialog for Adding New Category */}

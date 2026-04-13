@@ -479,7 +479,22 @@
     "errorSaving": "حدث خطأ أثناء الحفظ",
     "type": "النوع",
     "addCategory": "إضافة فئة",
-    "categoryDetails": "تفاصيل الفئة"
+    "categoryDetails": "تفاصيل الفئة",
+    "addAddress": "إضافة عنوان",
+  "street": "الشارع",
+  "state": "الولاية", 
+  "label": "الوسم",
+  "zipCode": "الرمز البريدي",
+  "setDefaultAddress": "تعيين كعنوان افتراضي",
+  "adding": "جاري الإضافة...",
+  "loading": "جاري التحميل...",
+  "errorLoadingAddresses": "خطأ في تحميل العناوين",
+  "noAddresses": "لم يتم العثور على عناوين",
+  "default": "افتراضي",
+  "editAddress": "تعديل العنوان",
+  "updating": "جاري التحديث...",
+  "delete": "حذف",
+  "view": "عرض"
   },
   "confirm": {
     "logout": {

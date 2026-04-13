@@ -479,7 +479,22 @@
     "errorSaving": "An error occurred while saving",
     "type": "Type",
     "addCategory": "Add Category",
-    "categoryDetails": "Category Details"
+    "categoryDetails": "Category Details",
+    "addAddress": "Add Address",
+    "street": "Street",
+    "state": "State",
+    "label": "Label",
+    "zipCode": "Zip Code",
+    "setDefaultAddress": "Set as default address",
+    "adding": "Adding...",
+    "loading": "Loading...",
+    "errorLoadingAddresses": "Error loading addresses",
+    "noAddresses": "No addresses found",
+    "default": "Default",
+    "editAddress": "Edit Address",
+    "updating": "Updating...",
+    "delete": "Delete",
+    "view": "View"
   },
   "confirm": {
     "logout": {
@@ -563,7 +578,7 @@
       "icon": "Icon",
       "thumbnail": "Thumbnail",
       "parentCategory": "Parent Category",
-      "parent" : "Parent"
+      "parent": "Parent"
     },
     "search": {
       "noData": "No data found"

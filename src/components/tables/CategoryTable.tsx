@@ -12,7 +12,20 @@ import { useDeleteCategory } from "@/hooks/useCategories";
 import { Category } from "@/types/category";
 import ConfirmDialog from "../dialog/ConfirmDialog";
 
-const CategoryTable = ({ data, isLoading }: { data: Category[]; isLoading: boolean }) => {
+const CategoryTable = ({ 
+  data, 
+  isLoading, 
+  pagination 
+}: { 
+  data: Category[]; 
+  isLoading: boolean; 
+  pagination?: {
+    total: number | undefined;
+    page: number | undefined;
+    limit: number | undefined;
+    setPage: (page: number) => void;
+  };
+}) => {
   const t = useTranslations("translation");
   const tConfirm = useTranslations("confirm");
   const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
@@ -21,7 +34,7 @@ const CategoryTable = ({ data, isLoading }: { data: Category[]; isLoading: boole
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
-  const cols = ["icon", "name", "parent", "actions"];
+  const cols = ["thumbnail", "name", "parent", "actions"];
 
   const handleView = (item: Category) => {
     setSelectedCategory(item);
@@ -38,8 +51,8 @@ const CategoryTable = ({ data, isLoading }: { data: Category[]; isLoading: boole
       <TableCell className="w-[100px]">
         <div className="flex justify-start">
           <MyImage
-            src={item.icon}
-            alt="icon"
+            src={item.thumbnail}
+            alt="thumbnail"
             width={36}
             height={36}
             className="w-9 h-9 rounded-md object-contain border bg-slate-50 shadow-sm"
@@ -47,14 +60,14 @@ const CategoryTable = ({ data, isLoading }: { data: Category[]; isLoading: boole
         </div>
       </TableCell>
 
-      <TableCell className="font-semibold text-slate-700 min-w-[150px]">
+      <TableCell className="font-semibold text-slate-700 min-w-[150px] capitalize">
         {item.name[locale]}
       </TableCell>
 
       <TableCell className="text-slate-500">
         {item.parentCategory ? (
           <span className="text-[11px] bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
-            {item.parentCategory}
+            {item.parentCategory.name[locale]}
           </span>
         ) : (
           <span className="text-gray-300">—</span>
@@ -115,6 +128,7 @@ const CategoryTable = ({ data, isLoading }: { data: Category[]; isLoading: boole
         isLoading={isLoading}
         headerClassName="bg-slate-50/80 border-b"
         tableClassName="w-full"
+        pagination={pagination}
       />
 
       <CategoryDetailDialog

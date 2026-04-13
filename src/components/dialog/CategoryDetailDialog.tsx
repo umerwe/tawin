@@ -28,13 +28,13 @@ const CategoryDetailDialog = ({ category, open, onClose }: CategoryDetailDialogP
         </DialogHeader>
 
         {/* Icon Section - Simple centered view */}
-        <div className="flex flex-col items-center py-6">
+        <div className="flex flex-col items-center">
           <div className="w-24 h-24 rounded-full bg-slate-50 overflow-hidden border flex items-center justify-center p-2">
             <MyImage
-              src={category.icon}
+              src={category?.thumbnail}
               alt="category icon"
-              width={80}
-              height={80}
+              width={256}
+              height={256}
               className="object-contain"
             />
           </div>
@@ -46,7 +46,7 @@ const CategoryDetailDialog = ({ category, open, onClose }: CategoryDetailDialogP
             <Label>
               {t("categoryName")}
             </Label>
-            <p className="text-sm font-semibold text-slate-700" dir={locale === "ar" ? "rtl" : "ltr"}>
+            <p className="text-sm">
               {category.name[locale]}
             </p>
           </div>
@@ -55,26 +55,10 @@ const CategoryDetailDialog = ({ category, open, onClose }: CategoryDetailDialogP
             <Label>
               {t("description")}
             </Label>
-            <p className="text-sm text-slate-600 leading-relaxed" dir={locale === "ar" ? "rtl" : "ltr"}>
+            <p className="text-sm">
               {category.description[locale]}
             </p>
           </div>
-
-          {category.thumbnail && (
-            <div className="space-y-2">
-              <Label>
-                {t("thumbnail")}
-              </Label>
-              <div className="w-full h-44 rounded-xl bg-slate-100 border overflow-hidden relative">
-                <MyImage
-                  src={category.thumbnail}
-                  alt="category thumbnail"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </div>
-          )}
         </div>
       </DialogContent>
     </Dialog>

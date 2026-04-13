@@ -1,8 +1,14 @@
 import api from "@/lib/axios";
-import { CategoriesResponse, Category } from "@/types/category";
+import { Category } from "@/types/category";
 
-export const getCategories = async (): Promise<CategoriesResponse> => {
-  const { data } = await api.get("/api/categories");
+export const getCategories = async (params?: { page?: number; limit?: number }) => {
+  const queryParams = new URLSearchParams();
+  queryParams.append('admin', 'true');
+  
+  if (params?.page) queryParams.append('page', params.page.toString());
+  if (params?.limit) queryParams.append('limit', params.limit.toString());
+  
+  const { data } = await api.get(`/api/categories?${queryParams.toString()}`);
   return data;
 };
 

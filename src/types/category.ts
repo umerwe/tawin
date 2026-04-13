@@ -12,7 +12,12 @@ export interface Category {
   thumbnail: string; // URL from server
   icon: string;      // URL from server
   isActive: boolean;
-  parentCategory?: string | null;
+  parentCategory?: {
+    _id: string;
+    name: LocalizedString;
+    slug: string;
+    id: string;
+  } | null;
   subcategories?: Category[];
   createdAt: { $date: string };
   updatedAt: { $date: string };
