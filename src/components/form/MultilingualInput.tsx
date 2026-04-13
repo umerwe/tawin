@@ -3,13 +3,20 @@
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
 import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), { 
+  ssr: false,
+  loading: () => <div className="h-40 bg-gray-50 animate-pulse rounded-md border" />
+});
+import "react-quill-new/dist/quill.snow.css";
 
 interface MultilingualInputProps {
   label: string;
-  name: string; // "name" or "description"
-  type?: "input" | "textarea";
+  name: string;
+  type?: "input" | "textarea" | "rich-text";
   placeholderEn?: string;
   placeholderAr?: string;
 }
@@ -21,8 +28,17 @@ export const MultilingualInput = ({
   placeholderEn = "",
   placeholderAr = "",
 }: MultilingualInputProps) => {
-  const { register } = useFormContext();
+  const { register, control } = useFormContext();
   const [lang, setLang] = useState<"en" | "ar">("en");
+
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ["bold", "italic", "underline"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["clean"],
+    ],
+  };
 
   const LangButton = ({ l }: { l: "en" | "ar" }) => (
     <button
@@ -47,28 +63,63 @@ export const MultilingualInput = ({
         </div>
       </div>
 
+      {/* --- ENGLISH SECTION --- */}
       <div className={lang === "en" ? "block" : "hidden"}>
-        {type === "input" ? (
-          <Input {...register(`${name}.en`)} placeholder={placeholderEn} className="rounded-md" />
-        ) : (
+        {type === "rich-text" ? (
+          <Controller
+            name={`${name}.en`}
+            control={control}
+            render={({ field }) => (
+              <div className="bg-white rounded-md overflow-hidden border border-gray-200">
+                <ReactQuill 
+                  theme="snow" 
+                  value={field.value || ""} 
+                  onChange={field.onChange} 
+                  modules={modules} 
+                  placeholder={placeholderEn} 
+                />
+              </div>
+            )}
+          />
+        ) : type === "textarea" ? (
           <textarea
             {...register(`${name}.en`)}
             placeholder={placeholderEn}
             className="w-full min-h-[100px] p-3 rounded-md bg-gray-50 border border-gray-200 focus:border-aqua outline-none text-sm resize-none"
           />
+        ) : (
+          <Input {...register(`${name}.en`)} placeholder={placeholderEn} className="rounded-md" />
         )}
       </div>
 
-      <div className={lang === "ar" ? "block" : "hidden"}>
-        {type === "input" ? (
-          <Input {...register(`${name}.ar`)} placeholder={placeholderAr} dir="rtl" className="rounded-md text-right" />
-        ) : (
+      {/* --- ARABIC SECTION (Fixed RTL) --- */}
+      <div className={lang === "ar" ? "block" : "hidden"} dir="rtl">
+        {type === "rich-text" ? (
+          <Controller
+            name={`${name}.ar`}
+            control={control}
+            render={({ field }) => (
+              <div className="bg-white rounded-md overflow-hidden border border-gray-200 ql-rtl">
+                <ReactQuill 
+                  theme="snow" 
+                  value={field.value || ""} 
+                  onChange={field.onChange} 
+                  modules={modules} 
+                  placeholder={placeholderAr}
+                  // This is the key for internal Quill RTL handling
+                  className="ql-editor-rtl" 
+                />
+              </div>
+            )}
+          />
+        ) : type === "textarea" ? (
           <textarea
             {...register(`${name}.ar`)}
             placeholder={placeholderAr}
-            dir="rtl"
             className="w-full min-h-[100px] p-3 rounded-md bg-gray-50 border border-gray-200 focus:border-aqua outline-none text-sm resize-none text-right"
           />
+        ) : (
+          <Input {...register(`${name}.ar`)} placeholder={placeholderAr} className="rounded-md text-right" />
         )}
       </div>
     </div>

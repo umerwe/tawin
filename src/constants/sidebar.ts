@@ -43,5 +43,6 @@ export const sidebarMenu = [
 
     // Administration
     { title: "manager", icon: Shield, path: "/admin/manager" },
-    { title: "controlPermissions", icon: Settings, path: "/admin/permissions" }
+    { title: "controlPermissions", icon: Settings, path: "/admin/permissions" },
+    { title: "config", icon: Settings, path: "/admin/config" }
 ];

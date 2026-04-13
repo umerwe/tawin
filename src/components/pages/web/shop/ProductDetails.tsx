@@ -10,6 +10,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import { useProductBySlug } from "@/hooks/useProducts"
 import { SpinnerLoader } from "@/components/common/SpinnerLoader"
+import { useProductReviews } from "@/hooks/useReviews"
 
 interface ProductDetailsProps {
     params: string
@@ -18,9 +19,9 @@ interface ProductDetailsProps {
 const ProductDetails = ({ params }: ProductDetailsProps) => {
     const locale = useLocale() as "en" | "ar";
     const t = useTranslations("translation");
-    
 
     const { data: product, isLoading, error } = useProductBySlug(params);
+    const { data: reviewData,isLoading: isReviewLoading } = useProductReviews(product?._id as string);
 
     if (isLoading) {
         return (
@@ -57,13 +58,14 @@ const ProductDetails = ({ params }: ProductDetailsProps) => {
                 <Breadcrumb
                     items={[
                         { title: t("home"), href: "/home" },
-                        { title: t("product"), href: `/product` },
+                        { title: t("shop"), href: "/shop" },
+                        { title: product.title[locale], href: `#` },
                     ]}
                 />
                 <Button
                     variant="destructive"
                     size="sm"
-                    className="bg-destructive/40"
+                    className="bg-destructive/40 pointer-events-none"
                 >
                     {t("remaining")}: {product.remainingPieces} {t("pieces")}
                 </Button>
@@ -71,7 +73,7 @@ const ProductDetails = ({ params }: ProductDetailsProps) => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 <ProductImageGallery
-                    images={[product.image]}
+                    images={product?.images || []}
                     isNew={product.isNewArrival || false}
                     discount={product.discount}
                 />
@@ -84,10 +86,10 @@ const ProductDetails = ({ params }: ProductDetailsProps) => {
             <ProductDescription
                 productKey={product._id}
                 productCode={product.slug}
-                category={product.category.name[locale]}
+                category={product?.category?.name?.[locale]}
             />
 
-            <Reviews product={product} />
+            <Reviews product={product} reviews={reviewData || []} isReviewsLoading={isReviewLoading} />
         </Container>
     )
 }

@@ -29,7 +29,7 @@ export function ProductImageGallery({ images, isNew, discount }: any) {
         {/* Floating Badges */}
         <div className="absolute left-4 top-4 z-10 flex flex-col gap-2">
           {isNew && <Badge className="bg-white text-black hover:bg-white">{t("new")}</Badge>}
-          {discount && <Badge className="bg-aqua text-white">-{discount}%</Badge>}
+          {discount > 0 && <Badge className="bg-aqua text-white">-{discount}%</Badge>}
         </div>
 
         {/* Navigation Arrows */}

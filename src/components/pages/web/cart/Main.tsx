@@ -26,9 +26,9 @@ export default function Cart() {
             </h1>
 
             <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-8 md:mb-16 px-4">
-                {steps.map((step) => (
+                {steps.map((step,index) => (
                     <div
-                        key={step.id}
+                        key={index}
                         onClick={() => setStep(step.id)}
                         className="flex items-center space-x-2 md:space-x-3 cursor-pointer relative pb-2"
                     >

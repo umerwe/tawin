@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -8,11 +9,10 @@ import ColorSelector from "./ColorSelector"
 import QuantitySelector from "./QuantitySelector"
 import StarRating from "@/components/StarRating"
 import { useLocale, useTranslations } from "next-intl"
-// --- REDUX IMPORTS ---
-import { useDispatch, useSelector } from "react-redux"
-import { addToCart } from "@/store/cartSlice"
-import { RootState } from "@/store/store"
 import { Product } from "@/types/product"
+import { useAddToCart, useCart } from "@/hooks/useCart"
+import { useToggleFavorite, useFavorites } from "@/hooks/useFavorite"
+import { cn } from "@/lib/utils"
 
 interface ProductInfoProps {
   product: Product
@@ -21,7 +21,6 @@ interface ProductInfoProps {
 export function ProductInfo({ product }: ProductInfoProps) {
   const locale = useLocale() as "en" | "ar";
   const t = useTranslations("translation");
-  const dispatch = useDispatch();
 
   const {
     _id,
@@ -31,105 +30,119 @@ export function ProductInfo({ product }: ProductInfoProps) {
     originalPrice,
     measurements = "",
     colors = [],
-    image,
+    sizes = [],
+    weights = [],
   } = product;
 
-  // Convert colors array to objects with name and value
+  // API Hooks
+  const { data: cartData } = useCart();
+  const { mutate: addToCartApi, isPending: isAdding } = useAddToCart();
+  const { data: favData } = useFavorites();
+  const { mutate: toggleFavApi, isPending: isTogglingFav } = useToggleFavorite();
+
+  // --- FIXED: Local states to track user selection ---
+  const [selectedColor, setSelectedColor] = useState(colors[0] || "");
+  const [selectedSize, setSelectedSize] = useState(sizes[0] || "");
+  const [quantity, setQuantity] = useState(1);
+
+  const isInCart = cartData?.data?.items?.some((item: any) => item.productId === _id);
+  const isWished = favData?.data?.some((fav: any) => fav.product?._id === _id);
+
   const colorObjects = colors.map((colorName) => ({
     name: colorName,
     value: colorName.toLowerCase() === "black" ? "#000000" : colorName
   }));
 
-  // Check if item is already in cart
-  const isInCart = useSelector((state: RootState) =>
-    state.cart.items.some((item: any) => item.id === _id)
-  );
-
   const handleAddToCart = () => {
     if (!isInCart) {
-      dispatch(addToCart({ 
-        id: _id, 
-        image: image || product.images?.[0],
-        title, 
-        price 
-      }));
+      addToCartApi({
+        productId: _id,
+        quantity: quantity, // Uses the current state value
+        attributes: {
+          color: selectedColor, // Uses the current selected color
+          size: selectedSize,
+          weight: weights[0] || undefined
+        }
+      });
     }
+  };
+
+  const handleToggleFavorite = () => {
+    toggleFavApi(_id);
   };
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Stars + Reviews */}
       <div className="flex items-center gap-2">
-        <StarRating />
+        <StarRating rating={product.reviewCount} />
         <span className="text-sm text-muted-foreground">{product.reviewCount} {t("reviews")}</span>
       </div>
 
-      {/* Title */}
       <h1 className="text-2xl font-semibold text-foreground">{title[locale]}</h1>
-
-      {/* Description */}
       <p className="text-sm text-muted-foreground leading-relaxed">{description?.[locale]}</p>
 
       <Separator />
 
-      {/* Price */}
       <div className="flex items-center gap-3">
-        <span className="text-2xl font-semibold text-foreground">
-          ${price.toFixed(2)}
-        </span>
+        <span className="text-2xl font-semibold text-foreground">${price.toFixed(2)}</span>
         {originalPrice && originalPrice > price && (
-          <span className="text-base text-muted-foreground line-through">
-            ${originalPrice.toFixed(2)}
-          </span>
+          <span className="text-base text-muted-foreground line-through">${originalPrice.toFixed(2)}</span>
         )}
       </div>
 
       <Separator />
 
-      {/* Offer Countdown */}
-      <div className="flex flex-col gap-3">
+      {/* <div className="flex flex-col gap-3">
         <span className="text-xs text-muted-foreground">{t("offerEndsIn")}</span>
         <CountdownTimer />
       </div>
 
-      <Separator />
+      <Separator /> */}
 
-      {/* Measurements */}
-      <div className="flex flex-col gap-2">
-        <span className="text-xs text-muted-foreground">{t("measurements")}</span>
-        <span className="text-sm text-foreground">{measurements}</span>
-      </div>
+      {
+        measurements && (
+          <div className="flex flex-col gap-2">
+            <span className="text-xs text-muted-foreground">{t("measurements")}</span>
+            <span className="text-sm text-foreground">{measurements}</span>
+          </div>
+        )
+      }
 
-      {/* Color Selector */}
-      <ColorSelector colors={colorObjects} />
+      {/* --- FIXED: Passing selectedColor and setter --- */}
+      <ColorSelector
+        colors={colorObjects}
+        selectedColor={selectedColor}
+        onColorChange={setSelectedColor}
+      />
 
-      {/* Quantity + Action buttons */}
       <div className="flex items-center gap-3">
-        {/* Quantity */}
-        <QuantitySelector />
+        {/* --- FIXED: Passing quantity and setter --- */}
+        <QuantitySelector
+          quantity={quantity}
+          setQuantity={setQuantity}
+        />
 
-        {/* Favorites */}
         <Button
           variant="outline"
           className="flex-1"
+          onClick={handleToggleFavorite}
+          disabled={isTogglingFav}
         >
-          <Heart className="h-4 w-4 ltr:mr-2 rtl:ml-2" />
-          {t("favorites")}
+          <Heart className={cn("h-4 w-4 ltr:mr-2 rtl:ml-2", isWished && "fill-red text-red")} />
+          {isWished ? t("inFavorites") : t("favorites")}
         </Button>
       </div>
 
-      {/* Add to Cart */}
       <Button
         variant={isInCart ? "secondary" : "primary"}
         className="mb-2"
         onClick={handleAddToCart}
-        disabled={isInCart}
+        disabled={isInCart || isAdding}
       >
-        {isInCart ? t("alreadyInCart") : t("addToCart")}
+        {isAdding ? t("adding") : isInCart ? t("alreadyInCart") : t("addToCart")}
       </Button>
 
       <Separator />
-
     </div>
   )
 }

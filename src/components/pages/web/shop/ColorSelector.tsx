@@ -1,12 +1,16 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { useState } from "react"
 import { useTranslations } from "next-intl"
 
-export default function ColorSelector({ colors = [] }: { colors?: { name: string; value: string }[] }) {
+interface ColorSelectorProps {
+  colors?: { name: string; value: string }[];
+  selectedColor: string; // From Parent
+  onColorChange: (colorName: string) => void; // Setter from Parent
+}
+
+export default function ColorSelector({ colors = [], selectedColor, onColorChange }: ColorSelectorProps) {
   const t = useTranslations("translation");
-  const [selected, setSelected] = useState(colors[0]?.name || "")
 
   return (
     <div className="space-y-2">
@@ -17,11 +21,12 @@ export default function ColorSelector({ colors = [] }: { colors?: { name: string
         {colors.map((color, i) => (
           <button
             key={i}
-            onClick={() => setSelected(color.name)}
+            type="button" // Prevent form submission
+            onClick={() => onColorChange(color.name)} // Update parent state
             aria-label={color.name}
             className={cn(
               "relative h-14 w-12 overflow-hidden rounded-md border-2 transition-all",
-              selected === color.name
+              selectedColor === color.name
                 ? "border-foreground"
                 : "border-transparent hover:border-border"
             )}

@@ -5,9 +5,15 @@ import ContactForm from "@/components/form/ContactForm"
 import { useTranslations } from "next-intl"
 import Link from "next/link"
 import Image from "@/components/MyImage"
+import { useSettings } from "@/hooks/useSettings"
+import { useLocale } from "next-intl"
+import HtmlContent from "@/components/common/HtmlContent"
 
 export default function ContactUs() {
   const t = useTranslations("translation");
+  const locale = useLocale();
+
+  const { data: settings, isLoading } = useSettings();
 
   return (
     <div className="w-full bg-white font-sans text-gray-800 space-y-10 pt-10">
@@ -36,15 +42,28 @@ export default function ContactUs() {
             />
           </div>
           <div className="w-full md:w-1/2 p-6 sm:p-12 flex flex-col justify-center space-y-6">
-            <h2 className="text-3xl font-semibold">{t("aboutUs")}</h2>
-            <p className="text-gray-500 text-sm leading-relaxed">
-              {t("aboutUsDescription")}
-            </p>
-            <Link
-              href="/shop"
-              className="text-sm font-semibold border-b-2 border-black w-fit pb-1 hover:text-gray-600 transition-colors">
-              {t("shopNow")} &rarr;
-            </Link>
+            {isLoading ? (
+              <>
+                <div className="animate-pulse bg-gray-200 rounded h-12 w-1/3" />
+                <div className="space-y-2">
+                  <div className="animate-pulse bg-gray-200 rounded h-4 w-full" />
+                  <div className="animate-pulse bg-gray-200 rounded h-4 w-full" />
+                  <div className="animate-pulse bg-gray-200 rounded h-4 w-5/6" />
+                  <div className="animate-pulse bg-gray-200 rounded h-4 w-4/6" />
+                </div>
+                <div className="animate-pulse bg-gray-200 rounded h-4 w-24" />
+              </>
+            ) : (
+              <>
+                <h2 className="text-3xl font-semibold">{t("aboutUs")}</h2>
+                <HtmlContent content={settings?.pages?.about?.[locale]} />
+                <Link
+                  href="/shop"
+                  className="text-sm font-semibold border-b-2 border-black w-fit pb-1 hover:text-gray-600 transition-colors">
+                  {t("shopNow")} &rarr;
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </section>

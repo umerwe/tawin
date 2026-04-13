@@ -1,0 +1,65 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getCart, addToCart, updateCartQuantity, removeFromCart, clearCart } from "@/services/cart";
+import { toast } from "sonner";
+
+export const useCart = () => {
+  return useQuery({
+    queryKey: ["cart"],
+    queryFn: getCart,
+  });
+};
+
+export const useAddToCart = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: addToCart,
+    onSuccess: () => {
+      toast.success("Item added to cart");
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to add item");
+    },
+  });
+};
+
+export const useUpdateCartQuantity = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateCartQuantity,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to update quantity");
+    },
+  });
+};
+
+export const useRemoveFromCart = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: removeFromCart,
+    onSuccess: () => {
+      toast.success("Item removed from cart");
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to remove item");
+    },
+  });
+};
+
+export const useClearCart = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: clearCart,
+    onSuccess: () => {
+      toast.success("Cart cleared");
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to clear cart");
+    },
+  });
+};

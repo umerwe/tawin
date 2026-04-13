@@ -8,34 +8,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { ReviewHeader, WriteReviewButton, ReviewCard } from "./ReviewComponents"
-import { Review } from "@/types/product"
-import { useTranslations } from "next-intl"
+import { WriteReviewButton, ReviewCard } from "./ReviewComponents"
+import { useLocale, useTranslations } from "next-intl"
+import { SpinnerLoader } from "@/components/common/SpinnerLoader"
+import WriteReviewDialog from "@/components/dialog/WriteReviewDialog"
 
-const mockReviews: Review[] = [
-  {
-    _id: "1",
-    name: {
-      en: "Maryam Ahmed",
-      ar: "مريم أحمد"
-    },
-    rating: 5,
-    date: "2 days ago",
-    comment: {
-      en: "Excellent experience!",
-      ar: "تجربة ممتازة!"
-    },
-    avatar: "/profile.jpg"
-  }
-];
-
-export default function Reviews( { product }: { product: any } ) {
+export default function Reviews({ product, reviews, isReviewsLoading }: {
+  product: any,
+  reviews: any[],
+  isReviewsLoading: boolean
+}) {
   const t = useTranslations("translation");
-  const [activeTab, setActiveTab] = useState("reviews")
+  const locale = useLocale();
 
+  const [activeTab, setActiveTab] = useState("reviews")
+  const [isWriteDialogOpen, setIsWriteDialogOpen] = useState(false)
+
+  // No hook here, just use props directly
   const tabs = [
     { key: "reviews", label: t("reviewsTab") },
-    { key: "faqs", label: t("faqsTab") },
+    // { key: "faqs", label: t("faqsTab") },
     { key: "product_info", label: t("productInfoTab") }
   ]
 
@@ -58,8 +50,13 @@ export default function Reviews( { product }: { product: any } ) {
 
       {activeTab === "reviews" && (
         <div className="space-y-8">
-          <ReviewHeader product={product} />
-          <WriteReviewButton /> 
+          <WriteReviewButton onClick={() => setIsWriteDialogOpen(true)} />
+
+          <WriteReviewDialog
+            open={isWriteDialogOpen}
+            onOpenChange={setIsWriteDialogOpen}
+            productId={product._id}
+          />
 
           <div className="flex justify-between items-center pt-2">
             <Select>
@@ -67,29 +64,41 @@ export default function Reviews( { product }: { product: any } ) {
                 <SelectValue placeholder={t("latest")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{t("allCategories")}</SelectItem>
-                <SelectItem value="interior">{t("interiorDoors")}</SelectItem>
-                <SelectItem value="exterior">{t("exteriorDoors")}</SelectItem>
-                <SelectItem value="garage">{t("garageDoors")}</SelectItem>
+                <SelectItem value="all">{t("latest")}</SelectItem>
+                <SelectItem value="interior">{t("oldest")}</SelectItem>
               </SelectContent>
             </Select>
-            <span className="text-sm text-gray-400 font-medium">11 {t("comments")}</span>
+            <span className="text-sm text-gray-400 font-medium">{reviews.length} {t("comments")}</span>
           </div>
 
           <div className="space-y-10 pt-4">
-            {mockReviews.map((review) => (
-              <ReviewCard key={review._id} review={review} />
-            ))}
+            {isReviewsLoading ? (
+              <div className="py-10 flex justify-center"><SpinnerLoader /></div>
+            ) : reviews.length === 0 ? (
+              <p className="text-center text-gray-400 py-10">{t("noReviews") ?? "No reviews yet."}</p>
+            ) : (
+              reviews.map((review: any) => (
+                <ReviewCard key={review._id} review={review} />
+              ))
+            )}
           </div>
 
-          <div className="flex items-center justify-center">
-            <Button
-              className="border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-10 rounded-full"
-              size="sm"
-            >
-              {t("more")}
-            </Button>
-          </div>
+          {reviews.length > 5 && (
+            <div className="flex items-center justify-center">
+              <Button
+                className="border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-10 rounded-full"
+                size="sm"
+              >
+                {t("more")}
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTab === "product_info" && (
+        <div className="text-gray-600 text-[15px] leading-relaxed">
+          {product?.description?.[locale] ?? "No description available."}
         </div>
       )}
     </div>

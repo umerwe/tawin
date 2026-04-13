@@ -11,15 +11,16 @@ import { useLocale, useTranslations } from "next-intl"
 import Image from "@/components/MyImage"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { useDispatch, useSelector } from "react-redux"
-import { addToCart } from "@/store/cartSlice"
-import { RootState } from "@/store/store"
+import { useAddToCart, useCart } from "@/hooks/useCart"
+import { useFavorites, useToggleFavorite } from "@/hooks/useFavorite" // Added hooks
 import { LoginDialog } from "../dialog/LoginDialog"
 
 export function ProductCard({
+    _id,
     image,
     title,
     price,
+    rating,
     originalPrice,
     isNew = false,
     discount,
@@ -28,25 +29,47 @@ export function ProductCard({
     const locale = useLocale();
     const router = useRouter();
     const t = useTranslations("translation");
-    const dispatch = useDispatch();
 
-    const [wished, setWished] = useState(false)
     const [loginOpen, setLoginOpen] = useState(false)
     const hasBadge = isNew || !!discount
 
-    const isInCart = useSelector((state: RootState) =>
-        state.cart.items.some((item: any) => item.slug === slug)
-    );
+    // Cart API Hooks
+    const { data: cartData } = useCart();
+    const { mutate: addToCartApi, isPending: isAddingToCart } = useAddToCart();
 
-    const handleAddToCart = (e: React.MouseEvent) => {
+    // Favorite API Hooks
+    const { data: favData } = useFavorites();
+    const { mutate: toggleFavApi, isPending: isTogglingFav } = useToggleFavorite();
+
+    // Check states from API data
+    const isInCart = cartData?.items?.some((item: any) => item.productId === _id);
+    const isWished = favData?.data?.some((fav: any) => fav.product?._id === _id);
+
+    const handleFavorite = (e: React.MouseEvent) => {
         e.stopPropagation();
         const token = localStorage.getItem("token")
         if (!token) {
             setLoginOpen(true)
             return
         }
+        toggleFavApi(_id);
+    };
+
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        const token = localStorage.getItem("token")
+
+        if (!token) {
+            setLoginOpen(true)
+            return
+        }
+
         if (!isInCart) {
-            dispatch(addToCart({ id: slug, image, title, price }));
+            const payload = {
+                productId: _id,
+                quantity: 1
+            };
+            addToCartApi(payload);
         }
     };
 
@@ -81,24 +104,22 @@ export function ProductCard({
                         <Button
                             size="icon"
                             variant="outline"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setWished((w) => !w);
-                            }}
-                            className="absolute right-3 top-3 z-10 h-8 w-8 rounded-full border-border bg-background/90 shadow-sm hover:bg-background"
+                            onClick={handleFavorite}
+                            disabled={isTogglingFav}
+                            className="absolute right-3 top-3 z-10 h-8 w-8 rounded-full border-border bg-background/90 shadow-sm hover:bg-background disabled:opacity-70"
                             aria-label="Toggle wishlist"
                         >
                             <Heart
                                 className={cn(
                                     "h-4 w-4 transition-colors",
-                                    wished ? "fill-red text-red" : "text-muted-foreground"
+                                    isWished ? "fill-red text-red" : "text-muted-foreground"
                                 )}
                             />
                         </Button>
                     </div>
 
                     <div className="flex flex-col items-start gap-1 bg-background pt-4">
-                        <StarRating />
+                        <StarRating rating={rating} />
 
                         <Link href={`/shop/${slug}`} className="line-clamp-1 text-sm font-medium text-foreground cursor-pointer">
                             {locale === "en" ? title.en : title.ar}
@@ -119,9 +140,12 @@ export function ProductCard({
                             size="sm"
                             className="w-full mt-2"
                             onClick={handleAddToCart}
-                            disabled={isInCart}
+                            disabled={isInCart || isAddingToCart}
                         >
-                            {isInCart ? t("alreadyInCart") : t("addToCart")}
+                            {isAddingToCart
+                                ? t("adding")
+                                : isInCart ? t("alreadyInCart") : t("addToCart")
+                            }
                         </Button>
                     </div>
                 </CardContent>

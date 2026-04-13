@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button"
 import StarRating from "@/components/StarRating"
-import { Review } from "@/types/product"
 import { useLocale, useTranslations } from "next-intl"
 import Image from "@/components/MyImage"
 import { Product } from "@/types/product"
@@ -20,16 +19,12 @@ export function ReviewHeader({
         <StarRating />
         <span className="text-sm font-bold text-gray-900">{product.reviewCount} {t("reviewsCount")}</span>
       </div>
-      <span className="text-sm text-gray-500 font-medium">{product.title[locale]}</span>
+      <span className="text-sm text-gray-500 font-medium">{product.title?.[locale]}</span>
     </div>
   )
 }
 
-interface WriteReviewButtonProps {
-  onClick?: () => void
-}
-
-export function WriteReviewButton({ onClick }: WriteReviewButtonProps) {
+export function WriteReviewButton({ onClick }: { onClick?: () => void }) {
   const t = useTranslations("translation");
 
   return (
@@ -45,32 +40,34 @@ export function WriteReviewButton({ onClick }: WriteReviewButtonProps) {
   )
 }
 
-export function ReviewCard({ review }: { review: Review }) {
-  const t = useTranslations("translation");
-  const locale = useLocale() as "en" | "ar";
+export function ReviewCard({ review }: { review: any }) {
 
-  const reviewerName = review.name[locale];
-  const reviewerComment = review.comment[locale];
+  const reviewerName = `${review.user?.firstName || ""} ${review.user?.lastName || ""}`;
+  const reviewerComment = review.comment;
 
   return (
     <div className="flex flex-col items-start group">
       <div className="flex items-center space-x-4 mb-3">
-        <Image
-          src={review.avatar}
-          alt={reviewerName}
-          width={256}
-          height={256}
-          className="w-12 h-12 rounded-full object-cover"
-        />
+        <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center border">
+          <Image
+            src={review.user?.avatar}
+            alt={reviewerName}
+            width={48}
+            height={48}
+            className="w-full h-full object-cover"
+          />
+        </div>
         <div>
           <h4 className="font-bold text-sm text-gray-900">{reviewerName}</h4>
-          <StarRating />
+          <StarRating rating={review.rating} />
         </div>
       </div>
-      <p className="text-gray-600 text-[15px] leading-relaxed max-w-4xl">
+      <p className="text-gray-600 text-[15px] leading-relaxed max-w-4xl capitalize">
         {reviewerComment}
       </p>
-      <span className="text-xs text-gray-400 mt-2 font-medium italic">({t("doorImage")})</span>
+      <span className="text-xs text-gray-400 mt-2 font-medium italic">
+        {new Date(review.createdAt).toLocaleDateString()}
+      </span>
     </div>
   )
 }

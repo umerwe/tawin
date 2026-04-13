@@ -17,6 +17,11 @@ export const getCategoryBySlug = async (slug: string): Promise<Category> => {
   return data.data;
 };
 
+export const getCategoryById = async (id: string): Promise<Category> => {
+  const { data } = await api.get(`/api/categories/id/${id}`);
+  return data.data;
+};
+
 export const createCategory = async (formData: FormData): Promise<Category> => {
   const { data } = await api.post("/api/categories", formData, {
     headers: { "Content-Type": "multipart/form-data" },

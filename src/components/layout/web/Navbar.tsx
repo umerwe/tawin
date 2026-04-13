@@ -8,22 +8,24 @@ import { CircleUserRound, Menu, Search, ShoppingBag, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import LanguageSwitcher from "../../LanguageSwitcher"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useRouter } from "next/navigation"
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
 import CartSheet from "@/components/CartSheet"
 import SearchDialog from "@/components/dialog/SearchDialog"
 import Image from "@/components/MyImage"
 import { ShopDropdown } from "@/components/ShopDropdown"
-
+import { useCart } from "@/hooks/useCart"
+import { useSettings } from "@/hooks/useSettings"
 
 export default function Navbar() {
   const t = useTranslations("translation");
   const router = useRouter();
   const pathname = usePathname();
+  const locale = useLocale();
 
-  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const { data: settings } = useSettings();
+  console.log(settings);
+
   const rawNormalizedPath = "/" + pathname.split("/").filter(Boolean).slice(1).join("/");
   const normalizedPath = rawNormalizedPath === "/" ? "/" : rawNormalizedPath;
 
@@ -34,7 +36,12 @@ export default function Navbar() {
   const [cartOpen, setCartOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
-  const count = cartItems.length;
+  // Use API Hook for Cart Data
+  const { data: cartResponse } = useCart();
+  
+  const cartItems = cartResponse?.items
+  const cartCount = cartResponse?.items?.length || 0;
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token")
@@ -56,33 +63,29 @@ export default function Navbar() {
       )}
     >
       <div className="h-14 flex items-center">
-
         <Link href="/" className="flex items-center gap-2 flex-1">
           <div>
             <Image
-              src="/logo.png"
+              src={settings?.logo}
               alt="Logo"
               width={60}
               height={60}
             />
           </div>
-          {
-            !isMain &&
+          {!isMain && (
             <h2 className="text-sm sm:text-base font-semibold text-[#2D3E50]">
-              {t("brandName")}
+              {settings?.businessName?.[locale]}
             </h2>
-          }
+          )}
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-10">
           {navLinks.map((link) => {
-            // If it's the shop link, use the dropdown
             if (link.label.toLowerCase() === "shop") {
               return (
                 <div key={link.href} className="relative">
                   <ShopDropdown isMain={isMain} />
-                  {/* Keep your active indicator line if needed */}
                   {normalizedPath.startsWith("/shop") && (
                     <span className="absolute bottom-[-2px] left-0 w-full h-0.5 bg-aqua" />
                   )}
@@ -90,7 +93,6 @@ export default function Navbar() {
               )
             }
 
-            // Standard links
             return (
               <Link
                 key={link.href}
@@ -101,7 +103,7 @@ export default function Navbar() {
                     ? "text-aqua"
                     : isMain
                       ? "text-white/80 hover:text-white"
-                      : "text-gray-500 hover:text-gray:900"
+                      : "text-gray-500 hover:text-gray-900"
                 )}
               >
                 {t(`${link.label.toLowerCase()}`)}
@@ -123,9 +125,9 @@ export default function Navbar() {
                   onClick={() => setCartOpen(true)}
                   className="flex items-center justify-center gap-1 transition-colors relative text-gray-600 hover:text-aqua"
                 >
-                  {count > 0 && (
+                  {cartCount > 0 && (
                     <span className="flex h-4 w-4 items-center justify-center rounded-full bg-black text-[8px] sm:text-[10px] text-white">
-                      {count}
+                      {cartCount}
                     </span>
                   )}
                   <ShoppingBag className="w-4 h-4 sm:h-5 sm:w-5" />
@@ -145,7 +147,6 @@ export default function Navbar() {
                 </Link>
               )}
 
-              {/* Search */}
               <button
                 onClick={() => setSearchOpen(true)}
                 className="flex items-center justify-center text-black hover:text-aqua transition-colors"
@@ -156,7 +157,6 @@ export default function Navbar() {
             </>
           )}
 
-          {/* Hamburger Toggle */}
           <button
             onClick={() => setIsOpen(true)}
             className={cn(
@@ -200,7 +200,6 @@ export default function Navbar() {
                   )
                 }
 
-                // Standard links
                 return (
                   <Link
                     key={link.href}
@@ -224,11 +223,11 @@ export default function Navbar() {
             {!isMain && (
               <div className="mt-auto pt-10">
                 {isLoggedIn ? (
-                  <Button onClick={handleLogout} variant="primary">
+                  <Button onClick={handleLogout} variant="primary" className="w-full">
                     {t("logout")}
                   </Button>
                 ) : (
-                  <Button onClick={() => router.push("/auth/signin")} variant="primary">
+                  <Button onClick={() => router.push("/auth/signin")} variant="primary" className="w-full">
                     {t("signin")}
                   </Button>
                 )}
@@ -238,8 +237,8 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Cart Sheet */}
-      <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
+      {/* Cart Sheet - Now controlled by open state, data is fetched internally in the Sheet component using useCart */}
+      <CartSheet open={cartOpen} onOpenChange={setCartOpen} cartItems={cartItems} isLoading={false} />
 
       {/* Search Dialog */}
       <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />

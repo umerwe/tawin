@@ -11,7 +11,7 @@ import { useTranslations } from "next-intl"
 import { useSearchParams } from "next/navigation"
 import Container from "@/components/common/Container"
 import { useProducts, useProductsByCategory } from "@/hooks/useProducts"
-import { SpinnerLoader } from "@/components/common/SpinnerLoader"
+import { Skeleton } from "@/components/ui/skeleton" // Assuming you use shadcn/ui or similar
 
 const Shop = () => {
     const t = useTranslations("translation");
@@ -23,7 +23,6 @@ const Shop = () => {
         : useProducts();
         
     const data = productsData?.data || [];
-
     const [viewMode, setViewMode] = useState("grid4");
 
     return (
@@ -33,12 +32,19 @@ const Shop = () => {
             <Container className="space-y-10 mb-14">
                 <FilterBar viewMode={viewMode} onViewModeChange={setViewMode} />
 
-                {/* Loading State */}
+                {/* --- Skeleton Loader State --- */}
                 {isLoading ? (
-                    <div className="flex items-center justify-center py-20">
-                        <SpinnerLoader />
+                    <div className={getGridClasses(viewMode)}>
+                        {[...Array(8)].map((_, i) => (
+                            <div key={i} className="space-y-4">
+                                <Skeleton className="h-[300px] w-full rounded-xl" />
+                                <Skeleton className="h-4 w-3/4" />
+                                <Skeleton className="h-4 w-1/2" />
+                            </div>
+                        ))}
                     </div>
                 ) : error ? (
+                    /* --- Error State --- */
                     <div className="flex flex-col items-center justify-center py-20 text-center">
                         <div className="bg-red-100 p-6 rounded-full mb-4">
                             <svg className="w-12 h-12 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,9 +61,10 @@ const Shop = () => {
                         </Button>
                     </div>
                 ) : data.length > 0 ? (
+                    /* --- Data Success State --- */
                     <>
                         <div className={getGridClasses(viewMode)}>
-                            {data.map((product) => (
+                            {data.slice(0, 8).map((product) => (
                                 <ProductCard
                                     key={product._id}
                                     {...product as any}
@@ -76,7 +83,7 @@ const Shop = () => {
                         </div>
                     </>
                 ) : (
-                    /* Not Found State */
+                    /* --- Not Found State --- */
                     <div className="flex flex-col items-center justify-center py-20 text-center">
                         <div className="bg-gray-100 p-6 rounded-full mb-4">
                             <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,4 +107,4 @@ const Shop = () => {
     )
 }
 
-export default Shop
+export default Shop;
