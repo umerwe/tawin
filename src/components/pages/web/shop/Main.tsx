@@ -21,6 +21,7 @@ const Shop = () => {
     const { data: productsData, isLoading, error } = category 
         ? useProductsByCategory(category)
         : useProducts();
+        
     const data = productsData?.data || [];
 
     const [viewMode, setViewMode] = useState("grid4");
