@@ -1,9 +1,9 @@
 import api from "@/lib/axios";
 import { Category } from "@/types/category";
 
-export const getCategories = async (params?: { page?: number; limit?: number }) => {
+export const getCategories = async (params?: { page?: number; limit?: number; isAdmin?: boolean }) => {
   const queryParams = new URLSearchParams();
-  queryParams.append('admin', 'true');
+  queryParams.append('admin', params?.isAdmin ? 'true' : 'false');
   
   if (params?.page) queryParams.append('page', params.page.toString());
   if (params?.limit) queryParams.append('limit', params.limit.toString());

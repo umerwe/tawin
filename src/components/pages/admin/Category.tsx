@@ -13,7 +13,7 @@ const Categories = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [limit] = useState(10);
   
-  const { data, isLoading } = useGetCategories({ page: currentPage, limit });
+  const { data, isLoading } = useGetCategories({ page: currentPage, limit, isAdmin: true });
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   
   const pagination = data?.data?.pagination;

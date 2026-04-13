@@ -14,7 +14,7 @@ const Hero = ({ activeCategory }: HeroProps) => {
     const t = useTranslations("shop");
     const { data: categoriesData } = useGetCategories();
 
-    const categoryData: any = categoriesData?.data?.find(cat => cat?._id === activeCategory);
+    const categoryData = categoriesData?.data?.data?.categories?.find((cat: any) => cat?._id === activeCategory);
 
     const title = categoryData?.name[locale] || t("heroTitleDefault");
     const subTitle = categoryData?.description[locale] || t("heroSubtitleDefault");
