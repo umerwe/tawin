@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import Image, { ImageProps, StaticImageData } from "next/image";
 import { getImageUrl } from "@/utils/getImageUrl";
@@ -28,6 +28,12 @@ const MyImage = ({
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(!src);
 
+  useEffect(() => {
+    if (!src) {
+      setIsError(true);
+    }
+  }, [src]);
+
   let resolvedSrc = getImageUrl(src as string | File | null);
 
   if (typeof resolvedSrc === "string") {
@@ -40,7 +46,7 @@ const MyImage = ({
         <div
           className={cn(
             "flex items-center justify-center bg-gray-200 text-gray-600 font-medium",
-            className
+            className,
           )}
         >
           {fallbackText}

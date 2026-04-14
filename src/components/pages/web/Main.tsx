@@ -8,9 +8,7 @@ export default function Main() {
     return (
         <div className="w-full bg-[#F3FFFD]">
             <HeroSection />
-
             <Foundations />
-
             <ContactSection />
         </div>
     )
