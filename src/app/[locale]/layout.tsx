@@ -20,7 +20,7 @@ export default async function RootLayout({
   const dir = getDirection(locale);
   return (
     <html dir={dir} lang={locale} suppressHydrationWarning>
-      <body className={`${cairo.className} overflow-x-hidden`}>
+      <body className={`${cairo.className} overflow-x-hidden`} suppressHydrationWarning>
         <Provider>
           {children}
           <TopLoader />

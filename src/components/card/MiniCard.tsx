@@ -28,7 +28,7 @@ const MiniCard = ({ data, isLoading }: any) => {
   }
 
   return (
-    data.map((item: any) => (
+    data?.map((item: any) => (
       <Card key={item._id} className="border shadow-none hover:border-aqua transition-colors cursor-pointer bg-white">
         <CardContent
           className="flex items-center justify-between"
