@@ -84,7 +84,7 @@ const Step1 = () => {
                                             <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden shrink-0">
                                                 <Image
                                                     // Fallback to a placeholder if images array is empty
-                                                    src={item.product?.images?.[0] || "/placeholder-product.png"}
+                                                    src={item.product?.photo || "/placeholder-product.png"}
                                                     alt={item.product?.title?.[locale]}
                                                     width={80}
                                                     height={80}

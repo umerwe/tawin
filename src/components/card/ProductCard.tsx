@@ -17,7 +17,7 @@ import { LoginDialog } from "../dialog/LoginDialog"
 
 export function ProductCard({
     _id,
-    image,
+    photo,
     title,
     price,
     rating,
@@ -81,7 +81,7 @@ export function ProductCard({
                         onClick={() => router.push(`/shop/${slug}`)}
                         className="group relative aspect-square w-full overflow-hidden cursor-pointer">
                         <Image
-                            src={image}
+                            src={photo}
                             alt={locale === "en" ? title.en : title.ar}
                             fill
                             className="object-cover transition-transform duration-300 group-hover:scale-105"

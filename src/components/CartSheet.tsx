@@ -78,7 +78,7 @@ export default function CartSheet({ open, onOpenChange, cartItems, isLoading }: 
                                 {/* Image - using images array from your JSON */}
                                 <div className="w-[72px] h-[72px] rounded-md overflow-hidden bg-gray-100 shrink-0">
                                     <Image
-                                        src={item.product?.images?.[0] || "/placeholder-product.png"}
+                                        src={item.product?.photo || "/placeholder-product.png"}
                                         alt={item.product?.title?.[locale]}
                                         width={72}
                                         height={72}

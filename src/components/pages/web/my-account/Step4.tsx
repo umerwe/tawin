@@ -53,7 +53,7 @@ export default function FavoritesList() {
                             href={`/shop/${item.product?.slug}`}
                              className="w-16 h-20 md:w-20 md:h-20 bg-gray-100 rounded-xl overflow-hidden shrink-0">
                                 <Image 
-                                    src={item.product?.images?.[0] || "/placeholder-product.png"} 
+                                    src={item.product?.photo || "/placeholder-product.png"} 
                                     alt={item.product?.title?.[locale]} 
                                     width={80} 
                                     height={80} 
