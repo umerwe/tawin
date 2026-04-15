@@ -523,7 +523,15 @@
     "pagesContent": "Pages Content",
     "landingPageText": "Landing Page Description",
     "homePageText": "Home Page Description",
-    "businessName": "Business Name"
+    "businessName": "Business Name",
+    "discountValue": "Discount Value",
+    "minOrderAmount": "Min Order Amount",
+    "usageLimit": "Usage Limit",
+    "expiryDate": "Expiry Date",
+    "coupon": "Coupon",
+    "minOrder": "Min Order",
+    "couponApplied": "Coupon Applied",
+    "size": "Size"
   },
   "confirm": {
     "logout": {
@@ -607,7 +615,11 @@
       "icon": "Icon",
       "thumbnail": "Thumbnail",
       "parentCategory": "Parent Category",
-      "parent": "Parent"
+      "parent": "Parent",
+      "type": "Type",
+      "minOrder": "Min. Order",
+      "usageLimit": "Usage Limit",
+      "expiryDate": "Expiry Date"
     },
     "search": {
       "noData": "No data found"

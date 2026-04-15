@@ -15,10 +15,10 @@ export const useApplyForBasket = () => {
   });
 };
 
-export const useAdminBasketRequests = () => {
+export const useAdminBasketRequests = (params?: { page?: number }) => {
   return useQuery({
-    queryKey: ["admin", "basket-requests"],
-    queryFn: getAdminBasketRequests,
+    queryKey: ["admin", "basket-requests", params?.page],
+    queryFn: () => getAdminBasketRequests(params),
     staleTime: 2 * 60 * 1000,
   });
 };

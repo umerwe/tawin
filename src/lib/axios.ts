@@ -4,7 +4,7 @@ import { baseURL } from "@/config/constants";
 const api = axios.create({ baseURL });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token") || localStorage.getItem("admin_token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -16,9 +16,12 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response && error.response.status === 401) {
+    if (error.response && error.response.status === 401 && error.response.data.message !== "The email or password you entered is incorrect.") {
       localStorage.removeItem("token");
-      window.location.href = "/auth/signin"; 
+      localStorage.removeItem("admin_token");
+
+      const adminToken = localStorage.getItem("admin_token");
+      window.location.href = adminToken ? "/auth/admin" : "/auth/signin";
     }
 
     return Promise.reject(error);

@@ -10,12 +10,21 @@ export const useLogin = () => {
   const mutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      localStorage.setItem("token", data.token!);
-      toast("Login Successfully");
-      router.push("/");
+      localStorage.removeItem("token");
+      localStorage.removeItem("admin_token");
+
+      if (data?.user?.role === "admin") {
+        localStorage.setItem("admin_token", data.token!);
+        router.replace("/admin");
+      } else {
+        localStorage.setItem("token", data.token!);
+        router.replace("/");
+      }
+
+      toast.success("Logged in successfully!");
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Please try again.");
+      toast.error(error.response?.data?.message || "Login failed. Please check your credentials.");
     },
   });
 

@@ -4,47 +4,69 @@ import { Input } from "@/components/ui/input"
 import { X, Minus, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import Image from "@/components/MyImage"
-// --- REDUX IMPORTS ---
-import { useDispatch } from "react-redux"
-import { removeFromCart, updateQuantity } from "@/store/cartSlice"
+import { useUpdateCartQuantity, useRemoveFromCart } from "@/hooks/useCart"
+
+interface CartItem {
+    product: {
+        _id: string;
+        title: {
+            en: string;
+            ar: string;
+        };
+        price: number;
+        photo: string | null;
+        images: string[];
+    };
+    quantity: number;
+    attributes: {
+        color: string;
+        size: string;
+    };
+}
 
 type OrderSummaryProps = {
-    cartItems: any[]
+    cartItems: CartItem[]
     discount: number
 }
 
 const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
     const locale = useLocale() as "en" | "ar";
     const t = useTranslations("translation");
-    const dispatch = useDispatch();
 
-    const updateQty = (id: number | string, delta: number) => {
-        const item = cartItems.find((i) => i.id === id);
-        if (item) {
-            const newQty = Math.max(1, (item.quantity || item.qty) + delta);
-            dispatch(updateQuantity({ id, quantity: newQty }));
+    const { mutate: updateCartQty } = useUpdateCartQuantity();
+    const { mutate: deleteItem } = useRemoveFromCart();
+
+    const updateQty = (productId: string, currentQty: number, delta: number) => {
+        const newQty = Math.max(1, currentQty + delta);
+        if (newQty !== currentQty) {
+            updateCartQty({ 
+                productId: productId, 
+                quantity: newQty 
+            });
         }
     }
 
-    const removeItem = (id: number | string) => {
-        dispatch(removeFromCart(id));
+    const removeItem = (productId: string) => {
+        deleteItem(productId);
     }
 
-    // Support both 'qty' and 'quantity' naming to prevent errors
-    const subtotal = cartItems.reduce((acc, item) => acc + item.price * (item.quantity || item.qty || 1), 0)
-    const grandTotal = subtotal - discount
+    const subtotal = cartItems.reduce((acc, item) => 
+        acc + (item.product.price * item.quantity), 0
+    )
+    const grandTotal = Math.max(0, subtotal - discount)
 
     return (
         <div className="lg:col-span-4">
             <div className="border border-gray-200 rounded-md p-6 sticky top-6 space-y-6 bg-white shadow-sm">
                 <h2 className="text-xl font-semibold text-gray-900">{t("orderSummary")}</h2>
 
+                {/* Items List */}
                 <div className="space-y-6 max-h-[400px] overflow-y-auto ltr:pr-2 rtl:pl-2 custom-scrollbar">
                     {cartItems.map((item) => (
-                        <div key={item.id} className="flex justify-between items-center border-b border-gray-50 pb-6 group">
-                             <div className="flex items-center ltr:space-x-3 rtl:space-x-reverse">
+                        <div key={item.product._id} className="flex justify-between items-center border-b border-gray-50 pb-6 group">
+                            <div className="flex items-center ltr:space-x-3 rtl:space-x-reverse">
                                 <button
-                                    onClick={() => removeItem(item.id)}
+                                    onClick={() => removeItem(item.product._id)}
                                     className="text-gray-300 hover:text-red-500 transition-colors"
                                 >
                                     <X className="w-4 h-4" />
@@ -53,8 +75,8 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
                                     <Image
                                         width={64}
                                         height={80}
-                                        src={item.image}
-                                        alt={locale === "en" ? item.title?.en : item.title?.ar}
+                                        src={item.product.photo || item.product.images[0]} 
+                                        alt={locale === "en" ? item.product.title.en : item.product.title.ar}
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
@@ -62,28 +84,30 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
                             
                             <div className="space-y-2 text-left rtl:text-right">
                                 <span className="text-sm font-semibold text-gray-900">
-                                    ${(item.price * (item.quantity || item.qty || 1)).toFixed(2)}
+                                    ${(item.product.price * item.quantity).toFixed(2)}
                                 </span>
                                 <div className="text-[11px] leading-tight">
                                     <p className="font-semibold text-gray-800 uppercase tracking-tight">
-                                        {locale === "en" ? item.title?.en : item.title?.ar}
+                                        {locale === "en" ? item.product.title.en : item.product.title.ar}
                                     </p>
-                                    <p className="text-gray-400">{t("color")}: Black</p>
+                                    <p className="text-gray-400">
+                                        {t("size")}: {item.attributes.size}
+                                    </p>
                                 </div>
 
                                 {/* Quantity Toggle */}
                                 <div className="flex items-center border border-gray-200 rounded-lg w-20 h-8 overflow-hidden bg-white">
                                     <button
-                                        onClick={() => updateQty(item.id, -1)}
+                                        onClick={() => updateQty(item.product._id, item.quantity, -1)}
                                         className="px-2 text-gray-400 hover:text-black transition-colors"
                                     >
                                         <Minus className="w-3 h-3" />
                                     </button>
                                     <span className="flex-1 text-center text-xs font-semibold text-gray-700">
-                                        {item.quantity || item.qty || 1}
+                                        {item.quantity}
                                     </span>
                                     <button
-                                        onClick={() => updateQty(item.id, 1)}
+                                        onClick={() => updateQty(item.product._id, item.quantity, 1)}
                                         className="px-2 text-gray-400 hover:text-black transition-colors"
                                     >
                                         <Plus className="w-3 h-3" />
@@ -94,8 +118,8 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
                     ))}
                 </div>
 
-                {/* Coupon Section */}
-                <div className="flex space-x-2 h-12">
+                {/* Coupon Section - Reverted to your exact Original Design */}
+                {/* <div className="flex space-x-2 h-12">
                     <Input
                         placeholder={t("enterCode")}
                         className="h-full rounded-xl border-gray-200 focus:border-aqua"
@@ -103,7 +127,7 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
                     <button className="bg-gray-800 text-white text-xs px-5 rounded-xl font-semibold uppercase tracking-wider hover:bg-black transition-all">
                         {t("apply")}
                     </button>
-                </div>
+                </div> */}
 
                 {/* Summary Totals */}
                 <div className="space-y-4 pt-4 border-t border-gray-100">

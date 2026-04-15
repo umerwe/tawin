@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getProducts, getProductBySlug, getProductsByCategory, addProduct, updateProduct, deleteProduct } from "@/services/products";
+import { getProducts, getProductBySlug, getProductsByCategory, addProduct, updateProduct, deleteProduct, getLowStockProducts, updateProductStock } from "@/services/products";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -73,6 +73,30 @@ export const useDeleteProduct = () => {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to delete product.");
+    },
+  });
+};
+
+export const useLowStockProducts = () => {
+  return useQuery({
+    queryKey: ["products", "low-stock"],
+    queryFn: getLowStockProducts,
+    staleTime: 2 * 60 * 1000, // 2 minutes for stock data
+  });
+};
+
+export const useUpdateProductStock = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, stock }: { id: string; stock: number }) => updateProductStock(id, stock),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["products", "low-stock"] });
+      toast.success("Product stock updated successfully");
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to update product stock.");
     },
   });
 };

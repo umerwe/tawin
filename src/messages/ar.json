@@ -523,7 +523,15 @@
     "pagesContent": "محتوى الصفحات",
     "landingPageText": "وصف صفحة الهبوط",
     "homePageText": "وصف الصفحة الرئيسية",
-    "businessName": "اسم الشركة"
+    "businessName": "اسم الشركة",
+    "discountValue": "قيمة الخصم",
+    "minOrderAmount": "الحد الأدنى للطلب",
+    "usageLimit": "حد الاستخدام",
+    "expiryDate": "تاريخ الانتهاء",
+    "coupon": "كوبون",
+    "minOrder": "الحد الأدنى",
+    "couponApplied": "تم تطبيق الكوبون",
+    "size": "الحجم"
   },
   "confirm": {
     "logout": {
@@ -607,7 +615,11 @@
       "icon": "الأيقونة",
       "thumbnail": "الصورة المصغرة",
       "parentCategory": "الفئة الأصلية",
-      "parent": "الأصلية"
+      "parent": "الأصلية",
+      "type": "النوع  ",
+      "minOrder": "أقل قيمة للطلب",
+      "usageLimit": "حد الاستخدام",
+      "expiryDate": "تاريخ الانتهاء"
     },
     "search": {
       "noData": "لا توجد بيانات"

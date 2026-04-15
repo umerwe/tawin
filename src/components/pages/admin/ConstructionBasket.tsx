@@ -7,10 +7,10 @@ import ConstructionBasketTable from "@/components/tables/ConstructionBasketTable
 import { useAdminBasketRequests } from "@/hooks/useBasket";
 
 const ConstructionBasket = () => {
-    const { data, isLoading } = useAdminBasketRequests();
+    const [page, setPage] = useState(1);
+    const { data, isLoading } = useAdminBasketRequests({ page });
 
     const [activeTab, setActiveTab] = useState("All Applications");
-    const [page, setPage] = useState(1);
 
     const constructionBasketData = data?.data?.data || [];
     const meta = data?.data?.meta || {};
@@ -28,7 +28,7 @@ const ConstructionBasket = () => {
                     />
                 </CardHeader>
                 <CardContent>
-                    <ConstructionBasketTable  activeTab={activeTab} data={constructionBasketData} meta={meta} isLoading={isLoading} setPage={setPage}  />
+                    <ConstructionBasketTable activeTab={activeTab} data={constructionBasketData} meta={meta} isLoading={isLoading} setPage={setPage} />
                 </CardContent>
             </Card>
         </div>

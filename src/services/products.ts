@@ -39,3 +39,13 @@ export const deleteProduct = async (id: string): Promise<any> => {
   const { data } = await api.delete(`/api/products/${id}`);
   return data;
 };
+
+export const getLowStockProducts = async (): Promise<any> => {
+  const { data } = await api.get("/api/product/low-stock");
+  return data;
+};
+
+export const updateProductStock = async (id: string, stock: number): Promise<any> => {
+  const { data } = await api.patch(`/api/product/${id}/stock`, { stock });
+  return data;
+};

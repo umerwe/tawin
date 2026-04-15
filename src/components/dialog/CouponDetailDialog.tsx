@@ -24,34 +24,49 @@ export default function CouponDetailDialog({
 
   if (!coupon) return null;
 
-  const isActive = coupon.status.en === "Active";
+  // Consistency with CouponsTable logic
+  const isActive = coupon.isActive;
 
   const rows = [
-    { label: t("status"), value: coupon.status[locale], valueClass: isActive ? "text-aqua font-semibold" : "text-red-500 font-semibold" },
+    {
+      label: t("status"),
+      value: isActive ? t('active') : t('cancelled'),
+      valueClass: isActive ? "text-aqua font-semibold" : "text-red-500 font-semibold"
+    },
     { label: t("couponCode"), value: coupon.code },
-    { label: t("startDate"), value: coupon.startDate },
-    { label: t("endDate"), value: coupon.endDate },
-    { label: t("discountRate"), value: coupon.discount },
-    { label: t("usageCount"), value: String(coupon.usageCount) },
+    { label: t("type"), value: coupon.type || "-" },
+    {
+      label: t("discountRate"),
+      value: coupon.type === "percentage" ? `%${coupon.value}` : `${coupon.value} QAR`
+    },
+    { label: t("minOrder"), value: String(coupon.minOrderAmount || 0) },
+    {
+      label: t("usageLimit"),
+      value: `${coupon.usedCount || 0} / ${coupon.usageLimit || 0}`
+    },
+    {
+      label: t("expiryDate"),
+      value: coupon.expiryDate ? new Date(coupon.expiryDate).toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-GB') : '-'
+    },
   ];
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-sm rounded-2xl p-0 overflow-hidden border border-gray-100 shadow-xl">
         {/* Header */}
-        <DialogHeader className="px-5 pt-5">
+        <DialogHeader>
           <DialogTitle className="text-base font-bold text-gray-800">
             {t("couponDetails")}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="px-5 pb-5 space-y-3">
+        <div className="space-y-3">
           {/* Detail Rows */}
           <div className="space-y-2">
             {rows.map(({ label, value, valueClass }) => (
               <div key={label} className="flex items-center gap-1.5">
                 <span className="text-sm text-gray-500 shrink-0">{label}:</span>
-                <span className={cn("text-sm font-medium text-gray-700", valueClass)}>
+                <span className={cn("text-sm font-medium text-gray-700 capitalize", valueClass)}>
                   {value}
                 </span>
               </div>

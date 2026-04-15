@@ -145,7 +145,7 @@ const FilterSection = ({
                 >
                   {tab.label}
                   {isAllTabId(tab.id) && (
-                    <span className="ml-1 text-aqua font-bold">({data.length})</span>
+                    <span className="ml-1 text-aqua font-bold">({data?.length})</span>
                   )}
                 </Button>
               ))}

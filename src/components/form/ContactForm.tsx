@@ -1,14 +1,32 @@
 "use client"
 
+import { useState } from "react"
 import Image from "@/components/MyImage"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { useTranslations } from "next-intl"
+import { useSubmitContactForm } from "@/hooks/useContact"
+import { SpinnerLoader } from "../common/SpinnerLoader"
 
 const ContactForm = ({ isHome }: { isHome?: boolean }) => {
   const t = useTranslations("translation");
+  const { mutate, isPending } = useSubmitContactForm();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: ""
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    mutate(formData);
+  };
+
+  const handleChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   return (
     <section className="max-w-7xl mx-auto md:ltr:pl-6 md:rtl:pr-6 my-16 bg-white">
@@ -25,20 +43,44 @@ const ContactForm = ({ isHome }: { isHome?: boolean }) => {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label>{t("fullName")}</Label>
-              <Input placeholder={t("fullNamePlaceholder")} className="border-gray-200 bg-white rounded-lg h-12" />
+              <Input
+                placeholder={t("fullNamePlaceholder")}
+                className="border-gray-200 bg-white rounded-lg h-12"
+                value={formData.name}
+                onChange={(e) => handleChange("name", e.target.value)}
+                required
+              />
             </div>
             <div className="space-y-2">
               <Label>{t("email")}</Label>
-              <Input placeholder={t("emailPlaceholder")} type="email" className="border-gray-200 bg-white rounded-lg h-12" />
+              <Input
+                placeholder={t("emailPlaceholder")}
+                type="email"
+                className="border-gray-200 bg-white rounded-lg h-12"
+                value={formData.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+                required
+              />
             </div>
             <div className="space-y-2">
               <Label>{t("message")}</Label>
-              <Textarea placeholder={t("messagePlaceholder")} className="border-gray-200 bg-white rounded-xl min-h-[150px] resize-none" />
+              <Textarea
+                placeholder={t("messagePlaceholder")}
+                className="border-gray-200 bg-white rounded-xl min-h-[150px] resize-none"
+                value={formData.message}
+                onChange={(e) => handleChange("message", e.target.value)}
+                required
+              />
             </div>
           </div>
 
-          <Button variant="primary" className={isHome ? "w-full" : "w-40"}>
-            {t("send")}
+          <Button
+            variant="primary"
+            className={isHome ? "w-full" : "w-40"}
+            onClick={handleSubmit}
+            disabled={isPending}
+          >
+            {isPending ? <SpinnerLoader /> : t("send")}
           </Button>
         </div>
 

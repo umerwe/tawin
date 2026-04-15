@@ -18,7 +18,7 @@ export const applyForBasket = async (payload: BasketApplicationData) => {
   return data;
 };
 
-export const getAdminBasketRequests = async () => {
-  const { data } = await api.get("/api/admin/construction-basket-requests");
+export const getAdminBasketRequests = async (params?: { page?: number }) => {
+  const { data } = await api.get("/api/admin/construction-basket-requests", { params });
   return data;
 };

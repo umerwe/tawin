@@ -3,48 +3,61 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FilterSection from "@/components/FilterSection";
-import CouponsTable, { coupons } from "@/components/tables/CouponTable";
+import CouponsTable from "@/components/tables/CouponTable";
 import StatsCard from "@/components/card/StatsCard";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import AddCouponDialog from "@/components/dialog/AddCouponDialog";
-
-const couponStats = [
-  {
-    title: { en: "Total Coupons", ar: "إجمالي الكوبونات" },
-    value: "1,240",
-    trend: "+14.4%",
-    isUp: true,
-    footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" },
-  },
-  {
-    title: { en: "Used Coupons", ar: "الكوبونات المستخدمة" },
-    value: "240",
-    trend: "+20%",
-    isUp: true,
-    footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" },
-  },
-  {
-    title: { en: "Unused Coupons", ar: "الكوبونات الغير مستخدمة" },
-    value: "960",
-    trend: "+85%",
-    isUp: true,
-    footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" },
-  },
-  {
-    title: { en: "Expired Coupons", ar: "الكوبونات المنتهية" },
-    value: "87",
-    trend: "5%",
-    isUp: false,
-    footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" },
-  },
-];
+import { useCouponsAdmin, useCouponStatsAdmin } from "@/hooks/useCoupon"; // Assuming this is the path
 
 const Coupons = () => {
   const t = useTranslations("translation");
+  const [page, setPage] = useState(1);
+
   const [activeTab, setActiveTab] = useState("All Coupons");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+
+  // Integrate the API hook
+  const { data: stats } = useCouponStatsAdmin();
+  const { data, isLoading } = useCouponsAdmin({
+    page,
+    limit: 10
+  });
+
+  const couponsData = data?.data?.coupons;
+  const meta = data?.pagination;
+
+  const couponStats = [
+    {
+      title: { en: "Total Coupons", ar: "إجمالي الكوبونات" },
+      value: stats?.totalCoupons?.toString() || "0",
+      trend: "+14.4%",
+      isUp: true,
+      footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" },
+    },
+    {
+      title: { en: "Used Coupons", ar: "الكوبونات المستخدمة" },
+      value: stats?.totalUsageCount?.toString() || "0",
+      trend: "+20%",
+      isUp: true,
+      footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" },
+    },
+    {
+      title: { en: "Active Coupons", ar: "الكوبونات النشطة" },
+      value: stats?.activeCoupons?.toString() || "0",
+      trend: "+85%",
+      isUp: true,
+      footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" },
+    },
+    {
+      title: { en: "Expired Coupons", ar: "الكوبونات المنتهية" },
+      value: stats?.expiredCoupons?.toString() || "0",
+      trend: "5%",
+      isUp: false,
+      footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" },
+    },
+  ];
 
   return (
     <div className="space-y-6 p-1">
@@ -74,16 +87,21 @@ const Coupons = () => {
           <FilterSection
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-            data={coupons}
+            data={couponsData}
             type="coupon"
           />
         </CardHeader>
         <CardContent>
-          <CouponsTable activeTab={activeTab} />
+          <CouponsTable
+            data={couponsData}
+            isLoading={isLoading}
+            meta={meta}
+            setPage={setPage}
+            activeTab={activeTab}
+          />
         </CardContent>
       </Card>
 
-      {/* Add Coupon Dialog */}
       <AddCouponDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
