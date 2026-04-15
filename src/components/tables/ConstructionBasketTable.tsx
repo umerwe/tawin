@@ -21,8 +21,8 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
   const [currentStatus, setCurrentStatus] = useState(item.constructionBasket.status);
 
   return (
-    <Select 
-      value={currentStatus} 
+    <Select
+      value={currentStatus}
       onValueChange={(val) => setCurrentStatus(val)}
     >
       <SelectTrigger
@@ -59,15 +59,14 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
   );
 };
 
-const ConstructionBasketTable = ({ data, activeTab, isLoading }: { data: any[]; activeTab: string; isLoading?: boolean }) => {
+const ConstructionBasketTable = ({ data, activeTab, isLoading, meta, setPage }: { data: any[]; activeTab: string; isLoading?: boolean; meta?: any; setPage: (page: number) => void }) => {
   const t = useTranslations("translation");
-  const [page, setPage] = useState(1);
   const [selectedBasket, setSelectedBasket] = useState<any | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const cols = ["basketCode", "fullName", "phoneNumber", "occupation", "propertyType", "status", "process"];
 
-  const filteredData = data.filter((item) => {
+  const filteredData = data?.filter((item) => {
     const matchesTab = activeTab === "All Applications" || item.constructionBasket.status === activeTab;
     return matchesTab;
   });
@@ -113,9 +112,9 @@ const ConstructionBasketTable = ({ data, activeTab, isLoading }: { data: any[]; 
       </TableCell>
 
       <TableCell onClick={(e) => e.stopPropagation()}>
-        <StatusDropdown 
-          item={item} 
-          t={t} 
+        <StatusDropdown
+          item={item}
+          t={t}
           getStatusColor={getStatusColor}
         />
       </TableCell>
@@ -150,7 +149,12 @@ const ConstructionBasketTable = ({ data, activeTab, isLoading }: { data: any[]; 
         row={row}
         headerClassName="bg-aqua/5 border-none"
         isLoading={isLoading}
-        pagination={{ total: data.length, page, limit: 10, setPage }}
+        pagination={{
+          total: meta?.totalDocs || 0,
+          page: meta?.page || 1,
+          limit: meta?.limit || 10,
+          setPage
+        }}
       />
 
       <ConstructionBasketDetailDialog
