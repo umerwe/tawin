@@ -18,7 +18,8 @@ export interface ProductFormValues {
     colors: string[];
     sizes: string[];
     weights: { unit: string; value: string }[];
-    imageFiles: File[];
+    photo: File | string | null;     
+    images: (File | string)[];
 }
 
 export default function AddProductPage() {
@@ -35,7 +36,8 @@ export default function AddProductPage() {
             colors: [],
             sizes: [],
             weights: [{ unit: "", value: "" }],
-            imageFiles: [],
+            photo: null,
+            images: []
         },
     });
 
@@ -61,7 +63,14 @@ export default function AddProductPage() {
             fd.append("weights[0][value]", values.weights[0].value);
         }
 
-        values.imageFiles.forEach((f) => fd.append("images", f));
+        if (values.photo) {
+            fd.append("photo", values.photo);
+        }
+
+        // Append the gallery array
+        values.images.forEach((img) => {
+            fd.append("images", img);
+        });
 
         addProduct(fd);
     };

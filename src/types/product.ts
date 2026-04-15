@@ -8,6 +8,7 @@ export interface Product {
   originalPrice?: number
   image: string
   images?: string[]
+  photo?: string
   reviews?: number
   measurements?: string
   colors?: string[]

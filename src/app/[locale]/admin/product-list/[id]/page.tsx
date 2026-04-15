@@ -18,9 +18,7 @@ const EditProductPage = () => {
 
     const { data: productData, isLoading } = useProductBySlug(id as string);
     const { mutate: updateProduct, isPending } = useUpdateProduct();
-    console.log({ productData })
 
-    // Mapping the data to match the form structure exactly
     const methods = useForm<ProductFormValues>({
         defaultValues: {
             title: { en: "", ar: "" },
@@ -32,10 +30,10 @@ const EditProductPage = () => {
             colors: [],
             sizes: [],
             weights: [{ unit: "", value: "" }],
-            imageFiles: [],
+            photo: null, // Initial state
+            images: [], // Initial state
         },
-        // Using 'values' ensures that when productData arrives from the API, 
-        // the form updates automatically.
+        // 'values' updates the form when API data arrives
         values: productData ? {
             title: {
                 en: productData.title?.en || "",
@@ -54,41 +52,52 @@ const EditProductPage = () => {
             weights: productData.weights?.length
                 ? productData.weights
                 : [{ unit: "", value: "" }],
-            imageFiles: [],
+            // Map the single photo and gallery images from your API
+            photo: productData.photo || null, 
+            images: productData.images ?? [],
         } : undefined,
     });
 
     const onSubmit = (values: ProductFormValues) => {
         const fd = new FormData();
 
+        // Standard Fields
         fd.append("title[en]", values.title.en);
         fd.append("title[ar]", values.title.ar);
         fd.append("description[en]", values.description.en);
         fd.append("description[ar]", values.description.ar);
+        fd.append("category", values.category);
+        fd.append("price", String(values.price));
+        fd.append("remainingPieces", String(values.remainingPieces));
+        fd.append("isNewArrival", String(values.isNewArrival));
 
         values.colors.forEach((c) => fd.append("colors", c));
         values.sizes.forEach((s) => fd.append("sizes", s));
 
-        // PROFESIONAL IMAGE SUBMISSION:
+        if (values.weights[0]?.unit && values.weights[0]?.value) {
+            fd.append("weights[0][unit]", values.weights[0].unit);
+            fd.append("weights[0][value]", values.weights[0].value);
+        }
 
-        // 1. Send New Files (if any)
-        if (values.imageFiles.length > 0) {
-            values.imageFiles.forEach((f) => {
-                if (f instanceof File) {
-                    fd.append("images", f);
-                }
+        // --- IMAGE SUBMISSION LOGIC ---
+
+        // 1. Handle "photo" (Single field)
+        // If it's a File (newly uploaded) or a string (existing URL to keep), append it
+        if (values.photo) {
+            fd.append("photo", values.photo);
+        }
+
+        // 2. Handle "images" (Gallery array)
+        if (values.images && values.images.length > 0) {
+            values.images.forEach((img) => {
+                fd.append("images", img);
             });
         }
 
-        // 2. ALWAYS Send Existing Image URLs
-        // This tells the backend: "Keep these images in the database"
-        if (productData?.images?.length) {
-            productData.images.forEach((url: string) => {
-                fd.append("images", url);
-            });
-        }
-console.log(Object.fromEntries(fd.entries()));
-        // updateProduct({ id: productData?._id || (id as string), formData: fd });
+        // For debugging
+        console.log("Submitting FormData:", Object.fromEntries(fd.entries()));
+        
+        updateProduct({ id: productData?._id || (id as string), formData: fd });
     };
 
     if (isLoading) {
@@ -128,6 +137,7 @@ console.log(Object.fromEntries(fd.entries()));
                 <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 items-start">
                     <ProductForm isEdit={true} />
                     <ProductImageForm
+                        existingPhoto={productData?.photo}
                         existingImages={productData?.images ?? []}
                         isEdit={true}
                     />

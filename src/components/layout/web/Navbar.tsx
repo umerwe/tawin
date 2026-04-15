@@ -24,7 +24,6 @@ export default function Navbar() {
   const locale = useLocale();
 
   const { data: settings } = useSettings();
-  console.log(settings);
 
   const rawNormalizedPath = "/" + pathname.split("/").filter(Boolean).slice(1).join("/");
   const normalizedPath = rawNormalizedPath === "/" ? "/" : rawNormalizedPath;

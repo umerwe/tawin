@@ -17,13 +17,15 @@ import { HexColorPicker } from "react-colorful";
 import MyImage from "@/components/MyImage";
 
 interface ProductImageFormProps {
+  existingPhoto?: string;
   existingImages?: string[];
-  isEdit?: boolean; // Prop to handle Edit mode
+  isEdit?: boolean;
 }
 
-const ProductImageForm = ({ existingImages = [], isEdit = false }: any) => {
+const ProductImageForm = ({ existingPhoto, existingImages = [], isEdit = false }: ProductImageFormProps) => {
   const t = useTranslations("translation");
   const { control, watch, setValue } = useFormContext<ProductFormValues>();
+
   const mainInputRef = useRef<HTMLInputElement>(null);
   const thumbInputRef = useRef<HTMLInputElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
@@ -33,41 +35,52 @@ const ProductImageForm = ({ existingImages = [], isEdit = false }: any) => {
 
   const { data: categoriesData, isLoading: categoriesLoading } = useGetCategories();
 
-  // We use imageFiles to store both Files and existing URL strings
-  const mixedImages = watch("imageFiles") || [];
+  // We now watch two separate fields: photo (single) and images (array)
+  const photo = watch("photo");
+  const images = watch("images") || [];
   const selectedColors: string[] = watch("colors") ?? [];
 
-  // Important: On Edit, prime the form state with existing images if empty
+  // Inside ProductImageForm component
   useEffect(() => {
-    if (isEdit && existingImages.length > 0 && mixedImages.length === 0) {
-      setValue("imageFiles", existingImages as any);
+    if (isEdit) {
+      // Only set the photo if it exists and hasn't been set in the form yet
+      if (existingPhoto && !photo) {
+        setValue("photo", existingPhoto);
+      }
+      // Only set the images array if it has data and the form's images array is empty
+      if (existingImages && existingImages.length > 0 && images.length === 0) {
+        setValue("images", existingImages);
+      }
     }
-  }, [existingImages, isEdit, setValue, mixedImages.length]);
+    // Remove images.length and other dynamic values that change size
+    // photo and images from watch() can sometimes cause stability issues in deps
+    // if they are not memoized by the library.
+  }, [isEdit, existingPhoto, existingImages, setValue]);
 
   const categories = categoriesData?.data || [];
 
-  const handleMainFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-    // Replace index 0, keep others
-    const remaining = mixedImages.slice(1);
-    setValue("imageFiles", [file, ...remaining] as any);
+    if (file) {
+      setValue("photo", file);
+    }
   };
 
-  const handleThumbFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGalleryUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    if (!files.length) return;
-    // Append new files to existing list
-    setValue("imageFiles", [...mixedImages, ...files] as any);
+    if (files.length) {
+      setValue("images", [...images, ...files]);
+    }
   };
 
-  const removeImage = (idx: number) => {
-    const updated = [...mixedImages];
+  const removeGalleryImage = (idx: number) => {
+    const updated = [...images];
     updated.splice(idx, 1);
-    setValue("imageFiles", updated as any);
+    setValue("images", updated);
   };
 
-  const getPreview = (item: string | File) => {
+  const getPreview = (item: any) => {
+    if (!item) return "";
     if (typeof item === "string") return item;
     return URL.createObjectURL(item);
   };
@@ -89,17 +102,18 @@ const ProductImageForm = ({ existingImages = [], isEdit = false }: any) => {
         </CardHeader>
         <CardContent className="space-y-6">
 
-          <input ref={mainInputRef} type="file" accept="image/*" className="hidden" onChange={handleMainFile} />
-          <input ref={thumbInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleThumbFiles} />
+          {/* Hidden Inputs */}
+          <input ref={mainInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+          <input ref={thumbInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleGalleryUpload} />
 
-          {/* Main Image */}
+          {/* Main Photo Section (photo field) */}
           <div className="space-y-2">
             <Label>{t("productImage")}</Label>
             <div className="relative aspect-video w-full rounded-2xl border border-dashed border-gray-200 flex items-center justify-center overflow-hidden bg-gray-50/40">
-              {mixedImages.length > 0 ? (
+              {photo ? (
                 <MyImage
-                  src={getPreview(mixedImages[0])}
-                  alt="Product"
+                  src={getPreview(photo)}
+                  alt="Product Photo"
                   width={400}
                   height={400}
                   className="object-contain p-10 w-full h-full"
@@ -125,14 +139,20 @@ const ProductImageForm = ({ existingImages = [], isEdit = false }: any) => {
             </div>
           </div>
 
-          {/* Thumbnails */}
+          {/* Thumbnails / Gallery Section (images field) */}
           <div className="grid grid-cols-3 gap-4">
-            {mixedImages.slice(1).map((item, i) => (
+            {images.map((item, i) => (
               <div key={i} className="relative aspect-square border rounded-xl overflow-hidden">
-                <img src={getPreview(item as any)} alt="Thumbnail" className="object-contain p-2 w-full h-full" />
+                <MyImage
+                  src={getPreview(item)}
+                  alt="Gallery Image"
+                  width={400}
+                  height={400}
+                  className="object-contain p-2 w-full h-full"
+                />
                 <button type="button"
                   className="absolute top-1 right-1 bg-white/80 rounded-full p-1 shadow-sm hover:bg-red-500 hover:text-white transition-colors"
-                  onClick={() => removeImage(i + 1)}>
+                  onClick={() => removeGalleryImage(i)}>
                   <X size={12} />
                 </button>
                 <div className="absolute bottom-1 left-1 text-[8px] px-1 bg-gray-100 rounded text-gray-400 font-bold uppercase">
@@ -175,7 +195,7 @@ const ProductImageForm = ({ existingImages = [], isEdit = false }: any) => {
             </div>
           )}
 
-          {/* Colors - ALWAYS VISIBLE */}
+          {/* Colors */}
           <div className="space-y-2 pt-2">
             <Label>{t("selectAvailableColors")}</Label>
             <div className="flex flex-wrap gap-2.5">

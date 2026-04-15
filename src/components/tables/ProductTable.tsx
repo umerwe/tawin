@@ -234,7 +234,7 @@ const ProductTable = ({ activeTab, data, isLoading }: ProductTableProps) => {
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 relative overflow-hidden">
             <Image
-              src={item.images?.[0] || ""}
+              src={item?.photo || ""}
               alt={item.title[locale]}
               fill
               className="object-cover"
