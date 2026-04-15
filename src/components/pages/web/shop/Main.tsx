@@ -11,7 +11,7 @@ import { useTranslations } from "next-intl"
 import { useSearchParams } from "next/navigation"
 import Container from "@/components/common/Container"
 import { useProducts, useProductsByCategory } from "@/hooks/useProducts"
-import { Skeleton } from "@/components/ui/skeleton" // Assuming you use shadcn/ui or similar
+import { Skeleton } from "@/components/ui/skeleton"
 
 const Shop = () => {
     const t = useTranslations("translation");
