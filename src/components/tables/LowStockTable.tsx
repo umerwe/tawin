@@ -53,7 +53,7 @@ const LowStockTable = ({ data, activeTab }: LowStockTableProps) => {
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-gray-400 hover:text-aqua"
-            onClick={() => router.push(`/${locale}/admin/low-stock/${item.id}`)}
+            // onClick={() => router.push(`/${locale}/admin/low-stock/${item.id}`)}
           >
             <Edit3 size={16} />
           </Button>
