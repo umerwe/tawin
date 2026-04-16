@@ -11,30 +11,30 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 
-interface ProductFormProps {
-  isEdit?: boolean;
-}
-
 const ProductForm = ({ isEdit = false }: any) => {
   const t = useTranslations("translation");
-  const { register, control } = useFormContext();
+
+  const { register, control, formState: { errors } } = useFormContext();
   const [titleLang, setTitleLang] = useState<"en" | "ar">("en");
   const [descLang, setDescLang] = useState<"en" | "ar">("en");
 
+  const ErrorMessage = ({ error }: { error: any }) => (
+    error ? <p className="text-red-500 text-xs">{error.message}</p> : null
+  );
+
   const LangToggle = ({
-    lang, setLang,
+    lang, setLang
   }: { lang: "en" | "ar"; setLang: (l: "en" | "ar") => void }) => (
-    <div className="flex gap-1 ml-auto">
+    <div className="flex gap-1 ml-auto items-center">
       {(["en", "ar"] as const).map((l) => (
         <button
           key={l}
           type="button"
           onClick={() => setLang(l)}
-          className={`px-2 py-0.5 text-xs rounded font-semibold transition-colors ${
-            lang === l
+          className={`px-2 py-0.5 text-xs rounded font-semibold transition-colors ${lang === l
               ? "bg-aqua text-white"
               : "bg-gray-100 text-gray-400 hover:bg-gray-200"
-          }`}
+            }`}
         >
           {l.toUpperCase()}
         </button>
@@ -52,42 +52,51 @@ const ProductForm = ({ isEdit = false }: any) => {
         </CardHeader>
         <CardContent className="space-y-6">
 
-          {/* Title EN / AR - ALWAYS VISIBLE */}
+          {/* Title EN / AR */}
           <div className="space-y-2">
             <div className="flex items-center">
               <Label>{t("productName")}</Label>
-              <LangToggle lang={titleLang} setLang={setTitleLang} />
+              <LangToggle
+                lang={titleLang}
+                setLang={setTitleLang} />
             </div>
             <div className={titleLang === "en" ? "block" : "hidden"}>
               <Input
                 {...register("title.en")}
                 placeholder="Product name in English"
-                className="rounded-md"
+                className={`rounded-md`}
+                error={!!(errors.title as any)?.en}
+                errorMessage={(errors.title as any)?.en?.message}
               />
             </div>
             <div className={titleLang === "ar" ? "block" : "hidden"}>
               <Input
                 {...register("title.ar")}
                 placeholder="اسم المنتج بالعربية"
-                className="rounded-md text-right"
-                dir="rtl"
+                className={`rounded-md text-right`}
+                error={!!(errors.title as any)?.ar}
+                errorMessage={(errors.title as any)?.ar?.message}
               />
             </div>
           </div>
 
-          {/* Description EN / AR - ALWAYS VISIBLE */}
+          {/* Description EN / AR */}
           <div className="space-y-2">
             <div className="flex items-center">
               <Label>{t("productDescription")}</Label>
-              <LangToggle lang={descLang} setLang={setDescLang} />
+              <LangToggle
+                lang={descLang}
+                setLang={setDescLang}
+              />
             </div>
             <div className="relative">
               <div className={descLang === "en" ? "block" : "hidden"}>
                 <textarea
                   {...register("description.en")}
-                  className="w-full min-h-[140px] p-4 pb-10 rounded-md bg-gray-50 border border-transparent focus:border-aqua outline-none text-sm text-gray-600 transition-all resize-none"
+                  className={`w-full min-h-[140px] p-4 pb-10 rounded-md bg-gray-50 border focus:border-aqua outline-none text-sm text-gray-600 transition-all resize-none ${(errors.description as any)?.en ? "border-red-500" : "border-transparent"}`}
                   placeholder="Describe your product in English…"
                 />
+                <ErrorMessage error={(errors.description as any)?.en} />
               </div>
               <div className={descLang === "ar" ? "block" : "hidden"}>
                 <textarea
@@ -100,20 +109,22 @@ const ProductForm = ({ isEdit = false }: any) => {
             </div>
           </div>
 
-          {/* Pricing - HIDDEN ON EDIT */}
+          {/* Pricing */}
           {!isEdit && (
             <div className="space-y-4 pt-2">
               <h3 className="text-lg font-bold text-gray-700">{t("pricing")}</h3>
-              <div className="space-y-2">
+              <div className="space-y-2 relative">
                 <Label>{t("productPrice")}</Label>
                 <div className="relative">
                   <Input
-                    {...register("price", { valueAsNumber: true })}
+                    {...register("price")}
                     type="number"
                     placeholder="0.00"
-                    className="pl-14 font-bold rounded-md"
+                    className={`pl-14 font-semibold rounded-md`}
+                    error={!!(errors.price as any)?.message}
+                    errorMessage={(errors.price as any)?.message}
                   />
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 pr-2 border-r border-gray-200">
+                  <div className={`absolute left-4 -translate-y-1/2 pr-2 border-r border-gray-200 ${errors.price ? "top-6.5" : "top-7"}`}>
                     <span className="text-base">🇺🇸</span>
                   </div>
                 </div>
@@ -121,7 +132,7 @@ const ProductForm = ({ isEdit = false }: any) => {
             </div>
           )}
 
-          {/* Stock & New Arrival - HIDDEN ON EDIT */}
+          {/* Stock & New Arrival */}
           {!isEdit && (
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -134,7 +145,7 @@ const ProductForm = ({ isEdit = false }: any) => {
                       value={field.value === true ? "true" : field.value === false ? "false" : ""}
                       onValueChange={(v) => field.onChange(v === "true")}
                     >
-                      <SelectTrigger className="rounded-md">
+                      <SelectTrigger className={`rounded-md ${errors.isNewArrival ? "border-red-500" : ""}`}>
                         <SelectValue placeholder="Select…" />
                       </SelectTrigger>
                       <SelectContent>
@@ -144,6 +155,7 @@ const ProductForm = ({ isEdit = false }: any) => {
                     </Select>
                   )}
                 />
+                <ErrorMessage error={errors.isNewArrival} />
               </div>
               <div className="space-y-2">
                 <Label>Remaining Pieces</Label>
@@ -151,13 +163,14 @@ const ProductForm = ({ isEdit = false }: any) => {
                   {...register("remainingPieces", { valueAsNumber: true })}
                   type="number"
                   placeholder="0"
-                  className="rounded-md"
+                  className={`rounded-md ${errors.remainingPieces ? "border-red-500" : ""}`}
                 />
+                <ErrorMessage error={errors.remainingPieces} />
               </div>
             </div>
           )}
 
-          {/* Sizes - ALWAYS VISIBLE */}
+          {/* Sizes */}
           <div className="space-y-2">
             <Label>Sizes</Label>
             <Controller
@@ -179,11 +192,10 @@ const ProductForm = ({ isEdit = false }: any) => {
                         key={s}
                         type="button"
                         onClick={() => toggle(s)}
-                        className={`px-3 py-1.5 text-sm rounded-md border font-medium transition-colors ${
-                          selected.includes(s)
+                        className={`px-3 py-1.5 text-sm rounded-md border font-medium transition-colors ${selected.includes(s)
                             ? "bg-aqua text-white border-aqua"
-                            : "bg-white text-gray-500 border-gray-200 hover:border-aqua/50"
-                        }`}
+                            : `bg-white text-gray-500 ${errors.sizes ? "border-red-300" : "border-gray-200"} hover:border-aqua/50`
+                          }`}
                       >
                         {s}
                       </button>
@@ -192,9 +204,10 @@ const ProductForm = ({ isEdit = false }: any) => {
                 );
               }}
             />
+            <ErrorMessage error={errors.sizes} />
           </div>
 
-          {/* Weight - HIDDEN ON EDIT */}
+          {/* Weight */}
           {!isEdit && (
             <div className="space-y-2">
               <Label>Weight</Label>
@@ -204,7 +217,7 @@ const ProductForm = ({ isEdit = false }: any) => {
                   name="weights.0.unit"
                   render={({ field }) => (
                     <Select value={field.value ?? ""} onValueChange={field.onChange}>
-                      <SelectTrigger className="w-28 rounded-md">
+                      <SelectTrigger className={`w-28 rounded-md ${(errors.weights as any)?.[0]?.unit ? "border-red-500" : ""}`}>
                         <SelectValue placeholder="Unit" />
                       </SelectTrigger>
                       <SelectContent>
@@ -218,9 +231,10 @@ const ProductForm = ({ isEdit = false }: any) => {
                 <Input
                   {...register("weights.0.value")}
                   placeholder="e.g. 500"
-                  className="flex-1 rounded-md"
+                  className={`flex-1 rounded-md ${(errors.weights as any)?.[0]?.value ? "border-red-500" : ""}`}
                 />
               </div>
+              <ErrorMessage error={(errors.weights as any)?.[0]?.unit || (errors.weights as any)?.[0]?.value} />
             </div>
           )}
 

@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
 import Image from "@/components/MyImage"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,29 +12,40 @@ import { useTranslations } from "next-intl"
 import { useSubmitContactForm } from "@/hooks/useContact"
 import { SpinnerLoader } from "../common/SpinnerLoader"
 
+const contactFormSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email').min(1, 'Email is required'),
+  message: z.string().min(1, 'Message is required'),
+})
+
+type ContactFormData = z.infer<typeof contactFormSchema>
+
 const ContactForm = ({ isHome }: { isHome?: boolean }) => {
   const t = useTranslations("translation");
   const { mutate, isPending } = useSubmitContactForm();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: ""
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      message: "",
+    },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    mutate(formData);
-  };
-
-  const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const onSubmit = (data: ContactFormData) => {
+    mutate(data);
   };
 
   return (
     <section className="max-w-7xl mx-auto md:ltr:pl-6 md:rtl:pr-6 my-16 bg-white">
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Contact Form */}
-        <div className="w-full lg:w-1/2 space-y-6">
+        {/* Contact Form - Wrapped in a form tag */}
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full lg:w-1/2 space-y-6">
           {
             isHome &&
             <p className="text-center flex-1 mt-8 px-4 md:px-12 text-gray-800 text-lg font-semibold leading-relaxed">
@@ -46,9 +59,9 @@ const ContactForm = ({ isHome }: { isHome?: boolean }) => {
               <Input
                 placeholder={t("fullNamePlaceholder")}
                 className="border-gray-200 bg-white rounded-lg h-12"
-                value={formData.name}
-                onChange={(e) => handleChange("name", e.target.value)}
-                required
+                {...register("name")}
+                error={!!errors.name}
+                errorMessage={errors.name?.message}
               />
             </div>
             <div className="space-y-2">
@@ -57,9 +70,9 @@ const ContactForm = ({ isHome }: { isHome?: boolean }) => {
                 placeholder={t("emailPlaceholder")}
                 type="email"
                 className="border-gray-200 bg-white rounded-lg h-12"
-                value={formData.email}
-                onChange={(e) => handleChange("email", e.target.value)}
-                required
+                {...register("email")}
+                error={!!errors.email}
+                errorMessage={errors.email?.message}
               />
             </div>
             <div className="space-y-2">
@@ -67,22 +80,22 @@ const ContactForm = ({ isHome }: { isHome?: boolean }) => {
               <Textarea
                 placeholder={t("messagePlaceholder")}
                 className="border-gray-200 bg-white rounded-xl min-h-[150px] resize-none"
-                value={formData.message}
-                onChange={(e) => handleChange("message", e.target.value)}
-                required
+                {...register("message")}
+                error={!!errors.message}
+                errorMessage={errors.message?.message}
               />
             </div>
           </div>
 
           <Button
+            type="submit"
             variant="primary"
             className={isHome ? "w-full" : "w-40"}
-            onClick={handleSubmit}
             disabled={isPending}
           >
             {isPending ? <SpinnerLoader /> : t("send")}
           </Button>
-        </div>
+        </form>
 
         <div className={`w-full lg:w-1/2 bg-gray-200 overflow-hidden relative ${isHome ? "h-[500px]" : "h-[415px]"}`}>
           {isHome ? (

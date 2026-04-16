@@ -220,7 +220,7 @@ const ProductTable = ({ activeTab, data, isLoading }: ProductTableProps) => {
   const [page, setPage] = useState(1);
   const router = useRouter();
 
-  const cols = ["no", "product", "dateCreated", "sort", "operations"];
+  const cols = ["no", "product", "price", "dateCreated", "operations"];
 
   const filteredData = data.filter((item) => {
     if (activeTab === "All Products") return true;
@@ -240,11 +240,11 @@ const ProductTable = ({ activeTab, data, isLoading }: ProductTableProps) => {
               className="object-cover"
             />
           </div>
-          <span className="font-medium text-sm">{item.title[locale]}</span>
+          <span className="font-medium text-sm capitalize">{item.title[locale]}</span>
         </div>
       </TableCell>
-      <TableCell className="text-sm">{new Date(item.createdAt?.$date || item.createdAt).toLocaleDateString()}</TableCell>
       <TableCell className="text-sm font-medium">${item.price}</TableCell>
+      <TableCell className="text-sm">{new Date(item.createdAt?.$date || item.createdAt).toLocaleDateString()}</TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
           <Button

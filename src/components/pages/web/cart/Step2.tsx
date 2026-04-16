@@ -21,7 +21,6 @@ const Step2 = () => {
     // Get live cart data from API
     const { data: cartResponse } = useCart()
     const cartItems = cartResponse?.items || [];
-    console.log(cartItems)
     const createOrderMutation = useCreateOrder()
 
     const [paymentMethod, setPaymentMethod] = useState<"COD" | "CARD">("COD")

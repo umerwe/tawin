@@ -23,7 +23,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const locale = useLocale();
 
-  const { data: settings } = useSettings();
+  const { data: settings, isLoading: settingsLoading } = useSettings();
 
   const rawNormalizedPath = "/" + pathname.split("/").filter(Boolean).slice(1).join("/");
   const normalizedPath = rawNormalizedPath === "/" ? "/" : rawNormalizedPath;
@@ -62,21 +62,31 @@ export default function Navbar() {
       )}
     >
       <div className="h-14 flex items-center">
-        <Link href="/" className="flex items-center gap-2 flex-1">
-          <div>
-            <Image
-              src={settings?.logo}
-              alt="Logo"
-              width={60}
-              height={60}
-            />
-          </div>
-          {!isMain && (
-            <h2 className="text-sm sm:text-base font-semibold text-[#2D3E50]">
-              {settings?.businessName?.[locale]}
-            </h2>
-          )}
-        </Link>
+        {
+          settingsLoading ? (
+            <div className="flex items-center gap-2 flex-1">
+              <div className="animate-pulse">
+                <div className="h-6 w-32 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          ) : (
+            <Link href="/" className="flex items-center gap-2 flex-1">
+              <div>
+                <Image
+                  src={settings?.logo}
+                  alt="Logo"
+                  width={256}
+                  height={60}
+                />
+              </div>
+              {!isMain && (
+                <h2 className="text-sm sm:text-base font-semibold text-[#2D3E50]">
+                  {settings?.businessName?.[locale]}
+                </h2>
+              )}
+            </Link>
+          )
+        }
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-10">
