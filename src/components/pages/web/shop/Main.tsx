@@ -12,6 +12,7 @@ import { useSearchParams } from "next/navigation"
 import Container from "@/components/common/Container"
 import { useProducts, useProductsByCategory } from "@/hooks/useProducts"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Product } from "@/types/product"
 
 const Shop = () => {
     const t = useTranslations("translation");
@@ -64,7 +65,7 @@ const Shop = () => {
                     /* --- Data Success State --- */
                     <>
                         <div className={getGridClasses(viewMode)}>
-                            {data.slice(0, 8).map((product) => (
+                            {data.slice(0, 8).map((product : Product) => (
                                 <ProductCard
                                     key={product._id}
                                     {...product as any}
