@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/card/ProductCard"
 import { useTranslations } from "next-intl"
 import { useProducts } from "@/hooks/useProducts"
 import { SpinnerLoader } from "@/components/common/SpinnerLoader"
+import { Product } from "@/types/product"
 
 const BestSellerSection = () => {
     const t = useTranslations("translation")
@@ -38,7 +39,7 @@ const BestSellerSection = () => {
                 </div>
             ) : products.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-                    {products.slice(0, 4).map((product) => (
+                    {products.slice(0, 4).map((product: Product) => (
                         <ProductCard key={product._id} {...product as any} />
                     ))}
                 </div>
