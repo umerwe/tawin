@@ -1,6 +1,5 @@
 "use client"
 
-import { useTranslations } from "next-intl"
 import Image from "@/components/MyImage"
 import { useSettings } from "@/hooks/useSettings";
 import { useLocale } from "next-intl";
@@ -18,7 +17,6 @@ const HeroSkeleton = () => (
 )
 
 const HeroSection = () => {
-    const t = useTranslations("translation");
     const locale = useLocale();
 
     const { data, isLoading } = useSettings();

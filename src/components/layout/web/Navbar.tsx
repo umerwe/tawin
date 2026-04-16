@@ -37,10 +37,10 @@ export default function Navbar() {
 
   // Use API Hook for Cart Data
   const { data: cartResponse } = useCart();
-  
+
   const cartItems = cartResponse?.items
   const cartCount = cartResponse?.items?.length || 0;
-  
+
 
   useEffect(() => {
     const token = localStorage.getItem("token")
@@ -71,12 +71,12 @@ export default function Navbar() {
             </div>
           ) : (
             <Link href="/" className="flex items-center gap-2 flex-1">
-              <div>
+              <div className="w-12 h-12">
                 <Image
                   src={settings?.logo}
                   alt="Logo"
                   width={256}
-                  height={60}
+                  height={256}
                 />
               </div>
               {!isMain && (

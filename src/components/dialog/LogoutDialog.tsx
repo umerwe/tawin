@@ -38,6 +38,7 @@ export const LogoutDialog = ({
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
+            size="sm"
             className="w-full rounded-full border-gray-300"
           >
             {t("cancel")}
@@ -45,6 +46,7 @@ export const LogoutDialog = ({
           <Button
             onClick={onConfirm}
             variant="primary"
+            size="sm"
             className="rounded-full"
           >
             {t("logout")}

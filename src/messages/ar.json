@@ -531,7 +531,8 @@
     "coupon": "كوبون",
     "minOrder": "الحد الأدنى",
     "couponApplied": "تم تطبيق الكوبون",
-    "size": "الحجم"
+    "size": "الحجم",
+    "errorLoadingCategories": "خطأ في تحميل الفئات"
   },
   "confirm": {
     "logout": {

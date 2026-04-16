@@ -423,6 +423,7 @@
     "inactive": "Inactive",
     "vip": "VIP",
     "errorLoadingProducts": "Error loading products",
+    "errorLoadingCategories": "Error loading categories",
     "tryAgain": "Try Again",
     "productNamePlaceholder": "e.g. iPhone 15 Pro",
     "pricePlaceholder": "0.00",

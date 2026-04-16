@@ -12,8 +12,9 @@ import Image from "@/components/MyImage"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useAddToCart, useCart } from "@/hooks/useCart"
-import { useFavorites, useToggleFavorite } from "@/hooks/useFavorite" // Added hooks
+import { useFavorites, useToggleFavorite } from "@/hooks/useFavorite"
 import { LoginDialog } from "../dialog/LoginDialog"
+import { SpinnerLoader } from "../common/SpinnerLoader"
 
 export function ProductCard({
     _id,
@@ -41,8 +42,6 @@ export function ProductCard({
     const { data: favData } = useFavorites();
     const { mutate: toggleFavApi, isPending: isTogglingFav } = useToggleFavorite();
 
-    // Check states from API data
-    const isInCart = cartData?.items?.some((item: any) => item.productId === _id);
     const isWished = favData?.data?.some((fav: any) => fav.product?._id === _id);
 
     const handleFavorite = (e: React.MouseEvent) => {
@@ -64,13 +63,11 @@ export function ProductCard({
             return
         }
 
-        if (!isInCart) {
-            const payload = {
-                productId: _id,
-                quantity: 1
-            };
-            addToCartApi(payload);
-        }
+        const payload = {
+            productId: _id,
+            quantity: 1
+        };
+        addToCartApi(payload);
     };
 
     return (
@@ -136,15 +133,15 @@ export function ProductCard({
                             )}
                         </div>
                         <Button
-                            variant={isInCart ? "secondary" : "primary"}
+                            variant="primary"
                             size="sm"
                             className="w-full mt-2"
                             onClick={handleAddToCart}
-                            disabled={isInCart || isAddingToCart}
+                            disabled={isAddingToCart}
                         >
                             {isAddingToCart
-                                ? t("adding")
-                                : isInCart ? t("alreadyInCart") : t("addToCart")
+                                ? <SpinnerLoader />
+                                : t("addToCart")
                             }
                         </Button>
                     </div>

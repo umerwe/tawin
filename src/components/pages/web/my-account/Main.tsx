@@ -21,7 +21,7 @@ export default function MyAccount() {
   const t = useTranslations("translation");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { data: userProfile, isLoading,isFetching, error, refetch } = useUserProfile();
+  const { data: userProfile, isLoading, isFetching, error, refetch } = useUserProfile();
   const updateProfileMutation = useUpdateUserProfile();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -131,8 +131,8 @@ export default function MyAccount() {
                     key={item.id}
                     onClick={() => setTab(item.id)}
                     className={`w-full ltr:text-left rtl:text-right py-3 px-2 text-sm transition-all relative ${currentTab === item.id
-                        ? "text-aqua font-semibold"
-                        : "text-gray-500 hover:text-gray-900"
+                      ? "text-aqua font-semibold"
+                      : "text-gray-500 hover:text-gray-900"
                       }`}
                   >
                     {t(item.label)}

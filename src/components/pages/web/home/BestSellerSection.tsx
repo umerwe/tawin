@@ -4,8 +4,9 @@ import Link from "next/link"
 import { ProductCard } from "@/components/card/ProductCard"
 import { useTranslations } from "next-intl"
 import { useProducts } from "@/hooks/useProducts"
-import { SpinnerLoader } from "@/components/common/SpinnerLoader"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Product } from "@/types/product"
+import ProductSkeleton from "@/components/skeletons/ProductSkeleton"
 
 const BestSellerSection = () => {
     const t = useTranslations("translation")
@@ -25,9 +26,7 @@ const BestSellerSection = () => {
 
             {/* Loading State */}
             {isLoading ? (
-                <div className="flex items-center justify-center py-10">
-                    <SpinnerLoader />
-                </div>
+               <ProductSkeleton count={4} />
             ) : error ? (
                 <div className="flex flex-col items-center justify-center py-10 text-center">
                     <div className="bg-red-100 p-4 rounded-full mb-3">
