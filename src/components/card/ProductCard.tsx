@@ -121,7 +121,7 @@ export function ProductCard({
                     <div className="flex flex-col items-start gap-1 bg-background pt-4">
                         <StarRating rating={rating} />
 
-                        <Link href={`/shop/${slug}`} className="line-clamp-1 text-sm font-medium text-foreground cursor-pointer">
+                        <Link href={`/shop/${slug}`} className="line-clamp-1 text-sm font-medium text-foreground cursor-pointer capitalize">
                             {locale === "en" ? title.en : title.ar}
                         </Link>
 

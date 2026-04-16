@@ -212,12 +212,20 @@ interface ProductTableProps {
   activeTab: string;
   data: any[];
   isLoading?: boolean;
+  pagination?: {
+    page: number;
+    limit: number;
+    totalDocs: number;
+    totalPages: number;
+  };
+  page: number;
+  setPage: (p: number) => void;
 }
 
-const ProductTable = ({ activeTab, data, isLoading }: ProductTableProps) => {
+
+const ProductTable = ({ activeTab, data, isLoading, pagination, page, setPage }: ProductTableProps) => {
   const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
 
-  const [page, setPage] = useState(1);
   const router = useRouter();
 
   const cols = ["no", "product", "price", "dateCreated", "operations"];
@@ -286,10 +294,10 @@ const ProductTable = ({ activeTab, data, isLoading }: ProductTableProps) => {
       headerClassName="bg-aqua/5 border-none"
       isLoading={isLoading}
       pagination={{
-        total: filteredData.length,
-        page,
-        limit: 10,
-        setPage,
+        total: pagination?.totalDocs || 0,
+        page: pagination?.page || 1,
+        limit: pagination?.limit || 10,
+        setPage
       }}
     />
   );

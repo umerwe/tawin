@@ -3,11 +3,19 @@ import { getProducts, getProductBySlug, getProductsByCategory, addProduct, updat
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export const useProducts = (category?: string) => {
+interface ProductParams {
+  category?: string;
+  allProducts?: boolean;
+  featuredProducts?: boolean;
+  reduced?: boolean;
+  outOfStock?: boolean;
+}
+
+export const useProducts = (params?: ProductParams) => {
   return useQuery({
-    queryKey: ["products", category],
-    queryFn: () => getProducts(category),
-    staleTime: 5 * 60 * 1000, 
+    queryKey: ["products", params],
+    queryFn: () => getProducts(params),
+    staleTime: 5 * 60 * 1000,
   });
 };
 

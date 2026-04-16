@@ -1,8 +1,15 @@
 import api from "@/lib/axios";
 import { ProductsResponse,Product } from "@/types/product";
 
-export const getProducts = async (category?: string): Promise<ProductsResponse> => {
-  const params = category ? { category } : {};
+interface ProductParams {
+  category?: string;
+  allProducts?: boolean;
+  featuredProducts?: boolean;
+  reduced?: boolean;
+  outOfStock?: boolean;
+}
+
+export const getProducts = async (params?: ProductParams) => {
   const { data } = await api.get("/api/products", { params });
   return data;
 };
