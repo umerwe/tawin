@@ -32,9 +32,10 @@ const EditProductPage = () => {
             category: "",
             remainingPieces: 0,
             isNewArrival: false,
-            colors: [],
-            sizes: [],
-            weights: [{ unit: "", value: "" }],
+            // colors: [],
+            // sizes: [],
+            // weights: [{ unit: "", value: "" }],
+            variant: "",
             photo: null,
             images: [],
         },
@@ -51,11 +52,12 @@ const EditProductPage = () => {
             category: productData.category?._id ?? productData.category ?? "",
             remainingPieces: Number(productData.remainingPieces) || 0,
             isNewArrival: productData.isNewArrival ?? false,
-            colors: productData.colors ?? [],
-            sizes: (productData.sizes as ProductFormValues["sizes"]) ?? [],
-            weights: productData.weights?.length
-                ? (productData.weights as ProductFormValues["weights"])
-                : [{ unit: "", value: "" }],
+            variant: productData.variant ?? "",
+            // colors: productData.colors ?? [],
+            // sizes: (productData.sizes as ProductFormValues["sizes"]) ?? [],
+            // weights: productData.weights?.length
+            //     ? (productData.weights as ProductFormValues["weights"])
+            //     : [{ unit: "", value: "" }],
             photo: productData.photo || null,
             images: productData.images ?? [],
         } : undefined,
@@ -74,14 +76,15 @@ const EditProductPage = () => {
         fd.append("price", String(values.price));
         fd.append("remainingPieces", String(values.remainingPieces));
         fd.append("isNewArrival", String(values.isNewArrival));
+        fd.append("variant", values.variant || "");
 
-        values.colors?.forEach((c) => fd.append("colors", c));
-        values.sizes?.forEach((s) => fd.append("sizes", s));
+        // values.colors?.forEach((c) => fd.append("colors", c));
+        // values.sizes?.forEach((s) => fd.append("sizes", s));
 
-        if (values.weights?.[0]?.unit && values.weights?.[0]?.value) {
-            fd.append("weights[0][unit]", values.weights[0].unit);
-            fd.append("weights[0][value]", values.weights[0].value);
-        }
+        // if (values.weights?.[0]?.unit && values.weights?.[0]?.value) {
+        //     fd.append("weights[0][unit]", values.weights[0].unit);
+        //     fd.append("weights[0][value]", values.weights[0].value);
+        // }
 
         if (values.photo) {
             fd.append("photo", values.photo);

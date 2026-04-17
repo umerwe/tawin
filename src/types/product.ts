@@ -17,6 +17,7 @@ export interface Product {
   discount?: number
   reviewCount?: number
   isListView?: boolean,
+  variant?: string,
   sizes?: string[]
   weights?: { unit: string; value: string }[]
 }

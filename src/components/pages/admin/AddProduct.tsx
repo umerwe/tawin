@@ -25,9 +25,7 @@ export default function AddProductPage() {
             category: "",
             remainingPieces: 0,
             isNewArrival: false,
-            colors: [],
-            sizes: [],
-            weights: [{ unit: "", value: "" }],
+            variant : "",
             photo: null,
             images: []
         },
@@ -44,16 +42,17 @@ export default function AddProductPage() {
         if (values.description.ar) fd.append("description[ar]", values.description.ar);
         fd.append("category", values.category);
         fd.append("price", String(values.price));
+        fd.append("variant", values.variant || "");
         fd.append("remainingPieces", String(values.remainingPieces));
         fd.append("isNewArrival", String(values.isNewArrival));
 
-        values.colors?.forEach((c) => fd.append("colors", c));
-        values.sizes?.forEach((s) => fd.append("sizes", s));
+        // values.colors?.forEach((c) => fd.append("colors", c));
+        // values.sizes?.forEach((s) => fd.append("sizes", s));
 
-        if (values.weights && values.weights[0]?.unit && values.weights[0]?.value) {
-            fd.append("weights[0][unit]", values.weights[0].unit);
-            fd.append("weights[0][value]", values.weights[0].value);
-        }
+        // if (values.weights && values.weights[0]?.unit && values.weights[0]?.value) {
+        //     fd.append("weights[0][unit]", values.weights[0].unit);
+        //     fd.append("weights[0][value]", values.weights[0].value);
+        // }
 
         if (values.photo) {
             fd.append("photo", values.photo);

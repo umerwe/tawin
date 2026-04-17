@@ -132,6 +132,17 @@ const ProductForm = ({ isEdit = false }: any) => {
             </div>
           )}
 
+          {/* Variant */}
+          <div className="space-y-2">
+            <Label>{t("variant")}</Label>
+            <Input
+              {...register("variant")}
+              placeholder="e.g. Color, Size, etc."
+              className={`rounded-md ${errors.variant ? "border-red-500" : ""}`}
+            />
+            <ErrorMessage error={errors.variant} />
+          </div>
+
           {/* Stock & New Arrival */}
           {!isEdit && (
             <div className="grid grid-cols-2 gap-4">
@@ -171,7 +182,7 @@ const ProductForm = ({ isEdit = false }: any) => {
           )}
 
           {/* Sizes */}
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label>Sizes</Label>
             <Controller
               control={control}
@@ -205,10 +216,10 @@ const ProductForm = ({ isEdit = false }: any) => {
               }}
             />
             <ErrorMessage error={errors.sizes} />
-          </div>
+          </div> */}
 
           {/* Weight */}
-          {!isEdit && (
+          {/* {!isEdit && (
             <div className="space-y-2">
               <Label>Weight</Label>
               <div className="flex gap-3">
@@ -236,7 +247,7 @@ const ProductForm = ({ isEdit = false }: any) => {
               </div>
               <ErrorMessage error={(errors.weights as any)?.[0]?.unit || (errors.weights as any)?.[0]?.value} />
             </div>
-          )}
+          )} */}
 
         </CardContent>
       </Card>

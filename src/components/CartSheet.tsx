@@ -91,10 +91,13 @@ export default function CartSheet({ open, onOpenChange, cartItems, isLoading }: 
                                     <p className="text-sm font-semibold text-gray-900 truncate">
                                         {item.product?.title?.[locale]}
                                     </p>
-                                    <p className="text-xs text-gray-400">
-                                        {/* Display attributes if available in JSON */}
-                                        {item.attributes?.color ? `${t("color")}: ${item.attributes.color}` : `${t("color")}: Black`}
+                                    {
+                                        item.product?.variant &&
+                                        <p className="text-xs text-gray-400">
+                                        {item.product?.variant}
                                     </p>
+                                    }
+                                    
                                     <button
                                         onClick={() => removeItem(item.product?._id)}
                                         disabled={removeItemMutation.isPending}

@@ -40,7 +40,7 @@ const ProductImageForm = ({ existingPhoto, existingImages = [], isEdit = false }
 
   const photo = watch("photo");
   const images = watch("images") || [];
-  const selectedColors: string[] = watch("colors") ?? [];
+  // const selectedColors: string[] = watch("colors") ?? [];
 
   useEffect(() => {
     if (isEdit) {
@@ -73,12 +73,12 @@ const ProductImageForm = ({ existingPhoto, existingImages = [], isEdit = false }
     return URL.createObjectURL(item);
   };
 
-  const handleAddColor = () => {
-    if (!selectedColors.includes(pendingColor)) {
-      setValue("colors", [...selectedColors, pendingColor]);
-    }
-    setShowPicker(false);
-  };
+  // const handleAddColor = () => {
+  //   if (!selectedColors.includes(pendingColor)) {
+  //     setValue("colors", [...selectedColors, pendingColor]);
+  //   }
+  //   setShowPicker(false);
+  // };
 
   const ErrorMessage = ({ error }: { error: any }) => (
     error ? <p className="text-red-500 text-xs mt-1 font-medium">{error.message}</p> : null
@@ -163,7 +163,7 @@ const ProductImageForm = ({ existingPhoto, existingImages = [], isEdit = false }
           )}
 
           {/* Colors */}
-          <div className="space-y-2 pt-2">
+          {/* <div className="space-y-2 pt-2">
             <Label>{t("selectAvailableColors")}</Label>
             <div className="flex flex-wrap gap-2.5">
               {selectedColors.map((hex) => (
@@ -187,7 +187,7 @@ const ProductImageForm = ({ existingPhoto, existingImages = [], isEdit = false }
               </div>
             </div>
             <ErrorMessage error={errors.colors} />
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </div>

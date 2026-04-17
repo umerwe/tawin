@@ -66,11 +66,11 @@ export function ProductInfo({ product }: ProductInfoProps) {
       addToCartApi({
         productId: _id,
         quantity: quantity,
-        attributes: {
-          colors: selectedColors, // Sending the array
-          sizes: selectedSizes,   // Sending the array
-          weight: weights[0] || undefined
-        }
+        // attributes: {
+        //   colors: selectedColors, // Sending the array
+        //   sizes: selectedSizes,   // Sending the array
+        //   weight: weights[0] || undefined
+        // }
       });
     }
   };
@@ -99,6 +99,13 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       <Separator />
+
+      {product.variant && (
+        <div className="flex flex-col gap-2">
+          <span className="text-xs text-muted-foreground">{t("variant")}</span>
+          <span className="text-sm text-foreground">{product.variant}</span>
+        </div>
+      )}
 
       {measurements && (
         <div className="flex flex-col gap-2">

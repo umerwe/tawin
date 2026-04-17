@@ -539,7 +539,9 @@
     "qty": "الكمية",
     "optional": "اختياري",
     "addressPlaceholder": "المدينة، الدولة",
-    "orderSuccess": "تم إرسال الطلب بنجاح"
+    "orderSuccess": "تم إرسال الطلب بنجاح",
+    "variant": "البديل",
+    "viewOrder": "عرض الطلب"
   },
   "confirm": {
     "logout": {

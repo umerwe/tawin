@@ -1,37 +1,65 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+"use client";
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useTranslations } from "next-intl";
+import { useGetOrders } from "@/hooks/useOrder";
 
 export default function OrderHistory() {
   const t = useTranslations("translation");
-  const orders = [
-    { id: "#3456_768", date: "October 17, 2023", status: t("received"), price: "$1234.00" },
-    { id: "#3456_980", date: "October 11, 2023", status: t("received"), price: "$345.00" },
-  ]
+  
+  // Integrating API
+  const { data: response, isLoading } = useGetOrders();
+  const orders = response?.data || [];
+
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       <h2 className="text-lg font-semibold text-gray-900">{t("orderHistory")}</h2>
+      
       <div className="border border-gray-100 rounded-2xl overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50 hover:bg-gray-50">
-              <TableHead>{t("orderCode")}</TableHead>
-              <TableHead>{t("date")}</TableHead>
-              <TableHead>{t("status")}</TableHead>
-              <TableHead className="text-right">{t("price")}</TableHead>
+            <TableRow className="bg-gray-50 hover:bg-gray-50 border-none">
+              <TableHead className="py-4">{t("orderCode")}</TableHead>
+              <TableHead className="py-4">{t("date")}</TableHead>
+              <TableHead className="py-4">{t("status")}</TableHead>
+              <TableHead className="text-right py-4">{t("price")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orders.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell className="text-sm font-medium">{order.id}</TableCell>
-                <TableCell className="text-sm text-gray-500">{order.date}</TableCell>
-                <TableCell className="text-sm">{order.status}</TableCell>
-                <TableCell className="text-right text-sm font-semibold">{order.price}</TableCell>
+            {isLoading ? (
+              // Simple Loading State
+              <TableRow>
+                <TableCell colSpan={4} className="text-center py-10 text-gray-400">
+                  {t("loading")}...
+                </TableCell>
               </TableRow>
-            ))}
+            ) : orders.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} className="text-center py-10 text-gray-400">
+                  {t("noOrdersFound")}
+                </TableCell>
+              </TableRow>
+            ) : (
+              orders.map((order: any) => (
+                <TableRow key={order._id} className="border-gray-50">
+                  <TableCell className="text-sm font-medium py-4">
+                    #{order._id.slice(-6).toUpperCase()}
+                  </TableCell>
+                  <TableCell className="text-sm text-gray-500 py-4">
+                    {new Date(order.createdAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell className="text-sm py-4">
+                    <span className="capitalize">{order.status}</span>
+                  </TableCell>
+                  <TableCell className="text-sm font-semibold py-4">
+                    ${order.finalAmount}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
     </div>
-  )
+  );
 }

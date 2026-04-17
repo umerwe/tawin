@@ -5,18 +5,10 @@ import { X, Minus, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import Image from "@/components/MyImage"
 import { useUpdateCartQuantity, useRemoveFromCart } from "@/hooks/useCart"
+import { Product } from "@/types/product"
 
 interface CartItem {
-    product: {
-        _id: string;
-        title: {
-            en: string;
-            ar: string;
-        };
-        price: number;
-        photo: string | null;
-        images: string[];
-    };
+    product: Product;
     quantity: number;
     attributes: {
         color: string;
@@ -75,7 +67,7 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
                                     <Image
                                         width={64}
                                         height={80}
-                                        src={item.product.photo || item.product.images[0]} 
+                                        src={item.product.photo || ""} 
                                         alt={locale === "en" ? item.product.title.en : item.product.title.ar}
                                         className="w-full h-full object-cover"
                                     />
@@ -90,9 +82,13 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
                                     <p className="font-semibold text-gray-800 uppercase tracking-tight">
                                         {locale === "en" ? item.product.title.en : item.product.title.ar}
                                     </p>
-                                    <p className="text-gray-400">
-                                        {t("size")}: {item?.attributes?.size}
-                                    </p>
+                                    {
+                                        item.product?.variant && (
+                                            <p className="text-gray-400">
+                                                {item.product?.variant}
+                                            </p>
+                                        )
+                                    }
                                 </div>
 
                                 {/* Quantity Toggle */}

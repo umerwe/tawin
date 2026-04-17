@@ -17,12 +17,7 @@ export const productFormSchema = z.object({
   price: z.string().min(1, "Price is required").regex(/^\d+(\.\d+)?$/, "Price must be a valid number"),
   remainingPieces: z.number().int().min(0, "Cannot be negative"),
   isNewArrival: z.boolean(),
-  colors: z.array(z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)).optional(),
-  sizes: z.array(z.enum(sizes)).optional(),
-  weights: z.array(z.object({
-    unit: z.enum(units).or(z.literal("")),
-    value: z.string()
-  })).optional(),
+  variant: z.string().optional(),
   photo: z.any().refine((file) => file !== null, "Main photo is required"),
   images: z.array(z.any()).optional(),
 });

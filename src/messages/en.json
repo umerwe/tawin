@@ -539,7 +539,9 @@
     "customer": "Customer",
     "optional": "Optional",
     "addressPlaceholder": "City, Country",
-    "orderSuccess": "Order Placed Successfully"
+    "orderSuccess": "Order Placed Successfully",
+    "variant": "Variant",
+    "viewOrder": "View Order"
   },
   "confirm": {
     "logout": {
