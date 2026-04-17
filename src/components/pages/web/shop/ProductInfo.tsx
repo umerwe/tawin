@@ -34,15 +34,14 @@ export function ProductInfo({ product }: ProductInfoProps) {
     weights = [],
   } = product;
 
-  // API Hooks
   const { data: cartData } = useCart();
   const { mutate: addToCartApi, isPending: isAdding } = useAddToCart();
   const { data: favData } = useFavorites();
   const { mutate: toggleFavApi, isPending: isTogglingFav } = useToggleFavorite();
 
-  // --- FIXED: Local states to track user selection ---
-  const [selectedColor, setSelectedColor] = useState(colors[0] || "");
-  const [selectedSize, setSelectedSize] = useState(sizes[0] || "");
+  // --- UPDATED: State handles arrays for multiple selection ---
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [quantity, setQuantity] = useState(1);
 
   const isInCart = cartData?.data?.items?.some((item: any) => item.productId === _id);
@@ -53,14 +52,23 @@ export function ProductInfo({ product }: ProductInfoProps) {
     value: colorName.toLowerCase() === "black" ? "#000000" : colorName
   }));
 
+  // Helper to toggle items in an array
+  const toggleSelection = (list: string[], item: string, setter: (val: string[]) => void) => {
+    if (list.includes(item)) {
+      setter(list.filter((i) => i !== item));
+    } else {
+      setter([...list, item]);
+    }
+  };
+
   const handleAddToCart = () => {
     if (!isInCart) {
       addToCartApi({
         productId: _id,
-        quantity: quantity, // Uses the current state value
+        quantity: quantity,
         attributes: {
-          color: selectedColor, // Uses the current selected color
-          size: selectedSize,
+          colors: selectedColors, // Sending the array
+          sizes: selectedSizes,   // Sending the array
           weight: weights[0] || undefined
         }
       });
@@ -92,31 +100,50 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
       <Separator />
 
-      {/* <div className="flex flex-col gap-3">
-        <span className="text-xs text-muted-foreground">{t("offerEndsIn")}</span>
-        <CountdownTimer />
-      </div>
+      {measurements && (
+        <div className="flex flex-col gap-2">
+          <span className="text-xs text-muted-foreground">{t("measurements")}</span>
+          <span className="text-sm text-foreground">{measurements}</span>
+        </div>
+      )}
 
-      <Separator /> */}
+      {sizes.length > 0 && (
+        <div className="space-y-2">
+          <span className="text-xs text-muted-foreground">{t("sizes")}</span>
+          <div className="flex flex-wrap gap-2 mt-0.5">
+            {sizes.map((s) => {
+              const isSelected = selectedSizes.includes(s);
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => toggleSelection(selectedSizes, s, setSelectedSizes)}
+                  className={cn(
+                    "px-4 py-2 text-sm rounded-md border font-medium transition-all",
+                    isSelected
+                      ? "bg-aqua text-white border-aqua"
+                      : "bg-white text-gray-500 border-gray-200 hover:border-aqua/50"
+                  )}
+                >
+                  {s}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {
-        measurements && (
-          <div className="flex flex-col gap-2">
-            <span className="text-xs text-muted-foreground">{t("measurements")}</span>
-            <span className="text-sm text-foreground">{measurements}</span>
-          </div>
+        colors.length > 0 && (
+          <ColorSelector
+            colors={colorObjects}
+            selectedColor={selectedColors}
+            onColorChange={(color) => toggleSelection(selectedColors, color, setSelectedColors)}
+          />
         )
       }
 
-      {/* --- FIXED: Passing selectedColor and setter --- */}
-      <ColorSelector
-        colors={colorObjects}
-        selectedColor={selectedColor}
-        onColorChange={setSelectedColor}
-      />
-
       <div className="flex items-center gap-3">
-        {/* --- FIXED: Passing quantity and setter --- */}
         <QuantitySelector
           quantity={quantity}
           setQuantity={setQuantity}

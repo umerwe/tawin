@@ -1,4 +1,5 @@
 "use client";
+
 import { cn } from "@/lib/utils";
 import { Copy, Phone, MapPin, Hash } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 export default function SupplierDetailDialog({
   supplier,
@@ -19,28 +21,34 @@ export default function SupplierDetailDialog({
   open: boolean;
   onClose: () => void;
 }) {
-  const locale = useLocale() as "en" | "ar";
   const t = useTranslations("translation");
-  const isRtl = locale === "ar";
 
   if (!supplier) return null;
 
-  const isActive = supplier.status.en === "Active";
+  const isActive = supplier.isActive;
+  const formattedDate = supplier.createdAt
+    ? new Date(supplier.createdAt).toLocaleDateString()
+    : "N/A";
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success(t("copied"));
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className={cn("max-w-sm rounded-2xl p-0 overflow-hidden border border-gray-100 shadow-xl")}
+        className="max-w-sm rounded-2xl overflow-hidden border border-gray-100 shadow-xl"
       >
         {/* Header */}
-        <DialogHeader className="px-5 pt-5 relative">
+        <DialogHeader className="relative">
           <DialogTitle className="text-base font-bold text-gray-800 leading-snug">
-            {supplier.name[locale]}
+            {supplier.name}
           </DialogTitle>
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs text-gray-400">{supplier.email}</span>
+          <div className="flex items-center gap-1.5 mt-1">
+            <span className="text-xs text-gray-400 truncate max-w-[200px]">{supplier.email}</span>
             <button
-              onClick={() => navigator.clipboard.writeText(supplier.email)}
+              onClick={() => handleCopy(supplier.email)}
               className="text-purple-500 hover:text-aqua transition-colors"
             >
               <Copy size={12} />
@@ -48,119 +56,96 @@ export default function SupplierDetailDialog({
           </div>
         </DialogHeader>
 
-        <div className="px-5 pb-5 space-y-4">
+        <div className="space-y-4 mt-2">
           {/* Supplier Info Section */}
           <div>
-            <p className="text-xs text-gray-400 mb-2">
+            <p className="text-xs font-semibold text-gray-400 mb-2">
               {t("supplierInfo")}
             </p>
             <div className="space-y-2">
               {/* Phone */}
-              <div className="flex items-center gap-3 border border-gray-100 rounded-lg px-3 py-2.5">
-                <Phone size={15} className="text-gray-400" />
+              <div className="flex items-center gap-3 border border-gray-50 bg-gray-50/30 rounded-lg px-3 py-2.5">
+                <Phone size={14} className="text-gray-400" />
                 <span className="text-sm text-gray-700 font-medium">
                   {supplier.phone}
                 </span>
               </div>
 
               {/* Address */}
-              <div className="flex items-center gap-3 border border-gray-100 rounded-lg px-3 py-2.5">
-                <MapPin size={15} className="text-gray-400" />
-                <span className="text-sm text-gray-700 font-medium">
-                  {supplier.address[locale]}
+              <div className="flex items-center gap-3 border border-gray-50 bg-gray-50/30 rounded-lg px-3 py-2.5">
+                <MapPin size={14} className="text-gray-400" />
+                <span className="text-sm text-gray-700 font-medium line-clamp-1">
+                  {supplier.address}
                 </span>
               </div>
 
-              {/* Tax Number */}
-              <div className="flex items-center gap-3 border border-gray-100 rounded-lg px-3 py-2.5">
-                <Hash size={15} className="text-gray-400" />
+              {/* Code */}
+              <div className="flex items-center gap-3 border border-gray-50 bg-gray-50/30 rounded-lg px-3 py-2.5">
+                <Hash size={14} className="text-gray-400" />
                 <span className="text-sm text-gray-700 font-medium">
-                  {supplier.taxNumber}
+                  {supplier.code}
                 </span>
               </div>
             </div>
           </div>
 
           {/* Activity Section */}
-          <div>
-            <p className="text-xs text-gray-400 mb-2">
-              {t("activity")}
-            </p>
-            <div className="space-y-1">
-              <div className="flex items-center gap-1.5">
-                <span className="text-sm text-gray-600">{t("status")}:</span>
-                <span
-                  className={cn(
-                    "text-sm font-semibold",
-                    isActive ? "text-aqua" : "text-red-500"
-                  )}
-                >
-                  {supplier.status[locale]}
-                </span>
-              </div>
-              <p className="text-sm text-gray-600">
-                {t("accountRegistered")}:{" "}
-                <span className="font-medium text-gray-700">
-                  {supplier.accountRegisteredAt}
-                </span>
-              </p>
-              <p className="text-sm text-gray-600">
-                {t("lastActivity")}:{" "}
-                <span className="font-medium text-gray-700">
-                  {supplier.lastAccountActivity}
-                </span>
-              </p>
+          <div className="bg-gray-50/50 p-3 rounded-xl border border-gray-100/50">
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-gray-500">{t("status")}:</span>
+              <span
+                className={cn(
+                  "text-xs font-bold px-2 py-0.5 rounded-full",
+                  isActive ? "bg-aqua/10 text-aqua" : "bg-red-50 text-red-500"
+                )}
+              >
+                {isActive ? t("active") : t("inactive")}
+              </span>
             </div>
           </div>
 
-          {/* Sales Summary Section */}
-          <div>
-            <p className="text-xs text-gray-400 mb-2">
-              {t("salesSummary")}
-            </p>
-            <div className="grid grid-cols-3 gap-2 text-center">
-              {/* Total */}
-              <div className="border border-gray-100 rounded-xl py-2.5 px-1">
-                <p className="text-lg font-bold text-gray-800">
-                  {supplier.salesSummary.total}
-                </p>
-                <p className="text-xs text-aqua font-medium mt-0.5">
-                  {t("totalSales")}
-                </p>
-              </div>
-              {/* Completed */}
-              <div className="border border-gray-100 rounded-xl py-2.5 px-1">
-                <p className="text-lg font-bold text-gray-800">
-                  {supplier.salesSummary.completed}
-                </p>
-                <p className="text-xs text-aqua font-medium mt-0.5">
-                  {t("completed")}
-                </p>
-              </div>
-              {/* Cancelled */}
-              <div className="border border-gray-100 rounded-xl py-2.5 px-1">
-                <p className="text-lg font-bold text-gray-800">
-                  {supplier.salesSummary.cancelled}
-                </p>
-                <p className="text-xs text-red-500 font-medium mt-0.5">
-                  {t("cancelled")}
-                </p>
+          {/* Sales Summary (If data exists in API) */}
+          {supplier.salesSummary && (
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-2">
+                {t("salesSummary")}
+              </p>
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div className="border border-gray-100 rounded-xl py-2 px-1">
+                  <p className="text-base font-bold text-gray-800">{supplier.salesSummary.total || 0}</p>
+                  <p className="text-[10px] text-gray-400 mt-0.5">{t("total")}</p>
+                </div>
+                <div className="border border-gray-100 rounded-xl py-2 px-1">
+                  <p className="text-base font-bold text-gray-800">{supplier.salesSummary.completed || 0}</p>
+                  <p className="text-[10px] text-aqua font-medium mt-0.5">{t("done")}</p>
+                </div>
+                <div className="border border-gray-100 rounded-xl py-2 px-1">
+                  <p className="text-base font-bold text-gray-800">{supplier.salesSummary.cancelled || 0}</p>
+                  <p className="text-[10px] text-red-400 mt-0.5">{t("void")}</p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-2 gap-3 pt-1">
+          <div className="grid grid-cols-2 gap-3 pt-2">
             <Button
               variant="outline"
-              className="border-red-200 bg-red-100 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-md h-10 font-medium"
+              onClick={onClose}
+              className="border-gray-200 text-gray-500 hover:bg-gray-50 rounded-lg h-10 text-sm font-medium"
             >
-              {t("block")}
+              {t("close")}
             </Button>
             <Button
               variant="primary"
-              className="bg-aqua/10 border border-aqua hover:bg-aqua/20 text-aqua rounded-md h-10 font-medium">
-              {t("activate")}
+              className={cn(
+                "rounded-lg h-10 text-sm font-medium transition-all",
+                isActive
+                  ? "bg-red-50 text-red-500 border border-red-100 hover:bg-red-100"
+                  : "bg-aqua text-white hover:bg-aqua/90"
+              )}
+            >
+              {isActive ? t("deactivate") : t("activate")}
             </Button>
           </div>
         </div>

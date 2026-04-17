@@ -532,7 +532,14 @@
     "coupon": "Coupon",
     "minOrder": "Min Order",
     "couponApplied": "Coupon Applied",
-    "size": "Size"
+    "size": "Size",
+    "sizes": "Sizes",
+    "qty": "Quantity",
+    "close": "Close",
+    "customer": "Customer",
+    "optional": "Optional",
+    "addressPlaceholder": "City, Country",
+    "orderSuccess": "Order Placed Successfully"
   },
   "confirm": {
     "logout": {
@@ -620,7 +627,9 @@
       "type": "Type",
       "minOrder": "Min. Order",
       "usageLimit": "Usage Limit",
-      "expiryDate": "Expiry Date"
+      "expiryDate": "Expiry Date",
+      "customer": "Customer",
+      "action": "Action"
     },
     "search": {
       "noData": "No data found"

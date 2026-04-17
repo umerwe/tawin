@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import OrderTable from "@/components/tables/OrderTable";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FilterSection from "@/components/FilterSection";
-import { MoreVertical, Plus } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StatsCard from "@/components/card/StatsCard";
 import { useTranslations } from "next-intl";
+import { useDeleteOrder, useGetOrders } from "@/hooks/useOrder";
+import { useDebounce } from "@/hooks/useDebounce";
+import { toast } from "sonner";
 
 const stats = [
     {
@@ -40,72 +43,55 @@ const stats = [
     },
 ];
 
-const orders = [
-    {
-        id: 1,
-        orderId: "#ORD0001",
-        product: { en: "Wireless Bluetooth Headphones", ar: "سماعات بلوتوث لاسلكية" },
-        img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=200&auto=format&fit=crop",
-        date: "01-01-2025",
-        price: "49.99",
-        payment: { en: "Paid", ar: "تم الدفع" },
-        status: { en: "Completed", ar: "مكتمل" },
-        color: "text-aqua",
-        dot: "bg-aqua"
-    },
-    {
-        id: 2,
-        orderId: "#ORD0002",
-        product: { en: "Wireless Bluetooth Headphones", ar: "سماعات بلوتوث لاسلكية" },
-        img: "https://images.unsplash.com/photo-1583394838336-acd977736f90?q=80&w=200&auto=format&fit=crop",
-        date: "02-01-2025",
-        price: "49.99",
-        payment: { en: "Paid", ar: "تم الدفع" },
-        status: { en: "Processing", ar: "قيد المعالجة" },
-        color: "text-orange-500",
-        dot: "bg-orange-500"
-    },
-    {
-        id: 3,
-        orderId: "#ORD0003",
-        product: { en: "Wireless Bluetooth Headphones", ar: "سماعات بلوتوث لاسلكية" },
-        img: "https://images.unsplash.com/photo-1484704849700-f032a568e944?q=80&w=200&auto=format&fit=crop",
-        date: "03-01-2025",
-        price: "49.99",
-        payment: { en: "Paid", ar: "تم الدفع" },
-        status: { en: "Completed", ar: "مكتمل" },
-        color: "text-aqua",
-        dot: "bg-aqua"
-    },
-    {
-        id: 4,
-        orderId: "#ORD0004",
-        product: { en: "Wireless Bluetooth Headphones", ar: "سماعات بلوتوث لاسلكية" },
-        img: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=200&auto=format&fit=crop",
-        date: "04-01-2025",
-        price: "49.99",
-        payment: { en: "Unpaid", ar: "غير مدفوع" },
-        status: { en: "Cancelled", ar: "ملغى" },
-        color: "text-red-500",
-        dot: "bg-red-500"
-    }
-];
-
 const Orders = () => {
-    const t = useTranslations("translation")
+    const t = useTranslations("translation");
+
+    // Table States
     const [activeTab, setActiveTab] = useState("All Orders");
+    const [search, setSearch] = useState("");
+    const [page, setPage] = useState(1);
+    const [isReversed, setIsReversed] = useState(false);
+
+    // Debounce search to prevent excessive API calls
+    const debouncedSearch = useDebounce(search, 500);
+
+    // Fetch Orders with Query Params
+    const queryParams = useMemo(() => ({
+        status: activeTab === "All Orders" ? undefined : activeTab.toLowerCase(),
+        page,
+        search: debouncedSearch,
+    }), [activeTab, page, debouncedSearch]);
+
+    const { data, isLoading, refetch, isFetching } = useGetOrders(queryParams);
+    
+    const rawOrders = data?.data || [];
+    const pagination = data?.meta || {};
+
+    const displayedOrders = useMemo(() => {
+        if (!rawOrders) return [];
+        return isReversed ? [...rawOrders].reverse() : rawOrders;
+    }, [rawOrders, isReversed]);
+
+    // Delete Mutation
+    const { mutate: deleteOrder, isPending: isDeleting } = useDeleteOrder();
+
+    const handleDelete = (id: string, closeDialog: () => void) => {
+        deleteOrder(id, {
+            onSuccess: () => {
+                toast.success(t("orderDeletedSuccess"));
+                closeDialog();
+                refetch();
+            },
+            onError: (error: any) => {
+                toast.error(error?.message || "Failed to delete order");
+            }
+        });
+    };
 
     return (
         <div className="space-y-6 p-1">
+            {/* Top Action Bar */}
             <div className="flex items-center justify-end gap-3">
-                <Button
-                    variant="primary"
-                    className="w-32"
-                    size="sm"
-                >
-                    <Plus className="h-4 w-4 mr-2" /> {t("addOrder")}
-                </Button>
-
                 <Button
                     variant="outline"
                     size="sm"
@@ -115,25 +101,45 @@ const Orders = () => {
                 </Button>
             </div>
 
+            {/* Statistics Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {stats.map((stat, i) => (
                     <StatsCard key={i} data={stat} />
                 ))}
             </div>
 
+            {/* Orders Table Card */}
             <Card className="border shadow-none overflow-hidden">
-                <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6">
+                <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <FilterSection
+                        type="order"
                         activeTab={activeTab}
-                        setActiveTab={setActiveTab}
-                        data={orders}
+                        setActiveTab={(tab) => {
+                            setActiveTab(tab);
+                            setPage(1);
+                        }}
+                        data={rawOrders}
+                        search={search}
+                        setSearch={(val) => {
+                            setSearch(val);
+                            setPage(1);
+                        }}
+                        isReversed={isReversed}
+                        setIsReversed={setIsReversed}
+                        onRefetch={refetch}
+                        isFetching={isFetching}
                     />
                 </CardHeader>
 
-                <CardContent>
+                <CardContent className="p-0 sm:p-6">
                     <OrderTable
-                        activeTab={activeTab}
-                        data={orders}
+                        data={displayedOrders}
+                        isLoading={isLoading || isFetching}
+                        pagination={pagination}
+                        page={page}
+                        setPage={setPage}
+                        onDelete={handleDelete}
+                        isDeleting={isDeleting}
                     />
                 </CardContent>
             </Card>

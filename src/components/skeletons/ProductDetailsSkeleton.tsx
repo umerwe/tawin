@@ -2,12 +2,12 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export default function ProductDetailsSkeleton() {
     return (
-        <div className="container mx-auto px-4 sm:px-6 space-y-10 pt-8 pb-16">
+        <div className="px-4 sm:px-6 space-y-10 pt-8 pb-16 max-w-7xl mx-auto">
 
             {/* Breadcrumb + top bar */}
             <div className="flex items-center justify-between">
                 <Skeleton className="h-4 w-60" />
-                <Skeleton className="h-8 w-28 rounded-md" />
+                <Skeleton className="h-8 w-28" />
             </div>
 
             {/* Main section */}
@@ -15,11 +15,11 @@ export default function ProductDetailsSkeleton() {
 
                 {/* Image Gallery Skeleton */}
                 <div className="flex flex-col gap-4">
-                    <Skeleton className="h-[450px] w-full rounded-xl" />
+                    <Skeleton className="h-[450px] w-full" />
 
                     <div className="grid grid-cols-4 gap-4">
                         {Array.from({ length: 4 }).map((_, i) => (
-                            <Skeleton key={i} className="aspect-square w-full rounded-md" />
+                            <Skeleton key={i} className="aspect-square w-full" />
                         ))}
                     </div>
                 </div>

@@ -25,21 +25,29 @@ export default function OrderDetailDialog({
 
   if (!order) return null;
 
-  const isPaid = order.payment.en === "Paid";
+  // Helpers for updated data structure
+  const firstItem = order.items?.[0];
+  const formattedDate = new Date(order.createdAt).toLocaleDateString();
+  const isCOD = order.paymentMethod === "COD";
 
   const rows = [
-    { label: t("orderId"), value: order.orderId },
-    { label: t("date"), value: order.date },
-    { label: t("price"), value: `$${order.price}` },
+    { label: t("orderId"), value: `#${order._id.slice(-6).toUpperCase()}` },
+    { label: t("customer"), value: `${order.user?.firstName} ${order.user?.lastName}` },
+    { label: t("phone"), value: order.phone },
+    { label: t("date"), value: formattedDate },
+    { label: t("totalPrice"), value: `${order.finalAmount} AED` },
     {
       label: t("payment"),
-      value: order.payment[locale],
-      valueClass: isPaid ? "text-aqua font-semibold" : "text-red-500 font-semibold",
+      value: order.paymentMethod,
+      valueClass: isCOD ? "text-orange-500 font-semibold" : "text-aqua font-semibold",
     },
     {
       label: t("status"),
-      value: order.status[locale],
-      valueClass: cn("font-semibold", order.color),
+      value: order.status,
+      valueClass: cn(
+        "font-semibold capitalize",
+        order.status === "pending" ? "text-orange-600" : "text-green-600"
+      ),
     },
   ];
 
@@ -54,30 +62,36 @@ export default function OrderDetailDialog({
         </DialogHeader>
 
         <div className="px-5 pb-5 space-y-4">
-          {/* Product Preview */}
-          <div className="flex items-center gap-3 border border-gray-100 rounded-lg px-3 py-2.5">
-            <div className="h-10 w-10 relative overflow-hidden rounded-md shrink-0">
-              <Image
-                src={order.img}
-                alt={order.product[locale]}
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm font-medium text-gray-800 line-clamp-1">
-                {order.product[locale]}
-              </p>
-              <p className="text-xs text-gray-400 mt-0.5">#{order.id}</p>
-            </div>
+          {/* Product(s) Preview */}
+          <div className="space-y-2 max-h-[160px] overflow-y-auto scrollbar-hide pr-1">
+            {order.items?.map((item: any, idx: number) => (
+              <div key={idx} className="flex items-center gap-3 border border-gray-100 rounded-lg px-3 py-2.5">
+                <div className="h-10 w-10 relative overflow-hidden rounded-md shrink-0 bg-gray-50">
+                  <Image
+                    src={item.product?.photo || ""}
+                    alt={item.product?.title?.[locale]}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-gray-800 line-clamp-1">
+                    {item.product?.title?.[locale]}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    {t("qty")}: {item.quantity} × {item.price} AED
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Detail Rows */}
-          <div className="space-y-2">
+          <div className="space-y-2 bg-gray-50/50 p-3 rounded-xl border border-gray-100/50">
             {rows.map(({ label, value, valueClass }) => (
-              <div key={label} className="flex items-center gap-1.5">
-                <span className="text-sm text-gray-500 shrink-0">{label}:</span>
-                <span className={cn("text-sm font-medium text-gray-700", valueClass)}>
+              <div key={label} className="flex justify-between items-center gap-1.5">
+                <span className="text-xs text-gray-500 shrink-0">{label}:</span>
+                <span className={cn("text-xs font-medium text-gray-700 text-end", valueClass)}>
                   {value}
                 </span>
               </div>
@@ -88,13 +102,14 @@ export default function OrderDetailDialog({
           <div className="grid grid-cols-2 gap-3 pt-1">
             <Button
               variant="outline"
-              className="border-red-200 bg-red-100 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-md h-10 font-medium"
+              onClick={onClose}
+              className="border-gray-200 text-gray-500 hover:bg-gray-50 rounded-md h-10 font-medium"
             >
-              {t("cancelOrder")}
+              {t("close")}
             </Button>
             <Button
               variant="primary"
-              className="bg-aqua/10 border border-aqua hover:bg-aqua/20 text-aqua rounded-md h-10 font-medium"
+              className="bg-aqua border border-aqua hover:bg-aqua/90 text-white rounded-md h-10 font-medium"
             >
               {t("trackOrder")}
             </Button>

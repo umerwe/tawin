@@ -22,7 +22,14 @@ interface FilterSectionProps {
   activeTab: string;
   setActiveTab: (val: string) => void;
   data: any[];
-  type?: "order" | "user" | "supplier" | "product" | "lowStock" | "brand" | "review" | "coupon" | "constructionBasket";
+  type?: "order" | "user" | "supplier" | "lowStock" | "brand" | "review" | "coupon" | "constructionBasket";
+  search?: string;
+  setSearch?: (val: string) => void;
+  isReversed?: boolean;
+  setIsReversed?: (val: boolean) => void;
+  onRefetch?: () => void;
+  isFetching?: boolean;
+  // Review specific
   ratingFilter?: number | null;
   setRatingFilter?: (val: number | null) => void;
   reviewsTotal?: number;
@@ -33,6 +40,12 @@ const FilterSection = ({
   setActiveTab,
   data,
   type = "order",
+  search,
+  setSearch,
+  isReversed,
+  setIsReversed,
+  onRefetch,
+  isFetching,
   ratingFilter,
   setRatingFilter,
   reviewsTotal = 0,
@@ -41,12 +54,6 @@ const FilterSection = ({
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   const getTabs = () => {
-    if (type === "product") return [
-      { id: "All Products", label: t("allProducts") },
-      { id: "Featured Products", label: t("featuredProducts") },
-      { id: "Reduced", label: t("reduced") },
-      { id: "Out of Stock", label: t("outOfStock") },
-    ];
     if (type === "coupon") return [
       { id: "All Coupons", label: t("allCoupons") },
       { id: "Active", label: t("active") },
@@ -64,9 +71,17 @@ const FilterSection = ({
   const tabs = getTabs();
 
   const actions = [
-    { icon: <RefreshCcw className="h-4 w-4" />, color: "text-gray-500" },
+    {
+      icon: <RefreshCcw className={cn("h-4 w-4", isFetching && "animate-spin")} />,
+      color: "text-gray-500",
+      onClick: onRefetch
+    },
     { icon: <Filter className="h-4 w-4" />, color: "text-gray-500" },
-    { icon: <ArrowUpDown className="h-4 w-4" />, color: "text-gray-500" },
+    {
+      icon: <ArrowUpDown className="h-4 w-4" />,
+      color: isReversed ? "text-aqua font-bold" : "text-gray-500",
+      onClick: () => setIsReversed?.(!isReversed)
+    },
     { icon: <MoreHorizontal className="h-4 w-4" />, color: "text-gray-500" },
     { icon: <FileText className="h-4 w-4" />, color: "text-red-500" },
   ];
@@ -79,11 +94,8 @@ const FilterSection = ({
     return "";
   };
 
-  // UPDATED: Added constructionBasket to Title Types
   const isTitleType = type === "user" || type === "supplier" || type === "brand" || type === "constructionBasket";
-
-  const isTabType = type === "order" || type === "product" || type === "lowStock" || type === "coupon";
-
+  const isTabType = type === "order" || type === "lowStock" || type === "coupon";
   const hasAddButton = !["order", "lowStock", "review", "coupon", "constructionBasket"].includes(type);
 
   const isAllTabId = (id: string) =>
@@ -91,11 +103,15 @@ const FilterSection = ({
 
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-center justify-between w-full gap-4">
+      <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between w-full gap-4">
 
-        <div className="flex items-center overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+        {/* Left Side: Tabs or Title */}
+        <div className={cn(
+          "w-full xl:w-auto overflow-x-auto scrollbar-hide",
+          "pb-1 md:pb-0"
+        )}>
           {type === "review" ? (
-            <div className="flex items-center gap-1 bg-emerald-50/40 p-1 rounded-lg border border-gray-100 flex-nowrap whitespace-nowrap">
+            <div className="flex items-center gap-1 bg-emerald-50/40 p-1 rounded-lg border border-gray-100 min-w-max">
               <Button
                 variant="ghost"
                 size="sm"
@@ -129,7 +145,7 @@ const FilterSection = ({
               ))}
             </div>
           ) : isTabType ? (
-            <div className="flex items-center gap-1 bg-emerald-50/40 p-1 rounded-lg border border-gray-100 flex-nowrap whitespace-nowrap">
+            <div className="flex items-center gap-1 bg-emerald-50/40 p-1 rounded-lg border border-gray-100 min-w-max">
               {tabs.map((tab) => (
                 <Button
                   key={tab.id}
@@ -137,7 +153,7 @@ const FilterSection = ({
                   size="sm"
                   onClick={() => setActiveTab(tab.id)}
                   className={cn(
-                    "h-8 px-4 text-xs font-medium transition-all",
+                    "h-8 px-4 text-xs font-medium transition-all shrink-0",
                     activeTab === tab.id
                       ? "bg-white shadow-sm text-gray-900 border border-gray-100 hover:bg-white"
                       : "text-muted-foreground hover:bg-aqua/10"
@@ -151,15 +167,18 @@ const FilterSection = ({
               ))}
             </div>
           ) : isTitleType ? (
-            <h1 className="text-lg font-bold text-gray-800 whitespace-nowrap overflow-hidden">{getTitle()}</h1>
+            <h1 className="text-lg font-bold text-gray-800 px-1 overflow-hidden whitespace-nowrap">{getTitle()}</h1>
           ) : null}
         </div>
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-          <div className="flex items-center gap-2 w-full">
+        {/* Right Side: Search, Actions, and Add Button */}
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 w-full xl:w-auto">
+          <div className="flex items-center gap-2 flex-1">
             <SearchInput
+              value={search}
+              onChange={(e) => setSearch?.(e.target.value)}
               placeholder={`${t("search")}...`}
-              className="flex-1 md:w-[240px] md:flex-none"
+              className="flex-1 md:w-[200px] lg:w-[240px]"
             />
 
             <div className="flex items-center gap-1 shrink-0">
@@ -168,7 +187,8 @@ const FilterSection = ({
                   key={idx}
                   variant="outline"
                   size="icon"
-                  className={cn("h-9 w-9 border-gray-200 bg-white", action.color)}
+                  onClick={action.onClick}
+                  className={cn("h-9 w-9 border-gray-200 bg-white shrink-0", action.color)}
                 >
                   {action.icon}
                 </Button>
@@ -180,7 +200,7 @@ const FilterSection = ({
             <Button
               variant="primary"
               size="sm"
-              className="w-full sm:w-40 gap-2 shrink-0"
+              className="w-full lg:w-40 gap-2 shrink-0 h-9"
               onClick={() => setIsAddDialogOpen(true)}
             >
               <span className="truncate">

@@ -8,21 +8,26 @@ export interface OrderFormData {
 }
 
 export const createOrder = async (formData: OrderFormData) => {
-  const { data } = await api.post("/api/order", formData);
+  const { data } = await api.post("/api/orders", formData);
   return data;
 };
 
 export const getOrderById = async (id: string) => {
-  const { data } = await api.get(`/api/order/${id}`);
+  const { data } = await api.get(`/api/orders/${id}`);
+  return data;
+};
+
+export const getOrders = async (queryParams?: { status?: string; page?: number; search?: string }) => {
+  const { data } = await api.get(`/api/orders`, { params: queryParams });
   return data;
 };
 
 export const updateOrderStatus = async (id: string, status: string) => {
-  const { data } = await api.patch(`/api/order/${id}`, { status });
+  const { data } = await api.patch(`/api/orders/${id}`, { status });
   return data;
 };
 
 export const deleteOrder = async (id: string) => {
-  const { data } = await api.delete(`/api/order/${id}`);
+  const { data } = await api.delete(`/api/orders/${id}`);
   return data;
 };

@@ -62,8 +62,8 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
 
                 {/* Items List */}
                 <div className="space-y-6 max-h-[400px] overflow-y-auto ltr:pr-2 rtl:pl-2 custom-scrollbar">
-                    {cartItems.map((item) => (
-                        <div key={item.product._id} className="flex justify-between items-center border-b border-gray-50 pb-6 group">
+                    {cartItems.map((item,i) => (
+                        <div key={i} className="flex justify-between items-center border-b border-gray-50 pb-6 group">
                             <div className="flex items-center ltr:space-x-3 rtl:space-x-reverse">
                                 <button
                                     onClick={() => removeItem(item.product._id)}
@@ -91,7 +91,7 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
                                         {locale === "en" ? item.product.title.en : item.product.title.ar}
                                     </p>
                                     <p className="text-gray-400">
-                                        {t("size")}: {item.attributes.size}
+                                        {t("size")}: {item?.attributes?.size}
                                     </p>
                                 </div>
 
