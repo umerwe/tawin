@@ -4,17 +4,14 @@ import { MoreVertical } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 
-const regionData = [
-  { name: { en: "Baghdad", ar: "بغداد" }, value: "30k", percentage: 25.8, trend: "up" },
-  { name: { en: "Basra", ar: "البصرة" }, value: "30k", percentage: 15.8, trend: "down" },
-  { name: { en: "Babil", ar: "بابل" }, value: "30k", percentage: 25.8, trend: "up" },
-];
-
-const SalesByRegion = () => {
+const SalesByRegion = ({ data }: { data: any[] }) => {
+ const router = useRouter();
   const t = useTranslations("translation");
-  const locale = useLocale() as "en" | "ar";
+
+  const totalSales = (data || []).reduce((sum, r) => sum + (r.totalSales || 0), 0);
 
   return (
     <Card className="w-full border">
@@ -23,11 +20,13 @@ const SalesByRegion = () => {
           <CardTitle className="text-sm font-medium text-purple-500">
             {t("activeUsersLastHour")}
           </CardTitle>
-          <div className="text-2xl font-bold">21.5K</div>
+          <div className="text-2xl font-bold">
+            {totalSales >= 1000 ? `${(totalSales / 1000).toFixed(1)}K` : totalSales}
+          </div>
         </div>
         <MoreVertical className="h-4 w-4 text-muted-foreground cursor-pointer" />
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         <div className="space-y-2">
           <p className="text-xs text-muted-foreground">{t("usersPerMinute")}</p>
@@ -44,25 +43,31 @@ const SalesByRegion = () => {
         </div>
 
         <div className="space-y-4">
-          {regionData.map((region, idx) => (
-            <div key={idx} className="space-y-2">
-              <div className="flex justify-between items-center text-xs">
-                <div className="flex flex-col">
-                  <span className="font-bold">{region.value}</span>
-                  <span className="text-muted-foreground">{region.name[locale]}</span>
+          {(data || []).map((region, idx) => {
+            const percentage = totalSales > 0
+              ? Math.round((region.totalSales / totalSales) * 100)
+              : 0;
+
+            return (
+              <div key={idx} className="space-y-2">
+                <div className="flex justify-between items-center text-xs">
+                  <div className="flex flex-col">
+                    <span className="font-bold">
+                      {region.totalSales >= 1000
+                        ? `${(region.totalSales / 1000).toFixed(1)}k`
+                        : region.totalSales}
+                    </span>
+                    <span className="text-muted-foreground">{region.city}</span>
+                  </div>
+                  <span className="text-aqua">▲ {percentage}%</span>
                 </div>
-                <span className={region.trend === "up" ? "text-aqua" : "text-red-500"}>
-                  {region.trend === "up" ? "▲" : "▼"} {region.percentage}%
-                </span>
+                <Progress value={percentage} className="h-2 bg-blue-100" />
               </div>
-              <Progress value={region.percentage} className="h-2 bg-blue-100" />
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        <Button className="w-full">
-          {t("viewDetails")}
-        </Button>
+        <Button onClick={() => router.push("/admin/users")} className="w-full">{t("viewDetails")}</Button>
       </CardContent>
     </Card>
   );

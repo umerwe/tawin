@@ -548,7 +548,8 @@
     "uploadShopImage": "Upload Shop Header Image",
     "editBrand": "Edit Brand",
     "shipped": "Shipped",
-    "delivered": "Delivered"
+    "delivered": "Delivered",
+    "noDataFound": "No data found"
   },
   "confirm": {
     "logout": {
@@ -638,7 +639,8 @@
       "usageLimit": "Usage Limit",
       "expiryDate": "Expiry Date",
       "customer": "Customer",
-      "action": "Action"
+      "action": "Action",
+      "totalAmount": "Total Amount"
     },
     "search": {
       "noData": "No data found"

@@ -1,25 +1,67 @@
+"use client"
 import StatsCard from "@/components/card/StatsCard";
-import { statsData } from "@/constants/dashboard";
-import AlertBanner from "../../Banner";
-import WeeklyReportChart from "@/components/charts/WeeklyReportChart";
+import WeeklyReportChart from "@/components/charts/DashboardChart";
 import SalesByRegion from "@/components/charts/SalesByRegion";
 import TopCategories from "./TopCategories";
 import FinancialTransfers from "../../FinancialTransfers";
 import AddNewProduct from "./AddNewProduct";
 import TopSellingProducts from "./TopSellingProducts";
-
-const tableStats = [
-  { label: { en: "Users", ar: "المستخدمين" }, value: "52k", active: true },
-  { label: { en: "Total Products", ar: "إجمالي المنتجات" }, value: "3.5k" },
-  { label: { en: "Available Products", ar: "المنتجات المتوفرة" }, value: "2.5k" },
-  { label: { en: "Out of Stock", ar: "نفدت الكمية" }, value: "0.5k" },
-  { label: { en: "Revenue", ar: "الإيرادات" }, value: "250k" },
-];
+import { useGetAdminSummary } from "@/hooks/useAdmin";
 
 const Dashboard = () => {
+  const { data: adminSummary } = useGetAdminSummary();
+
+  const stats = adminSummary?.data?.stats || [];
+  const categories = adminSummary?.data?.categories || [];
+  const financials = adminSummary?.data?.financials || [];
+  const products = adminSummary?.data?.products || [];
+  const report = adminSummary?.data?.report || [];
+  const region = adminSummary?.data?.region || [];
+
+  const statsData = [
+    {
+      title: { en: "Total Users", ar: "إجمالي المستخدمين" },
+      subtitle: { en: "Last 7 days", ar: "آخر 7 أيام" },
+      value: stats?.totalUsers?.value || "0",
+      change: (stats?.totalUsers?.growth || "0") + "%",
+      changeLabel: { en: "Users", ar: "المستخدمين" },
+      changeType: "increase" as const,
+      footerValue: "($235)",
+      footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" },
+    },
+    {
+      title: { en: "Total Orders", ar: "إجمالي الطلبات" },
+      subtitle: { en: "Last 7 days", ar: "آخر 7 أيام" },
+      value: stats?.totalOrders?.value || "0",
+      change: (stats?.totalOrders?.growth || "0") + "%",
+      changeLabel: { en: "Order", ar: "طلب" },
+      changeType: "increase" as const,
+      footerValue: "(7.6k)",
+      footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" },
+    },
+    {
+      title: { en: "Total Sales", ar: "إجمالي المبيعات" },
+      subtitle: { en: "Last 7 days", ar: "آخر 7 أيام" },
+      value: stats?.totalSales?.value || "0",
+      change: (stats?.totalSales?.growth || "0") + "%",
+      changeLabel: { en: "Sales", ar: "المبيعات" },
+      changeType: "increase" as const,
+      footerValue: "($235)",
+      footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" },
+    },
+  ];
+
+  const inventoryStats = [
+    { label: { en: "Total Products", ar: "إجمالي المنتجات" }, value: report?.inventory?.totalProducts || 0, active: true },
+    { label: { en: "Low Stock", ar: "مخزون منخفض" }, value: report?.inventory?.lowStock || 0 },
+    { label: { en: "Out of Stock", ar: "نفدت الكمية" }, value: report?.inventory?.outOfStock || 0 },
+    { label: { en: "Total Customers", ar: "إجمالي العملاء" }, value: report?.inventory?.totalCustomers || 0 },
+    { label: { en: "Total Sales", ar: "إجمالي المبيعات" }, value: report?.inventory?.totalSales || 0 },
+];
+
   return (
     <div className="space-y-6">
-      <AlertBanner />
+      {/* <AlertBanner /> */}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {statsData.map((stat, index) => (
@@ -31,29 +73,30 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <WeeklyReportChart
-            data={tableStats}
+            statsData={inventoryStats}
+            chartData={report?.revenueHistory}
           />
         </div>
         <div className="lg:col-span-1">
-          <SalesByRegion />
+          <SalesByRegion data={region} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         <div className="lg:col-span-1">
-          <TopCategories />
+          <TopCategories data={categories} />
         </div>
         <div className="lg:col-span-2">
-          <FinancialTransfers />
+          <FinancialTransfers data={financials} />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1">
+      <div className="grid grid-cols-1 gap-6">
+        {/* <div className="lg:col-span-1">
           <AddNewProduct />
-        </div>
+        </div> */}
         <div className="lg:col-span-2">
-          <TopSellingProducts />
+          <TopSellingProducts data={products} />
         </div>
       </div>
     </div>

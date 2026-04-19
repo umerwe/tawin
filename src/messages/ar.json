@@ -548,7 +548,8 @@
     "updateBrand": "تحديث العلامة التجارية",
     "editBrand": "تعديل العلامة التجارية",
     "shipped": "تم الشحن",
-    "delivered": "تم التسليم"
+    "delivered": "تم التسليم",
+    "noDataFound": "لا توجد بيانات"
   },
   "confirm": {
     "logout": {
@@ -638,7 +639,8 @@
       "usageLimit": "حد الاستخدام",
       "expiryDate": "تاريخ الانتهاء",
       "customer": "العميل",
-      "action": "الإجراء"
+      "action": "الإجراء",
+      "totalAmount": "إجمالي المبلغ"
     },
     "search": {
       "noData": "لا توجد بيانات"
