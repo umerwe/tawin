@@ -546,7 +546,9 @@
     "shopPageText": "وصف صفحة المتجر",
     "uploadShopImage": "تحميل صورة رأس صفحة المتجر",
     "updateBrand": "تحديث العلامة التجارية",
-    "editBrand": "تعديل العلامة التجارية"
+    "editBrand": "تعديل العلامة التجارية",
+    "shipped": "تم الشحن",
+    "delivered": "تم التسليم"
   },
   "confirm": {
     "logout": {

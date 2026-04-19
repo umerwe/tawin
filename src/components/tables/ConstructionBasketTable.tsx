@@ -4,7 +4,7 @@ import { useState } from "react";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 import { cn } from "@/lib/utils";
-import { MessageSquare, Trash2, CheckCircle, XCircle, Clock } from "lucide-react";
+import { MessageSquare, Trash2, CheckCircle, XCircle, Clock, Package, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -34,6 +34,19 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
     );
   };
 
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "pending": return <Clock size={14} className="text-orange-500" />;
+      case "processing": return <Package size={14} className="text-blue-500" />;
+      case "shipped": return <Truck size={14} className="text-purple-500" />;
+      case "delivered": return <CheckCircle size={14} className="text-green-500" />;
+      case "cancelled": return <XCircle size={14} className="text-red-500" />;
+      case "approved": return <CheckCircle size={14} className="text-green-500" />;
+      case "rejected": return <XCircle size={14} className="text-red-500" />;
+      default: return null;
+    }
+  };
+
   return (
     <Select
       value={currentStatus}
@@ -47,14 +60,39 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-2">
+          {getStatusIcon(currentStatus)}
           <SelectValue />
         </div>
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="pending" className="cursor-pointer">
           <div className="flex items-center gap-2">
-            <Clock size={14} className="text-yellow-500" />
+            <Clock size={14} className="text-orange-500" />
             <span>{t("pending")}</span>
+          </div>
+        </SelectItem>
+        <SelectItem value="processing" className="cursor-pointer">
+          <div className="flex items-center gap-2">
+            <Package size={14} className="text-blue-500" />
+            <span>{t("processing")}</span>
+          </div>
+        </SelectItem>
+        <SelectItem value="shipped" className="cursor-pointer">
+          <div className="flex items-center gap-2">
+            <Truck size={14} className="text-purple-500" />
+            <span>{t("shipped")}</span>
+          </div>
+        </SelectItem>
+        <SelectItem value="delivered" className="cursor-pointer">
+          <div className="flex items-center gap-2">
+            <CheckCircle size={14} className="text-green-500" />
+            <span>{t("delivered")}</span>
+          </div>
+        </SelectItem>
+        <SelectItem value="cancelled" className="cursor-pointer">
+          <div className="flex items-center gap-2">
+            <XCircle size={14} className="text-red-500" />
+            <span>{t("cancelled")}</span>
           </div>
         </SelectItem>
         <SelectItem value="approved" className="cursor-pointer">

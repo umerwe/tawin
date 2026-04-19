@@ -546,7 +546,9 @@
     "basket" : "Basket",
     "shopPageText": "Shop Page Description",
     "uploadShopImage": "Upload Shop Header Image",
-    "editBrand": "Edit Brand"
+    "editBrand": "Edit Brand",
+    "shipped": "Shipped",
+    "delivered": "Delivered"
   },
   "confirm": {
     "logout": {

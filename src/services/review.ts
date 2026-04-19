@@ -18,3 +18,8 @@ export const createReview = async (reviewData: {
   const { data } = await api.post("/api/reviews", reviewData);
   return data;
 };
+
+export const deleteReview = async (reviewId: string) => {
+  const { data } = await api.delete(`/api/reviews/${reviewId}`);
+  return data;
+};

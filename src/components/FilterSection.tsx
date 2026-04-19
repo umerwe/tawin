@@ -62,8 +62,10 @@ const FilterSection = ({
     ];
     return [
       { id: "All Orders", label: t("allOrders") },
-      { id: "Completed", label: t("completed") },
+      { id: "pending", label: t("pending") },
       { id: "Processing", label: t("processing") },
+      { id: "Shipped", label: t("shipped") }, // Added Shipped as it's common in orders
+      { id: "Delivered", label: t("delivered") },
       { id: "Cancelled", label: t("cancelled") },
     ];
   };

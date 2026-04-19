@@ -6,7 +6,9 @@ import { MessageSquare, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import ReviewDetailDialog from "@/components/dialog/ReviewDetailDialog";
-import { useLocale } from "next-intl";
+import ConfirmDialog from "@/components/dialog/ConfirmDialog";
+import { useLocale, useTranslations } from "next-intl";
+import { useDeleteReview } from "@/hooks/useReviews";
 
 const ReviewsTable = ({
   data,
@@ -24,8 +26,11 @@ const ReviewsTable = ({
   ratingFilter: number | null;
 }) => {
   const locale = useLocale() as "en" | "ar";
+  const t = useTranslations("translation");
+  const tConfirm = useTranslations("confirm");
   const [selectedReview, setSelectedReview] = useState<any | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const { mutate: deleteReview, isPending: isDeleting } = useDeleteReview();
 
   const cols = ["productCode", "product", "userName", "rating", "date", "actions"];
 
@@ -33,6 +38,14 @@ const ReviewsTable = ({
     if (ratingFilter !== null) return item.rating === ratingFilter;
     return true;
   });
+
+  const handleDelete = (reviewId: string, closeDialog: () => void) => {
+    deleteReview(reviewId, {
+      onSuccess: () => {
+        closeDialog();
+      },
+    });
+  };
 
   const handleRowClick = (item: any) => {
     setSelectedReview(item);
@@ -61,21 +74,33 @@ const ReviewsTable = ({
       </TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
-          <Button
+          {/* <Button
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-gray-400 hover:text-blue-500 transition-colors"
             onClick={() => handleRowClick(item)}
           >
             <MessageSquare size={16} />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-gray-400 hover:text-red-500 transition-colors"
-          >
-            <Trash2 size={16} />
-          </Button>
+          </Button> */}
+          <div onClick={(e) => e.stopPropagation()}>
+            <ConfirmDialog
+              title={tConfirm("delete.title", { value: t("review") })}
+              description={tConfirm("delete.description", { value: t("review") })}
+              variant="destructive"
+              loading={isDeleting}
+              onConfirm={(closeDialog) => {
+                handleDelete(item._id, closeDialog);
+              }}
+              asChild
+            >
+              <button
+                className="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-md hover:bg-red-50 cursor-pointer disabled:opacity-50"
+                title={t("delete")}
+              >
+                <Trash2 size={18} />
+              </button>
+            </ConfirmDialog>
+          </div>
         </div>
       </TableCell>
     </>

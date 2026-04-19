@@ -5,10 +5,19 @@ import Image from "@/components/MyImage";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 import { cn } from "@/lib/utils";
+import { CheckCircle, Truck, Package, XCircle, Clock } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import OrderDetailDialog from "@/components/dialog/OrderDetailDialog";
 import ConfirmDialog from "@/components/dialog/ConfirmDialog"; // Assuming this is the path
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useUpdateOrderStatus } from "@/hooks/useOrder";
 
 interface OrderTableProps {
   data: any[];
@@ -26,6 +35,7 @@ const OrderTable = ({ data, pagination, isLoading, page, setPage, onDelete, isDe
   const t = useTranslations();
   // Assuming you have a 'confirm' namespace for translations based on your snippet
   const tConfirm = useTranslations("confirm");
+  const { mutate: updateOrderStatus } = useUpdateOrderStatus();
 
   // Removed "no" and added "action"
   const cols = ["orderId", "customer", "product", "date", "price", "payment", "status", "action"];
@@ -33,6 +43,94 @@ const OrderTable = ({ data, pagination, isLoading, page, setPage, onDelete, isDe
   const handleRowClick = (item: any) => {
     setSelectedOrder(item);
     setDialogOpen(true);
+  };
+
+  const OrderStatusDropdown = ({ item }: { item: any }) => {
+    const [currentStatus, setCurrentStatus] = useState(item.status);
+
+    const handleStatusChange = (newStatus: string) => {
+      updateOrderStatus(
+        { id: item._id, status: newStatus },
+        {
+          onSuccess: () => {
+            setCurrentStatus(newStatus);
+          },
+        }
+      );
+    };
+
+    const getStatusColor = (status: string) => {
+      switch (status) {
+        case "pending": return "text-orange-600 bg-orange-100 border-orange-200";
+        case "processing": return "text-blue-600 bg-blue-100 border-blue-200";
+        case "shipped": return "text-purple-600 bg-purple-100 border-purple-200";
+        case "delivered": return "text-green-600 bg-green-100 border-green-200";
+        case "cancelled": return "text-red-600 bg-red-100 border-red-200";
+        default: return "text-gray-600 bg-gray-100 border-gray-200";
+      }
+    };
+
+    // const getStatusIcon = (status: string) => {
+    //   switch (status) {
+    //     case "pending": return <Clock size={14} className="text-orange-500" />;
+    //     case "processing": return <Package size={14} className="text-blue-500" />;
+    //     case "shipped": return <Truck size={14} className="text-purple-500" />;
+    //     case "delivered": return <CheckCircle size={14} className="text-green-500" />;
+    //     case "cancelled": return <XCircle size={14} className="text-red-500" />;
+    //     default: return null;
+    //   }
+    // };
+
+    return (
+      <Select
+        value={currentStatus}
+        onValueChange={handleStatusChange}
+      >
+        <SelectTrigger
+          className={cn(
+            "h-8 w-[140px] px-2 border rounded-md transition-all outline-none focus:ring-0 font-semibold text-xs",
+            getStatusColor(currentStatus)
+          )}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center gap-2">
+            <SelectValue />
+          </div>
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="pending" className="cursor-pointer">
+            <div className="flex items-center gap-2">
+              <Clock size={14} className="text-orange-500" />
+              <span>Pending</span>
+            </div>
+          </SelectItem>
+          <SelectItem value="processing" className="cursor-pointer">
+            <div className="flex items-center gap-2">
+              <Package size={14} className="text-blue-500" />
+              <span>Processing</span>
+            </div>
+          </SelectItem>
+          <SelectItem value="shipped" className="cursor-pointer">
+            <div className="flex items-center gap-2">
+              <Truck size={14} className="text-purple-500" />
+              <span>Shipped</span>
+            </div>
+          </SelectItem>
+          <SelectItem value="delivered" className="cursor-pointer">
+            <div className="flex items-center gap-2">
+              <CheckCircle size={14} className="text-green-500" />
+              <span>Delivered</span>
+            </div>
+          </SelectItem>
+          <SelectItem value="cancelled" className="cursor-pointer">
+            <div className="flex items-center gap-2">
+              <XCircle size={14} className="text-red-500" />
+              <span>Cancelled</span>
+            </div>
+          </SelectItem>
+        </SelectContent>
+      </Select>
+    );
   };
 
   const row = (item: any, index: number, locale: "en" | "ar") => {
@@ -53,7 +151,7 @@ const OrderTable = ({ data, pagination, isLoading, page, setPage, onDelete, isDe
         <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 relative overflow-hidden rounded shrink-0 bg-gray-100">
-              <Image src={firstItem?.photo} alt={firstItem?.title[locale]} fill className="object-cover" />
+              <Image src={firstItem?.photo} alt={firstItem?.title[locale] || ""} fill className="object-cover" />
             </div>
             <span className="text-sm font-medium line-clamp-1">
               {firstItem?.title[locale]}
@@ -77,15 +175,8 @@ const OrderTable = ({ data, pagination, isLoading, page, setPage, onDelete, isDe
             <span>{item.paymentMethod}</span>
           </div>
         </TableCell>
-        <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
-          <div
-            className={cn(
-              "flex items-center gap-2 font-medium text-xs px-2 py-1 rounded-full w-fit capitalize",
-              item.status === "pending" ? "text-orange-600 bg-orange-100" : "text-green-600 bg-green-100"
-            )}
-          >
-            <span>{item.status}</span>
-          </div>
+        <TableCell onClick={(e) => e.stopPropagation()}>
+          <OrderStatusDropdown item={item} />
         </TableCell>
         {/* Action Column */}
         <TableCell>

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getProductReviews, createReview, getReviews } from "@/services/review";
+import { getProductReviews, createReview, getReviews, deleteReview } from "@/services/review";
 import { toast } from "sonner";
 
 export const useReviews = (params?: any) => {
@@ -23,12 +23,25 @@ export const useCreateReview = () => {
     mutationFn: createReview,
     onSuccess: (data) => {
       toast.success(data.message || "Review submitted successfully!");
-      // Invalidate both the reviews list and potentially the product (to update rating/count)
       queryClient.invalidateQueries({ queryKey: ["reviews"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to submit review");
+    },
+  });
+};
+
+export const useDeleteReview = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteReview,
+    onSuccess: () => {
+      toast.success("Review deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["reviews"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to delete review");
     },
   });
 };
