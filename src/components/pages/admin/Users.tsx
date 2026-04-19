@@ -1,12 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import WeeklyReportChart from "@/components/charts/WeeklyReportChart";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import UserTable from "@/components/tables/UserTable";
 import FilterSection from "@/components/FilterSection";
 import StatsCard from "@/components/card/StatsCard";
 import { useAdminUsers } from "@/hooks/useAuth";
+import { MoreVertical } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
+import { useDebounce } from "@/hooks/useDebounce";
+import { toast } from "sonner";
 
 const stats = [
   {
@@ -40,15 +45,49 @@ const tableStats = [
 ];
 
 const Users = () => {
-  const [activeTab, setActiveTab] = useState("All Users");
-  const { data, isLoading } = useAdminUsers();
+  const t = useTranslations("translation");
 
-  const usersData = data?.data || [];
+  // Table States
+  const [activeTab, setActiveTab] = useState("All Users");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [isReversed, setIsReversed] = useState(false);
+
+  // Debounce search to prevent excessive API calls
+  const debouncedSearch = useDebounce(search, 500);
+
+  // Fetch Users with Query Params
+  const queryParams = useMemo(() => ({
+    status: activeTab === "All Users" ? undefined : activeTab.toLowerCase(),
+    page,
+    search: debouncedSearch,
+  }), [activeTab, page, debouncedSearch]);
+
+  const { data, isLoading, refetch, isFetching } = useAdminUsers(queryParams);
+  
+  const rawUsers = data?.data || [];
+  const pagination = data?.meta || {};
+
+  const displayedUsers = useMemo(() => {
+    if (!rawUsers) return [];
+    return isReversed ? [...rawUsers].reverse() : rawUsers;
+  }, [rawUsers, isReversed]);
 
   return (
     <div className="space-y-6 p-1">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Top Action Bar */}
+      <div className="flex items-center justify-end gap-3">
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-32"
+        >
+          <MoreVertical className="h-4 w-4 mr-2" /> {t("more")}
+        </Button>
+      </div>
 
+      {/* Statistics Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <WeeklyReportChart
             title="userStatistics"
@@ -65,16 +104,35 @@ const Users = () => {
 
       {/* Main Users Table Card */}
       <Card className="border shadow-none overflow-hidden">
-        <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6">
+        <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <FilterSection
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            data={usersData}
             type="user"
+            activeTab={activeTab}
+            setActiveTab={(tab) => {
+              setActiveTab(tab);
+              setPage(1);
+            }}
+            data={rawUsers}
+            search={search}
+            setSearch={(val) => {
+              setSearch(val);
+              setPage(1);
+            }}
+            isReversed={isReversed}
+            setIsReversed={setIsReversed}
+            onRefetch={refetch}
+            isFetching={isFetching}
           />
         </CardHeader>
-        <CardContent>
-          <UserTable activeTab={activeTab} data={usersData} isLoading={isLoading} />
+
+        <CardContent className="p-0 sm:p-6">
+          <UserTable
+            data={displayedUsers}
+            isLoading={isLoading || isFetching}
+            pagination={pagination}
+            page={page}
+            setPage={setPage}
+          />
         </CardContent>
       </Card>
     </div>

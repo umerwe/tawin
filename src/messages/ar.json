@@ -541,7 +541,8 @@
     "addressPlaceholder": "المدينة، الدولة",
     "orderSuccess": "تم إرسال الطلب بنجاح",
     "variant": "البديل",
-    "viewOrder": "عرض الطلب"
+    "viewOrder": "عرض الطلب",
+    "basket": "سلة البناء"
   },
   "confirm": {
     "logout": {

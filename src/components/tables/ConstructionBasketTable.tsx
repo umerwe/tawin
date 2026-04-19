@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ConstructionBasketDetailDialog from "../dialog/ConstructionBasketDetailDialog";
+import ConfirmDialog from "@/components/dialog/ConfirmDialog";
 import { useTranslations } from "next-intl";
 import getStatusColor from "@/utils/getStatusColor";
 
@@ -30,6 +31,7 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
           "h-8 w-[140px] px-2 border rounded-md transition-all outline-none focus:ring-0 font-semibold text-xs",
           getStatusColor(currentStatus)
         )}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-2">
           <SelectValue />
@@ -39,19 +41,19 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
         <SelectItem value="pending" className="cursor-pointer">
           <div className="flex items-center gap-2">
             <Clock size={14} className="text-yellow-500" />
-            <span>{t('pending')}</span>
+            <span>{t("pending")}</span>
           </div>
         </SelectItem>
         <SelectItem value="approved" className="cursor-pointer">
           <div className="flex items-center gap-2">
             <CheckCircle size={14} className="text-green-500" />
-            <span>{t('approved')}</span>
+            <span>{t("approved")}</span>
           </div>
         </SelectItem>
         <SelectItem value="rejected" className="cursor-pointer">
           <div className="flex items-center gap-2">
             <XCircle size={14} className="text-red-500" />
-            <span>{t('rejected')}</span>
+            <span>{t("rejected")}</span>
           </div>
         </SelectItem>
       </SelectContent>
@@ -59,16 +61,34 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
   );
 };
 
-const ConstructionBasketTable = ({ data, activeTab, isLoading, meta, setPage }: { data: any[]; activeTab: string; isLoading?: boolean; meta?: any; setPage: (page: number) => void }) => {
+interface ConstructionBasketTableProps {
+  data: any[];
+  activeTab: string;
+  isLoading?: boolean;
+  meta?: any;
+  setPage: (page: number) => void;
+  onDelete?: (id: string, callback: () => void) => void;
+  isDeleting?: boolean;
+}
+
+const ConstructionBasketTable = ({
+  data,
+  activeTab,
+  isLoading,
+  meta,
+  setPage,
+  onDelete,
+  isDeleting,
+}: ConstructionBasketTableProps) => {
   const t = useTranslations("translation");
+  const tConfirm = useTranslations("confirm");
   const [selectedBasket, setSelectedBasket] = useState<any | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const cols = ["basketCode", "fullName", "phoneNumber", "occupation", "propertyType", "status", "process"];
 
   const filteredData = data?.filter((item) => {
-    const matchesTab = activeTab === "All Applications" || item.constructionBasket.status === activeTab;
-    return matchesTab;
+    return activeTab === "All Applications" || item.constructionBasket.status === activeTab;
   });
 
   const handleRowClick = (item: any) => {
@@ -112,11 +132,7 @@ const ConstructionBasketTable = ({ data, activeTab, isLoading, meta, setPage }: 
       </TableCell>
 
       <TableCell onClick={(e) => e.stopPropagation()}>
-        <StatusDropdown
-          item={item}
-          t={t}
-          getStatusColor={getStatusColor}
-        />
+        <StatusDropdown item={item} t={t} getStatusColor={getStatusColor} />
       </TableCell>
 
       <TableCell>
@@ -129,13 +145,29 @@ const ConstructionBasketTable = ({ data, activeTab, isLoading, meta, setPage }: 
           >
             <MessageSquare size={16} />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-gray-400 hover:text-red-500"
-          >
-            <Trash2 size={16} />
-          </Button>
+          <div onClick={(e) => e.stopPropagation()}>
+            <ConfirmDialog
+              title={tConfirm("delete.title", { value: t("basket") })}
+              description={tConfirm("delete.description", { value: t("basket") })}
+              variant="destructive"
+              loading={isDeleting}
+              onConfirm={(closeDialog) => {
+                if (onDelete) {
+                  onDelete(item._id, closeDialog);
+                } else {
+                  closeDialog();
+                }
+              }}
+              asChild
+            >
+              <button
+                className="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-md hover:bg-red-50 cursor-pointer disabled:opacity-50"
+                title={t("delete")}
+              >
+                <Trash2 size={16} />
+              </button>
+            </ConfirmDialog>
+          </div>
         </div>
       </TableCell>
     </>
@@ -153,7 +185,7 @@ const ConstructionBasketTable = ({ data, activeTab, isLoading, meta, setPage }: 
           total: meta?.totalDocs || 0,
           page: meta?.page || 1,
           limit: meta?.limit || 10,
-          setPage
+          setPage,
         }}
       />
 

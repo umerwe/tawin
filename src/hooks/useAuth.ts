@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { loginUser, signUpUser, getUserProfile, updateUserProfile, getAdminUsers, verifyUser, addAddress, getAllAddresses, deleteAddress, updateAddress } from "@/services/auth";
 import { toast } from "sonner";
-import { Signup } from "@/validations/auth";
 
 export const useLogin = () => {
   const router = useRouter();
@@ -32,17 +31,14 @@ export const useLogin = () => {
 };
 
 export const useSignup = () => {
-  const router = useRouter();
-
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: signUpUser,
-    onSuccess: (data: Signup) => {
-      localStorage.setItem("token", (data as any).token);
+    onSuccess: () => {
       toast("Account created successfully!");
-      router.push("/");
+      queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
     },
     onError: (error: any) => {
-      console.log(error);
       toast.error(error.response?.data?.message || "Something went wrong.");
     },
   });
@@ -72,10 +68,10 @@ export const useUpdateUserProfile = () => {
   });
 };
 
-export const useAdminUsers = () => {
+export const useAdminUsers = (params: { status?: string; page?: number; search?: string }) => {
   return useQuery({
-    queryKey: ["adminUsers"],
-    queryFn: getAdminUsers,
+    queryKey: ["adminUsers", params],
+    queryFn: () => getAdminUsers(params),
     staleTime: 5 * 60 * 1000,
     retry: 1,
   });

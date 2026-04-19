@@ -1,38 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FilterSection from "@/components/FilterSection";
 import ConstructionBasketTable from "@/components/tables/ConstructionBasketTable";
 import { useAdminBasketRequests } from "@/hooks/useBasket";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const ConstructionBasket = () => {
-    const [page, setPage] = useState(1);
-    const { data, isLoading } = useAdminBasketRequests({ page });
+  const [page, setPage] = useState(1);
+  const [activeTab, setActiveTab] = useState("All Applications");
+  const [search, setSearch] = useState("");
+  const [isReversed, setIsReversed] = useState(false);
 
-    const [activeTab, setActiveTab] = useState("All Applications");
+  const debouncedSearch = useDebounce(search, 500);
 
-    const constructionBasketData = data?.data?.data || [];
-    const meta = data?.data?.meta || {};
+  const queryParams = useMemo(() => ({
+    status: activeTab === "All Applications" ? undefined : activeTab.toLowerCase(),
+    page,
+    search: debouncedSearch,
+  }), [activeTab, page, debouncedSearch]);
 
-    return (
-        <div className="space-y-6 p-1">
+  const { data, isLoading, refetch, isFetching } = useAdminBasketRequests(queryParams);
 
-            <Card className="border shadow-none overflow-hidden">
-                <CardHeader className="flex flex-row items-center justify-between pb-6">
-                    <FilterSection
-                        activeTab={activeTab}
-                        setActiveTab={setActiveTab}
-                        data={constructionBasketData}
-                        type="constructionBasket"
-                    />
-                </CardHeader>
-                <CardContent>
-                    <ConstructionBasketTable activeTab={activeTab} data={constructionBasketData} meta={meta} isLoading={isLoading} setPage={setPage} />
-                </CardContent>
-            </Card>
-        </div>
-    );
+  const rawData = data?.data?.data || [];
+  const meta = data?.data?.meta || {};
+  
+  const displayedData = useMemo(() => {
+    if (!rawData) return [];
+    return isReversed ? [...rawData].reverse() : rawData;
+  }, [rawData, isReversed]);
+
+  return (
+    <div className="space-y-6 p-1">
+      <Card className="border shadow-none overflow-hidden">
+        <CardHeader className="flex flex-row items-center justify-between pb-6">
+          <FilterSection
+            activeTab={activeTab}
+            setActiveTab={(tab) => { setActiveTab(tab); setPage(1); }}
+            data={rawData}
+            type="constructionBasket"
+            search={search}
+            setSearch={(val) => { setSearch(val); setPage(1); }}
+            isReversed={isReversed}
+            setIsReversed={setIsReversed}
+            onRefetch={refetch}
+            isFetching={isFetching}
+          />
+        </CardHeader>
+        <CardContent>
+          <ConstructionBasketTable
+            activeTab={activeTab}
+            data={displayedData}
+            meta={meta}
+            isLoading={isLoading || isFetching}
+            setPage={setPage}
+          />
+        </CardContent>
+      </Card>
+    </div>
+  );
 };
 
 export default ConstructionBasket;

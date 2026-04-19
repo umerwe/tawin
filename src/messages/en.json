@@ -541,7 +541,8 @@
     "addressPlaceholder": "City, Country",
     "orderSuccess": "Order Placed Successfully",
     "variant": "Variant",
-    "viewOrder": "View Order"
+    "viewOrder": "View Order",
+    "basket" : "Basket"  
   },
   "confirm": {
     "logout": {

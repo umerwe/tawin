@@ -40,8 +40,8 @@ export const updateUserProfile = async (data: File | { firstName: string; lastNa
   }
 };
 
-export const getAdminUsers = async () => {
-  const { data } = await api.get("/api/admin/users");
+export const getAdminUsers = async (params?: { status?: string; page?: number; search?: string }) => {
+  const { data } = await api.get("/api/admin/users", { params });
   return data;
 };
 

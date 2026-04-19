@@ -15,9 +15,13 @@ export const useApplyForBasket = () => {
   });
 };
 
-export const useAdminBasketRequests = (params?: { page?: number }) => {
+export const useAdminBasketRequests = (params?: {
+  page?: number;
+  status?: string;
+  search?: string;
+}) => {
   return useQuery({
-    queryKey: ["admin", "basket-requests", params?.page],
+    queryKey: ["admin", "basket-requests", params?.page, params?.status, params?.search],
     queryFn: () => getAdminBasketRequests(params),
     staleTime: 2 * 60 * 1000,
   });
