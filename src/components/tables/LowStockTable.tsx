@@ -1,62 +1,88 @@
 "use client";
 
 import { useState } from "react";
+import Image from "@/components/MyImage";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
-import { Edit3, Trash2 } from "lucide-react";
+import { Trash2, Edit3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import ConfirmDialog from "../dialog/ConfirmDialog";
+import { useDeleteProduct } from "@/hooks/useProducts";
 
-interface LowStockTableProps {
-  data: any[];
+interface ProductTableProps {
   activeTab: string;
+  data: any[];
+  isLoading?: boolean;
+  pagination?: {
+    page: number;
+    limit: number;
+    totalDocs: number;
+    totalPages: number;
+  };
+  page: number;
+  setPage: (p: number) => void;
 }
 
-const LowStockTable = ({ data, activeTab }: LowStockTableProps) => {
-  const [page, setPage] = useState(1);
-  const router = useRouter();
-  const locale = useLocale();
 
-  const cols = ["no", "product", "category", "amount", "supplierName", "operations"];
+const ProductTable = ({ activeTab, data, isLoading, pagination, page, setPage }: ProductTableProps) => {
+  const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
+
+  const router = useRouter();
+
+  const cols = ["no", "product", "price", "dateCreated", "operations"];
 
   const filteredData = data.filter((item) => {
-    const matchesTab = activeTab === "All Products" || item.status.en === activeTab;
-    return matchesTab;
+    if (activeTab === "All Products") return true;
+    return item.status?.en === activeTab;
   });
 
   const row = (item: any, index: number, locale: "en" | "ar") => (
     <>
-      <TableCell>{item.no}</TableCell>
+      <TableCell>{index + 1}</TableCell>
       <TableCell>
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 relative rounded border overflow-hidden bg-gray-50 shrink-0">
-            <Image src={item.img} alt="product" fill className="object-cover" />
+          <div className="h-8 w-8 relative overflow-hidden">
+            <Image
+              src={item?.photo || ""}
+              alt={item.title[locale]}
+              fill
+              className="object-cover"
+            />
           </div>
-          <span className="font-medium">{item.name[locale]}</span>
+          <span className="font-medium text-sm capitalize">{item.title[locale]}</span>
         </div>
       </TableCell>
-      <TableCell>{item.category[locale]}</TableCell>
-      <TableCell>{item.quantity}</TableCell>
-      <TableCell>{item.supplier[locale]}</TableCell>
+      <TableCell className="text-sm font-medium">${item.price}</TableCell>
+      <TableCell className="text-sm">{new Date(item.createdAt?.$date || item.createdAt).toLocaleDateString()}</TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-gray-400 hover:text-red-500"
-          >
-            <Trash2 size={16} />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
             className="h-8 w-8 text-gray-400 hover:text-aqua"
-            // onClick={() => router.push(`/${locale}/admin/low-stock/${item.id}`)}
+            onClick={() => router.push(`/${locale}/admin/low-stock/${item.slug}`)}
           >
             <Edit3 size={16} />
           </Button>
+          <ConfirmDialog
+            title="Delete Product"
+            description={`Are you sure you want to delete ${item.title[locale]}?`}
+            variant="destructive"
+            loading={isDeleting}
+            onConfirm={(close) => {
+              deleteProduct(item._id);
+              close();
+            }}
+          >
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-gray-400 hover:text-red-500"
+            >
+              <Trash2 size={16} />
+            </Button>
+          </ConfirmDialog>
         </div>
       </TableCell>
     </>
@@ -68,9 +94,15 @@ const LowStockTable = ({ data, activeTab }: LowStockTableProps) => {
       cols={cols}
       row={row}
       headerClassName="bg-aqua/5 border-none"
-      pagination={{ total: 24, page, limit: 10, setPage }}
+      isLoading={isLoading}
+      pagination={{
+        total: pagination?.totalDocs || 0,
+        page: pagination?.page || 1,
+        limit: pagination?.limit || 10,
+        setPage
+      }}
     />
   );
 };
 
-export default LowStockTable;
+export default ProductTable;

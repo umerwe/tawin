@@ -1,5 +1,10 @@
 import api from "@/lib/axios";
 
+export const getReviews = async (params?: any) => {
+  const { data } = await api.get(`/api/reviews`, { params });
+  return data;
+};
+
 export const getProductReviews = async (productId: string) => {
   const { data } = await api.get(`/api/reviews/product/${productId}`);
   return data.data;

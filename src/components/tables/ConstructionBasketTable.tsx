@@ -17,14 +17,27 @@ import ConstructionBasketDetailDialog from "../dialog/ConstructionBasketDetailDi
 import ConfirmDialog from "@/components/dialog/ConfirmDialog";
 import { useTranslations } from "next-intl";
 import getStatusColor from "@/utils/getStatusColor";
+import { useUpdateBasketRequestStatus, useDeleteBasketRequest } from "@/hooks/useBasket";
 
 export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
   const [currentStatus, setCurrentStatus] = useState(item.constructionBasket.status);
+  const { mutate: updateStatus } = useUpdateBasketRequestStatus();
+
+  const handleStatusChange = (newStatus: string) => {
+    updateStatus(
+      { id: item._id, status: newStatus },
+      {
+        onSuccess: () => {
+          setCurrentStatus(newStatus);
+        },
+      }
+    );
+  };
 
   return (
     <Select
       value={currentStatus}
-      onValueChange={(val) => setCurrentStatus(val)}
+      onValueChange={handleStatusChange}
     >
       <SelectTrigger
         className={cn(
@@ -77,13 +90,13 @@ const ConstructionBasketTable = ({
   isLoading,
   meta,
   setPage,
-  onDelete,
   isDeleting,
 }: ConstructionBasketTableProps) => {
   const t = useTranslations("translation");
   const tConfirm = useTranslations("confirm");
   const [selectedBasket, setSelectedBasket] = useState<any | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const { mutate: deleteBasket } = useDeleteBasketRequest();
 
   const cols = ["basketCode", "fullName", "phoneNumber", "occupation", "propertyType", "status", "process"];
 
@@ -94,6 +107,14 @@ const ConstructionBasketTable = ({
   const handleRowClick = (item: any) => {
     setSelectedBasket(item);
     setDialogOpen(true);
+  };
+
+  const handleDelete = (id: string, closeDialog: () => void) => {
+    deleteBasket(id, {
+      onSuccess: () => {
+        closeDialog();
+      },
+    });
   };
 
   const row = (item: any, index: number) => (
@@ -152,11 +173,7 @@ const ConstructionBasketTable = ({
               variant="destructive"
               loading={isDeleting}
               onConfirm={(closeDialog) => {
-                if (onDelete) {
-                  onDelete(item._id, closeDialog);
-                } else {
-                  closeDialog();
-                }
+                handleDelete(item._id, closeDialog);
               }}
               asChild
             >

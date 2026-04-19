@@ -47,8 +47,8 @@ export const deleteProduct = async (id: string): Promise<any> => {
   return data;
 };
 
-export const getLowStockProducts = async (): Promise<any> => {
-  const { data } = await api.get("/api/product/low-stock");
+export const getLowStockProducts = async (params?: { allProducts?: boolean; featuredProducts?: boolean; reduced?: boolean; outOfStock?: boolean; page?: number; search?: string }): Promise<any> => {
+  const { data } = await api.get("/api/products/low-stock", { params });
   return data;
 };
 

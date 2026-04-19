@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import WeeklyReportChart from "@/components/charts/WeeklyReportChart";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FilterSection from "@/components/FilterSection";
-import ReviewsTable, { reviews } from "@/components/tables/ReviewsTable";
+import ReviewsTable from "@/components/tables/ReviewsTable";
 import StatsCard from "@/components/card/StatsCard";
+import { useReviews } from "@/hooks/useReviews";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const stats = [
   {
@@ -41,6 +43,27 @@ const tableStats = [
 const Reviews = () => {
   const [activeTab, setActiveTab] = useState("All Orders");
   const [ratingFilter, setRatingFilter] = useState<number | null>(null);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [isReversed, setIsReversed] = useState(false);
+
+  const debouncedSearch = useDebounce(search, 500);
+
+  const queryParams = useMemo(() => ({
+    page,
+    limit: 10,
+    rating: ratingFilter ?? undefined,
+    search: debouncedSearch || undefined,
+  }), [page, ratingFilter, debouncedSearch]);
+
+  const { data: reviewsResponse, isLoading, refetch, isFetching } = useReviews(queryParams);
+
+  const rawData = reviewsResponse?.data || [];
+  const meta = reviewsResponse?.meta;
+
+  const reviewsData = useMemo(() => {
+    return isReversed ? [...rawData].reverse() : rawData;
+  }, [rawData, isReversed]);
 
   return (
     <div className="space-y-6 p-1">
@@ -60,15 +83,34 @@ const Reviews = () => {
           <FilterSection
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-            data={[]}
+            data={rawData}
             type="review"
             ratingFilter={ratingFilter}
-            setRatingFilter={setRatingFilter}
-            reviewsTotal={reviews.length}
+            setRatingFilter={(val) => {
+              setRatingFilter(val);
+              setPage(1);
+            }}
+            reviewsTotal={meta?.total || 0}
+            search={search}
+            setSearch={(val) => {
+              setSearch(val);
+              setPage(1);
+            }}
+            isReversed={isReversed}
+            setIsReversed={setIsReversed}
+            onRefetch={refetch}
+            isFetching={isFetching}
           />
         </CardHeader>
         <CardContent>
-          <ReviewsTable ratingFilter={ratingFilter} />
+          <ReviewsTable
+            data={reviewsData}
+            isLoading={isLoading || isFetching}
+            meta={meta}
+            setPage={setPage}
+            page={page}
+            ratingFilter={ratingFilter}
+          />
         </CardContent>
       </Card>
     </div>

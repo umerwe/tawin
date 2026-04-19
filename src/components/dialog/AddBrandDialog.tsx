@@ -1,29 +1,67 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {  useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useForm, FormProvider } from "react-hook-form";
+import { useCreateBrand, useUpdateBrand } from "@/hooks/useBrand";
+import { MultilingualInput } from "@/components/form/MultilingualInput";
+import { SpinnerLoader } from "@/components/common/SpinnerLoader";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import MyImage from "../MyImage";
 
 export default function AddBrandDialog({
   open,
   onOpenChange,
+  brand,
 }: {
   open: boolean;
   onOpenChange: (val: boolean) => void;
+  brand?: any;
 }) {
   const t = useTranslations("translation");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+
+  const isEdit = !!brand;
+
+  const { mutate: createBrand, isPending: isCreating } = useCreateBrand();
+  const { mutate: updateBrand, isPending: isUpdating } = useUpdateBrand();
+  const isPending = isCreating || isUpdating;
+
+  const methods = useForm({
+    defaultValues: {
+      name: { en: "", ar: "" },
+      description: { en: "", ar: "" },
+    },
+  });
+
+  const { handleSubmit, reset } = methods;
+
+  useEffect(() => {
+    if (open) {
+      if (brand) {
+        reset({
+          name: { en: brand.name?.en || "", ar: brand.name?.ar || "" },
+          description: { en: brand.description?.en || "", ar: brand.description?.ar || "" },
+        });
+        setPreviewUrl(brand.image || null);
+        setFileName(null);
+      } else {
+        reset({ name: { en: "", ar: "" }, description: { en: "", ar: "" } });
+        setPreviewUrl(null);
+        setFileName(null);
+      }
+    }
+  }, [open, brand, reset]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -35,82 +73,83 @@ export default function AddBrandDialog({
   const handleClose = () => {
     setPreviewUrl(null);
     setFileName(null);
+    reset();
     onOpenChange(false);
+  };
+
+  const onSubmit = (data: any) => {
+    const formData = new FormData();
+    formData.append("name[en]", data.name.en);
+    formData.append("name[ar]", data.name.ar);
+    formData.append("description[en]", data.description.en);
+    formData.append("description[ar]", data.description.ar);
+
+    const imageFile = fileInputRef.current?.files?.[0];
+    if (imageFile) formData.append("image", imageFile);
+
+    if (isEdit) {
+      updateBrand({ id: brand._id, data:formData }, { onSuccess: () => handleClose() });
+    } else {
+      createBrand(formData, { onSuccess: () => handleClose() });
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-sm rounded-2xl p-0 overflow-hidden border border-gray-100 shadow-xl">
-        {/* Header */}
-        <DialogHeader className="px-5 pt-5">
+      <DialogContent className="max-w-md rounded-2xl p-0 overflow-hidden border border-gray-100 shadow-xl">
+        <DialogHeader>
           <DialogTitle className="text-xl font-bold text-[#004d40]">
-            {t("addBrand")}
+            {isEdit ? t("editBrand") : t("addBrand")}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="px-5 pb-5 space-y-4">
-          {/* Brand Name */}
-          <div className="space-y-1.5">
-            <Label className="text-sm text-gray-500">{t("brandName")}</Label>
-            <Input className="border border-gray-200 bg-white rounded-md h-10 text-gray-700 focus-visible:ring-aqua/40" />
-          </div>
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-          {/* Website */}
-          <div className="space-y-1.5">
-            <Label className="text-sm text-gray-500">{t("website")}</Label>
-            <Input className="border border-gray-200 bg-white rounded-md h-10 text-gray-700 focus-visible:ring-aqua/40" />
-          </div>
+            <MultilingualInput
+              label={t("name")}
+              name="name"
+              placeholderEn="Enter brand name"
+              placeholderAr="أدخل اسم العلامة التجارية"
+            />
 
-          {/* Image Upload */}
-          <div className="space-y-1.5">
-            <Label className="text-sm text-gray-500">{t("image")}</Label>
-            <div className="border border-gray-200 rounded-md px-3 py-2 flex items-center gap-3">
-              {previewUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={previewUrl}
-                  alt="preview"
-                  className="h-8 w-8 rounded object-cover shrink-0"
-                />
-              ) : (
-                <ImageIcon size={18} className="text-gray-400 shrink-0" />
-              )}
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="text-sm text-gray-600 hover:text-aqua transition-colors font-medium"
-              >
-                {fileName ?? t("browse")}
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleFileChange}
-              />
+            <MultilingualInput
+              label={t("description")}
+              name="description"
+              type="textarea"
+              placeholderEn="Enter description"
+              placeholderAr="أدخل الوصف"
+            />
+
+            <div className="space-y-1.5">
+              <Label className="text-sm text-gray-500">{t("image")}</Label>
+              <div className="border border-gray-200 rounded-md px-3 py-2 flex items-center gap-3 bg-white">
+                {previewUrl ? (
+                  <MyImage src={previewUrl} alt="preview" width={256} height={256} className="h-8 w-8 rounded object-cover shrink-0" />
+                ) : (
+                  <ImageIcon size={18} className="text-gray-400 shrink-0" />
+                )}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="text-sm text-gray-600 hover:text-aqua transition-colors font-medium truncate flex-1 text-left"
+                >
+                  {fileName ?? t("browse")}
+                </button>
+                <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+              </div>
             </div>
-          </div>
 
-          {/* Action Buttons */}
-          <div className="flex justify-center gap-3 pt-1">
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-32 border-gray-200 text-gray-600 hover:bg-gray-50 rounded-md h-10"
-              onClick={handleClose}
-            >
-              {t("cancel")}
-            </Button>
-            <Button
-              variant="primary"
-              size="sm"
-              className="w-32 bg-aqua hover:bg-aqua/90 text-white rounded-md h-10 font-medium"
-            >
-              {t("add")}
-            </Button>
-          </div>
-        </div>
+            <div className="flex justify-center gap-3 pt-2">
+              <Button type="button" variant="outline" size="sm" className="flex-1 border-gray-200 text-gray-600 hover:bg-gray-50 rounded-md h-10" onClick={handleClose} disabled={isPending}>
+                {t("cancel")}
+              </Button>
+              <Button type="submit" variant="primary" size="sm" className="flex-1 bg-aqua hover:bg-aqua/90 text-white rounded-md h-10 font-medium" disabled={isPending}>
+                {isPending ? <SpinnerLoader /> : isEdit ? t("updateBrand") : t("add")}
+              </Button>
+            </div>
+          </form>
+        </FormProvider>
       </DialogContent>
     </Dialog>
   );

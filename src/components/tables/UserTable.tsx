@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import UserDetailDialog from "@/components/dialog/UserDetailDialog";
 import ConfirmDialog from "@/components/dialog/ConfirmDialog";
 import { useTranslations } from "next-intl";
-import { useVerifyUser } from "@/hooks/useAuth";
+import { useVerifyUser, useDeleteUser } from "@/hooks/useAuth";
 
 interface UserTableProps {
   data: any[];
@@ -18,8 +18,6 @@ interface UserTableProps {
   isLoading?: boolean;
   page: number;
   setPage: (page: number) => void;
-  onDelete?: (id: string, callback: () => void) => void;
-  isDeleting?: boolean;
 }
 
 const getStatusColor = (isVerified: boolean) => {
@@ -39,15 +37,9 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
   };
 
   return (
-    <Select
-      value={currentStatus ? "verified" : "unverified"}
-      onValueChange={handleChange}
-    >
+    <Select value={currentStatus ? "verified" : "unverified"} onValueChange={handleChange}>
       <SelectTrigger
-        className={cn(
-          "h-8 w-[140px] px-2 border rounded-md transition-all outline-none focus:ring-0 font-semibold text-xs",
-          getStatusColor(currentStatus)
-        )}
+        className={cn("h-8 w-[140px] px-2 border rounded-md transition-all outline-none focus:ring-0 font-semibold text-xs", getStatusColor(currentStatus))}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-2">
@@ -72,19 +64,13 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
   );
 };
 
-const UserTable = ({
-  data,
-  pagination,
-  isLoading,
-  page,
-  setPage,
-  onDelete,
-  isDeleting,
-}: UserTableProps) => {
+const UserTable = ({ data, pagination, isLoading, page, setPage }: UserTableProps) => {
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const t = useTranslations();
   const tConfirm = useTranslations("confirm");
+
+  const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
 
   const cols = ["userCode", "name", "email", "username", "verified", "actions"];
 
@@ -112,13 +98,9 @@ const UserTable = ({
       </TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-gray-400 hover:text-blue-500"
-          >
+          {/* <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-blue-500">
             <MessageSquare size={16} />
-          </Button>
+          </Button> */}
           <div onClick={(e) => e.stopPropagation()}>
             <ConfirmDialog
               title={tConfirm("delete.title", { value: t("translation.user") })}
@@ -126,12 +108,9 @@ const UserTable = ({
               variant="destructive"
               loading={isDeleting}
               onConfirm={(closeDialog) => {
-                if (onDelete) {
-                  onDelete(item._id, closeDialog);
-                } else {
-                  console.log("Delete ID:", item._id);
-                  closeDialog();
-                }
+                deleteUser(item._id, {
+                  onSuccess: () => closeDialog(),
+                });
               }}
               asChild
             >

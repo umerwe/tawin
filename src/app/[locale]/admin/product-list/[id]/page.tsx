@@ -94,7 +94,12 @@ const EditProductPage = () => {
             fd.append("images", img);
         });
 
-        updateProduct({ id: productData?._id || (id as string), formData: fd });
+        updateProduct({ id: productData?._id || (id as string), formData: fd },
+    {
+        onSuccess: () => {
+            router.push("/admin/product-list");
+        }
+    });
     };
 
     if (isLoading) {

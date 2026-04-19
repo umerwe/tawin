@@ -542,7 +542,11 @@
     "orderSuccess": "تم إرسال الطلب بنجاح",
     "variant": "البديل",
     "viewOrder": "عرض الطلب",
-    "basket": "سلة البناء"
+    "basket": "سلة البناء",
+    "shopPageText": "وصف صفحة المتجر",
+    "uploadShopImage": "تحميل صورة رأس صفحة المتجر",
+    "updateBrand": "تحديث العلامة التجارية",
+    "editBrand": "تعديل العلامة التجارية"
   },
   "confirm": {
     "logout": {

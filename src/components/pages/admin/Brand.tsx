@@ -1,82 +1,141 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, MoreVertical } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Plus, MoreVertical, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FilterSection from "@/components/FilterSection";
 import BrandsTable from "@/components/tables/BrandsTable";
 import MiniCard from "@/components/card/MiniCard";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import AddBrandDialog from "@/components/dialog/AddBrandDialog";
+import { useGetCategories } from "@/hooks/useCategories";
+import { useBrands } from "@/hooks/useBrand";
+import { SpinnerLoader } from "@/components/common/SpinnerLoader";
+import { useDebounce } from "@/hooks/useDebounce";
 
-const categories = [
-    { title: { en: "Cleaning Machines", ar: "مكائن تنظيف" }, image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=200&auto=format" },
-    { title: { en: "Fire Systems", ar: "أنظمة حريق" }, image: "https://images.unsplash.com/photo-1628151015968-3a4429e9ef04?q=80&w=200&auto=format" },
-    { title: { en: "Paints", ar: "أصباغ" }, image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=200&auto=format" },
-    { title: { en: "Electrical", ar: "كهربائيات" }, image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=200&auto=format" },
-    { title: { en: "Cameras", ar: "كاميرات" }, image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=200&auto=format" },
-    { title: { en: "Doors", ar: "أبواب" }, image: "https://images.unsplash.com/photo-1506377295352-e3154d43ea9e?q=80&w=200&auto=format" },
-    { title: { en: "Building Materials", ar: "مواد بناء" }, image: "https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?q=80&w=200&auto=format" },
-    { title: { en: "Solar Energy", ar: "الطاقة الشمسية" }, image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=200&auto=format" },
-];
-
-const brandsData = [
-    { id: 1, brandCode: "#C001", name: "Ta3win Construction", registrationDate: "01-01-2026", logo: "/iphone.webp", status: { en: "Active", ar: "نشط" } },
-    { id: 2, brandCode: "#CUST001", name: "Steel Foundries", registrationDate: "15-01-2026", logo: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=200&h=200", status: { en: "Closed", ar: "مغلق" } },
-    { id: 3, brandCode: "#CUST002", name: "Timber Masters", registrationDate: "02-02-2026", logo: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&q=80&w=200&h=200", status: { en: "Closed", ar: "مغلق" } },
-    { id: 4, brandCode: "#CUST003", name: "Stone Craft", registrationDate: "10-02-2026", logo: "https://images.unsplash.com/photo-1523413555809-0fb1d4da238d?auto=format&fit=crop&q=80&w=200&h=200", status: { en: "Active", ar: "نشط" } }
-];
+const CATEGORY_PAGE_SIZE = 8;
 
 const Brand = () => {
     const [activeTab, setActiveTab] = useState("All Brands");
-    const t = useTranslations("translation");
-    const locale = useLocale() as "en" | "ar";
-
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const [categoryPage, setCategoryPage] = useState(1);
+    const [brandPage, setBrandPage] = useState(1);
+    const [search, setSearch] = useState("");
+    const [isReversed, setIsReversed] = useState(false);
+
+    const t = useTranslations("translation");
+    const debouncedSearch = useDebounce(search, 500);
+
+    // Fetch Brands Data
+    const queryParams = useMemo(() => ({
+        page: brandPage,
+        search: debouncedSearch,
+        status: activeTab === "All Brands" ? undefined : activeTab.toLowerCase(),
+    }), [brandPage, debouncedSearch, activeTab]);
+
+    const { data: brandsResponse, isLoading: brandsLoading, refetch, isFetching } = useBrands(queryParams);
+
+    // Fetch Categories Data
+    const { data: categoriesData, isLoading: categoriesLoading } = useGetCategories({
+        limit: CATEGORY_PAGE_SIZE,
+        page: categoryPage,
+        isAdmin: true,
+    });
+
+    const brandsList = brandsResponse?.data?.data || [];
+    const brandsMeta = brandsResponse?.data?.meta || { totalPages: 1, page: 1 };
+
+    const categories = categoriesData?.data?.categories || [];
+    const categoryTotalPages = categoriesData?.data?.pagination?.pages ?? 1;
+
+    const displayedBrands = useMemo(() => {
+        if (!brandsList) return [];
+        return isReversed ? [...brandsList].reverse() : brandsList;
+    }, [brandsList, isReversed]);
 
     return (
         <div className="space-y-6 p-1">
+            {/* Header */}
             <div className="flex items-center justify-end gap-3">
                 <Button variant="outline" size="sm" className="w-32">
                     <MoreVertical className="h-4 w-4 mr-2" /> {t('more')}
                 </Button>
-                {/* Trigger open state here */}
-                <Button
-                    variant="primary"
-                    className="w-44"
-                    size="sm"
-                    onClick={() => setIsAddDialogOpen(true)}
-                >
+                <Button variant="primary" className="w-44" size="sm" onClick={() => setIsAddDialogOpen(true)}>
                     <Plus className="h-4 w-4 mr-2" /> {t('addBrand')}
                 </Button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {categories.map((cat, i) => (
-                    <MiniCard key={i} image={cat.image} title={cat.title[locale]} />
-                ))}
+            {/* Category Grid with backend pagination */}
+            <div>
+                <div className="flex items-center justify-end mb-3">
+                    <div className="flex items-center gap-1.5">
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => setCategoryPage(p => Math.max(1, p - 1))}
+                            disabled={categoryPage === 1 || categoriesLoading}
+                        >
+                            <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <span className="text-xs text-muted-foreground min-w-[48px] text-center">
+                            {categoryPage} / {categoryTotalPages}
+                        </span>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => setCategoryPage(p => Math.min(categoryTotalPages, p + 1))}
+                            disabled={categoryPage >= categoryTotalPages || categoriesLoading}
+                        >
+                            <ChevronRight className="h-4 w-4" />
+                        </Button>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <MiniCard
+                        data={categories}
+                        isLoading={categoriesLoading}
+                    />
+                </div>
             </div>
 
+            {/* Brands Table Card */}
             <Card className="border shadow-none overflow-hidden">
-                <CardHeader className="flex flex-row items-center justify-between pb-6">
+                <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <FilterSection
-                        activeTab={activeTab}
-                        setActiveTab={setActiveTab}
-                        data={brandsData}
                         type="brand"
+                        activeTab={activeTab}
+                        setActiveTab={(tab) => {
+                            setActiveTab(tab);
+                            setBrandPage(1);
+                        }}
+                        data={brandsList}
+                        search={search}
+                        setSearch={(val) => {
+                            setSearch(val);
+                            setBrandPage(1);
+                        }}
+                        isReversed={isReversed}
+                        setIsReversed={setIsReversed}
+                        onRefetch={refetch}
+                        isFetching={isFetching}
                     />
                 </CardHeader>
                 <CardContent>
-                    <BrandsTable activeTab={activeTab} data={brandsData} />
+                    <BrandsTable
+                        activeTab={activeTab}
+                        data={displayedBrands}
+                        isLoading={brandsLoading || isFetching}
+                        meta={brandsMeta}
+                        setPage={setBrandPage}
+                    />
                 </CardContent>
             </Card>
 
-            {/* The Add Dialog */}
-            <AddBrandDialog
-                open={isAddDialogOpen}
-                onOpenChange={setIsAddDialogOpen}
-            />
+            <AddBrandDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />
         </div>
     );
 };

@@ -13,6 +13,7 @@ import { useCreateCategory, useUpdateCategory, useGetCategories } from "@/hooks/
 import { Category } from "@/types/category";
 import { ImagePlus } from "lucide-react";
 import MyImage from "../MyImage";
+import { ca } from "zod/v4/locales";
 
 interface CategoryFormDialogProps {
   open: boolean;
@@ -141,14 +142,6 @@ const CategoryFormDialog = ({ open, onClose, category }: CategoryFormDialogProps
                   </Select>
                 </div>
 
-                <MultilingualInput
-                  label={t("description")}
-                  name="description"
-                  type="textarea"
-                  placeholderEn={t("placeholderDescEn")}
-                  placeholderAr={t("placeholderDescAr")}
-                />
-
                 {selectedType === "subCategory" && (
                   <div className="space-y-2">
                     <Label>{t("parentCategory")}</Label>
@@ -161,7 +154,7 @@ const CategoryFormDialog = ({ open, onClose, category }: CategoryFormDialogProps
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="none">{t("selectParentCategory")}</SelectItem>
-                        {categoriesData?.data?.categories?.filter((cat: Category) => cat._id !== category?._id).map((cat: Category) => (
+                        {categoriesData?.data?.filter((cat: Category) => cat._id !== category?._id).map((cat: Category) => (
                           <SelectItem key={cat._id} value={cat._id}>
                             {cat.name[locale]}
                           </SelectItem>
@@ -180,6 +173,14 @@ const CategoryFormDialog = ({ open, onClose, category }: CategoryFormDialogProps
               placeholderEn={t("placeholderNameEn")}
               placeholderAr={t("placeholderNameAr")}
             />
+
+            <MultilingualInput
+                  label={t("description")}
+                  name="description"
+                  type="textarea"
+                  placeholderEn={t("placeholderDescEn")}
+                  placeholderAr={t("placeholderDescAr")}
+                />
 
             {/* Thumbnail field - always shown */}
             <div className="space-y-3 pt-2">

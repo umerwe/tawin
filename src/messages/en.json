@@ -474,6 +474,7 @@
     "upload": "Upload",
     "create": "Create Category",
     "update": "Update Category",
+    "updateBrand" : "Update Brand",
     "saving": "Saving...",
     "updateSuccess": "Category updated successfully",
     "createSuccess": "Category created successfully",
@@ -542,7 +543,10 @@
     "orderSuccess": "Order Placed Successfully",
     "variant": "Variant",
     "viewOrder": "View Order",
-    "basket" : "Basket"  
+    "basket" : "Basket",
+    "shopPageText": "Shop Page Description",
+    "uploadShopImage": "Upload Shop Header Image",
+    "editBrand": "Edit Brand"
   },
   "confirm": {
     "logout": {

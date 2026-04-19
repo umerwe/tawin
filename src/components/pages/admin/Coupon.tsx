@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FilterSection from "@/components/FilterSection";
 import CouponsTable from "@/components/tables/CouponTable";
@@ -9,24 +9,39 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import AddCouponDialog from "@/components/dialog/AddCouponDialog";
-import { useCouponsAdmin, useCouponStatsAdmin } from "@/hooks/useCoupon"; // Assuming this is the path
+import { useCouponsAdmin, useCouponStatsAdmin } from "@/hooks/useCoupon";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const Coupons = () => {
   const t = useTranslations("translation");
   const [page, setPage] = useState(1);
-
   const [activeTab, setActiveTab] = useState("All Coupons");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [isReversed, setIsReversed] = useState(false);
 
-  // Integrate the API hook
-  const { data: stats } = useCouponStatsAdmin();
-  const { data, isLoading } = useCouponsAdmin({
+  const debouncedSearch = useDebounce(search, 500);
+
+  const queryParams = useMemo(() => ({
     page,
-    limit: 10
-  });
+    limit: 10,
+    search: debouncedSearch,
+    status: activeTab === "Active" ? "active"
+      : activeTab === "Used" ? "used"
+        : activeTab === "Cancelled" ? "cancelled"
+          : undefined,
+  }), [page, debouncedSearch, activeTab]);
 
-  const couponsData = data?.data?.coupons;
-  const meta = data?.pagination;
+  const { data: stats } = useCouponStatsAdmin();
+  const { data, isLoading, refetch, isFetching } = useCouponsAdmin(queryParams);
+
+  const couponsData = data?.data?.coupons || [];
+  const meta = data?.data?.pagination;
+
+  const displayedCoupons = useMemo(() => {
+    if (!couponsData) return [];
+    return isReversed ? [...couponsData].reverse() : couponsData;
+  }, [couponsData, isReversed]);
 
   const couponStats = [
     {
@@ -63,12 +78,7 @@ const Coupons = () => {
     <div className="space-y-6 p-1">
       {/* Add Coupon Button */}
       <div className="flex items-center justify-end gap-3">
-        <Button
-          variant="primary"
-          className="w-32"
-          size="sm"
-          onClick={() => setAddDialogOpen(true)}
-        >
+        <Button variant="primary" className="w-32" size="sm" onClick={() => setAddDialogOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />
           {t("addCoupon")}
         </Button>
@@ -85,16 +95,28 @@ const Coupons = () => {
       <Card className="border shadow-none overflow-hidden">
         <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between pb-6">
           <FilterSection
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            data={couponsData}
             type="coupon"
+            activeTab={activeTab}
+            setActiveTab={(tab) => {
+              setActiveTab(tab);
+              setPage(1);
+            }}
+            data={couponsData}
+            search={search}
+            setSearch={(val) => {
+              setSearch(val);
+              setPage(1);
+            }}
+            isReversed={isReversed}
+            setIsReversed={setIsReversed}
+            onRefetch={refetch}
+            isFetching={isFetching}
           />
         </CardHeader>
         <CardContent>
           <CouponsTable
-            data={couponsData}
-            isLoading={isLoading}
+            data={displayedCoupons}
+            isLoading={isLoading || isFetching}
             meta={meta}
             setPage={setPage}
             activeTab={activeTab}
@@ -102,10 +124,7 @@ const Coupons = () => {
         </CardContent>
       </Card>
 
-      <AddCouponDialog
-        open={addDialogOpen}
-        onOpenChange={setAddDialogOpen}
-      />
+      <AddCouponDialog open={addDialogOpen} onOpenChange={setAddDialogOpen} />
     </div>
   );
 };

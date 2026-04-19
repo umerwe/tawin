@@ -11,6 +11,11 @@ export const signUpUser = async (credentials: Signup) => {
   return data.data;
 };
 
+export const signUpUserByAdmin = async (credentials: Signup) => {
+  const { data } = await api.post("/api/admin/users/register", credentials);
+  return data.data;
+};
+
 export const getUserProfile = async () => {
   const { data } = await api.get("/api/users/me");
   return data;
@@ -38,6 +43,11 @@ export const updateUserProfile = async (data: File | { firstName: string; lastNa
     });
     return response.data;
   }
+};
+
+export const deleteUser = async (userId: string) => {
+  const { data } = await api.delete(`/api/auth/delete-user/${userId}`);
+  return data;
 };
 
 export const getAdminUsers = async (params?: { status?: string; page?: number; search?: string }) => {

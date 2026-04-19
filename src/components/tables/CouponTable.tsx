@@ -76,14 +76,14 @@ const CouponsTable = ({
       </TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
-          <Button
+          {/* <Button
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-gray-400 hover:text-blue-500 transition-colors"
             onClick={() => handleRowClick(item)}
           >
             <MessageSquare size={16} />
-          </Button>
+          </Button> */}
           
           <ConfirmDialog
             title={tConfirm("delete.title", { value: t("coupon") })}
@@ -119,9 +119,9 @@ const CouponsTable = ({
         isLoading={isLoading}
         headerClassName="bg-aqua/5 border-none"
         pagination={{ 
-          total: meta?.totalItems || 0, 
-          page: meta?.currentPage || 1, 
-          limit: meta?.itemsPerPage || 10, 
+          total: meta?.total || 0, 
+          page: meta?.page || 1, 
+          limit: meta?.limit || 10, 
           setPage 
         }}
       />

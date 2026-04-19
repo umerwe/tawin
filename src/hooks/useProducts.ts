@@ -62,7 +62,6 @@ export const useUpdateProduct = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["product"] });
-      router.push("/admin/product-list");
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to update product.");
@@ -85,11 +84,11 @@ export const useDeleteProduct = () => {
   });
 };
 
-export const useLowStockProducts = () => {
+export const useLowStockProducts = ({ allProducts, featuredProducts, reduced, outOfStock, page, search }: { allProducts?: boolean; featuredProducts?: boolean; reduced?: boolean; outOfStock?: boolean; page?: number; search?: string }) => {
   return useQuery({
-    queryKey: ["products", "low-stock"],
-    queryFn: getLowStockProducts,
-    staleTime: 2 * 60 * 1000, // 2 minutes for stock data
+    queryKey: ["products", "low-stock", allProducts, featuredProducts, reduced, outOfStock, page, search],
+    queryFn: () => getLowStockProducts({ allProducts, featuredProducts, reduced, outOfStock, page, search }),
+    staleTime: 2 * 60 * 1000,
   });
 };
 

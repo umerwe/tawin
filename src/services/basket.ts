@@ -26,3 +26,13 @@ export const getAdminBasketRequests = async (params?: {
   const { data } = await api.get("/api/admin/construction-basket-requests", { params });
   return data;
 };
+
+export const updateBasketRequestStatus = async (id: string, status: string) => {
+  const { data } = await api.patch(`/api/admin/construction-basket-requests/${id}/status`, { status });
+  return data;
+};
+
+export const deleteBasketRequest = async (id: string) => {
+  const { data } = await api.delete(`/api/admin/construction-basket-requests/${id}`);
+  return data;
+};

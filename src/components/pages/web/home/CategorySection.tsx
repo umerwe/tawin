@@ -6,8 +6,8 @@ import { useGetCategories } from "@/hooks/useCategories"
 import CategorySkeleton from "@/components/skeletons/CategorySkeleton";
 
 export default function ShopByCategory() {
-    const { data, isLoading, isError } = useGetCategories();
-    const categoriesData = data?.data || [];
+    const { data, isLoading, isError } = useGetCategories({ limit: 12, isAdmin: true });
+    const categoriesData = data?.data?.categories || [];
     const t = useTranslations("translation")
 
     return (

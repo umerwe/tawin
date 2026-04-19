@@ -28,6 +28,7 @@ const AdminSettingsPage = () => {
             header: {
                 landing_page: { text: { en: "", ar: "" } },
                 home: { text: { en: "", ar: "" } },
+                shop: { text: { en: "", ar: "" } }, // Added Shop default
             },
             pages: {
                 privacyPolicy: { en: "", ar: "" },
@@ -72,6 +73,8 @@ const AdminSettingsPage = () => {
         formData.append("header[landing_page][text][ar]", data.header.landing_page.text.ar);
         formData.append("header[home][text][en]", data.header.home.text.en);
         formData.append("header[home][text][ar]", data.header.home.text.ar);
+        formData.append("header[shop][text][en]", data.header.shop.text.en); // Added Shop text en
+        formData.append("header[shop][text][ar]", data.header.shop.text.ar); // Added Shop text ar
 
         // Pages
         formData.append("pages[privacyPolicy][en]", data.pages.privacyPolicy.en);
@@ -85,10 +88,12 @@ const AdminSettingsPage = () => {
         const logoFile = (document.getElementById("logo-input") as HTMLInputElement).files?.[0];
         const landingImg = (document.getElementById("landing-image-input") as HTMLInputElement).files?.[0];
         const homeImg = (document.getElementById("home-image-input") as HTMLInputElement).files?.[0];
+        const shopImg = (document.getElementById("shop-image-input") as HTMLInputElement).files?.[0]; // Added Shop input check
 
         if (logoFile) formData.append("logo", logoFile);
         if (landingImg) formData.append("header[landing_page][image]", landingImg);
         if (homeImg) formData.append("header[home][image]", homeImg);
+        if (shopImg) formData.append("header[shop][image]", shopImg); // Added Shop image append
 
         update(formData);
     };
@@ -120,10 +125,6 @@ const AdminSettingsPage = () => {
                             </div>
                             <MultilingualInput label={t("businessName")} name="businessName" />
                             <MultilingualInput label={t("tagline")} name="tagline" />
-                            {/* <div className="flex items-center gap-2 pt-2">
-                                <input type="checkbox" id="enableEmail" {...methods.register("enableContactEmail")} className="rounded border-gray-300 text-aqua focus:ring-aqua" />
-                                <Label htmlFor="enableEmail">{t("enableContactEmail")}</Label>
-                            </div> */}
                         </div>
 
                         <div className="space-y-6">
@@ -155,6 +156,14 @@ const AdminSettingsPage = () => {
                                 <div className="relative h-40 border-2 border-dashed rounded-xl overflow-hidden bg-slate-50 flex items-center justify-center">
                                     <MyImage src={previews.home || settings?.header?.home?.image} alt="Home" width={300} height={150} className="object-cover" />
                                     <input type="file" id="home-image-input" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleFilePreview(e, "home")} />
+                                </div>
+                            </div>
+                            {/* New Shop Page Section Added Below */}
+                            <div className="space-y-6">
+                                <MultilingualInput label={t("shopPageText")} name="header.shop.text" type="textarea" />
+                                <div className="relative h-40 border-2 border-dashed rounded-xl overflow-hidden bg-slate-50 flex items-center justify-center">
+                                    <MyImage src={previews.shop || settings?.header?.shop?.image} alt="Shop" width={300} height={150} className="object-cover" />
+                                    <input type="file" id="shop-image-input" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleFilePreview(e, "shop")} />
                                 </div>
                             </div>
                         </div>

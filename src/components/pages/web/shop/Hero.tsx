@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { useGetCategoryById } from "@/hooks/useCategories"
 import Breadcrumb from '@/components/ui/breadcrumb'
 import Image from '@/components/MyImage'
+import { useSettings } from "@/hooks/useSettings"
 
 interface HeroProps {
     activeCategory: string | null;
@@ -31,21 +32,23 @@ const Hero = ({ activeCategory, isLoading }: HeroProps) => {
     const locale = useLocale() as "en" | "ar";
     const t = useTranslations("shop");
 
+    const { data: settingsData } = useSettings();
+
     const { data: categoryData, isLoading: isCategoryLoading } = useGetCategoryById(activeCategory || "");
 
     if (isLoading || isCategoryLoading) {
         return <HeroSkeleton />
     }
 
-    const title = categoryData?.name[locale] || t("heroTitleDefault");
-    const subTitle = categoryData?.description[locale] || t("heroSubtitleDefault");
-    const backgroundImage = categoryData?.thumbnail || "/shop.png";
+    const title = categoryData?.name[locale] || settingsData?.header?.shop?.text?.[locale];
+    const subTitle = categoryData?.description[locale] || "";
+    const backgroundImage = categoryData?.thumbnail || settingsData?.header?.shop?.image;
 
     return (
         <section className="relative h-[400px] md:h-[600px] w-full overflow-hidden">
             <Image
                 src={backgroundImage}
-                alt={title}
+                alt={title || ""}
                 fill
                 className="object-cover"
                 sizes="100vw"

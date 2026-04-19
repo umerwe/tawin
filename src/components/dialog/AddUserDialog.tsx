@@ -10,7 +10,7 @@ import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Signup, SignupSchema } from "@/validations/auth";
-import { useSignup } from "@/hooks/useAuth";
+import { useSignup, useUserSignupByAdmin } from "@/hooks/useAuth";
 import { SpinnerLoader } from "@/components/common/SpinnerLoader";
 import {
     Dialog,
@@ -28,7 +28,7 @@ export default function AddUserDialog({
 }) {
     const t = useTranslations("translation");
     const [showPassword, setShowPassword] = useState(false);
-    const { mutate: signup, isPending } = useSignup();
+    const { mutate: signup, isPending } = useUserSignupByAdmin();
 
     const {
         register,

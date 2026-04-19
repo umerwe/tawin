@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { loginUser, signUpUser, getUserProfile, updateUserProfile, getAdminUsers, verifyUser, addAddress, getAllAddresses, deleteAddress, updateAddress } from "@/services/auth";
+import { loginUser, signUpUser, getUserProfile, updateUserProfile, getAdminUsers, verifyUser, addAddress, getAllAddresses, deleteAddress, updateAddress, signUpUserByAdmin, deleteUser } from "@/services/auth";
 import { toast } from "sonner";
 
 export const useLogin = () => {
@@ -45,6 +45,21 @@ export const useSignup = () => {
   return mutation;
 };
 
+export const useUserSignupByAdmin = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: signUpUserByAdmin,
+    onSuccess: () => {
+      toast("Account created successfully!");
+      queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Something went wrong.");
+    },
+  });
+  return mutation;
+};
+
 export const useUserProfile = () => {
   return useQuery({
     queryKey: ["userProfile"],
@@ -64,6 +79,20 @@ export const useUpdateUserProfile = () => {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to update profile.");
+    },
+  });
+};
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => {
+      toast("User deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to delete user.");
     },
   });
 };

@@ -1,8 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Copy, Globe } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useLocale, useTranslations } from "next-intl";
 import {
   Dialog,
@@ -10,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import MyImage from "../MyImage";
 
 export default function BrandDetailDialog({
   brand,
@@ -25,76 +24,77 @@ export default function BrandDetailDialog({
 
   if (!brand) return null;
 
-  const isActive = brand.status.en === "Active";
+  const isActive = brand.isActive;
+  const displayName = brand.name[locale] || brand.name['en'];
+  const displayDesc = brand.description[locale] || brand.description['en'];
+  const regDate = new Date(brand.createdAt).toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-US');
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-sm rounded-2xl p-0 overflow-hidden border border-gray-100 shadow-xl">
-        {/* Header */}
-        <DialogHeader className="px-5 pt-5">
+        <DialogHeader>
           <div className="flex items-center gap-3">
-            {/* Brand Logo — LEFT */}
-            <div className="h-12 w-12 rounded-xl border border-gray-100 bg-gray-50 flex items-center justify-center shrink-0 overflow-hidden">
-              {brand.logo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={brand.logo}
-                  alt={brand.name}
-                  className="h-8 w-8 object-contain"
+            <div className="h-12 w-12 rounded-xl border border-gray-100 bg-gray-50 flex items-center justify-center shrink-0 overflow-hidden relative">
+              {brand.image ? (
+                <MyImage
+                  src={brand.image}
+                  alt={displayName}
+                  width={256}
+                  height={256}
+                  className="h-full w-full object-contain p-1"
                 />
               ) : (
                 <span className="text-lg font-bold text-gray-400">
-                  {brand.name.charAt(0)}
+                  {displayName.charAt(0)}
                 </span>
               )}
             </div>
 
-            {/* Name + Website — RIGHT of logo */}
             <div className="min-w-0">
               <DialogTitle className="text-base font-bold text-gray-800 leading-snug">
-                {brand.name}
+                {displayName}
               </DialogTitle>
-              <div className="flex items-center gap-1.5 mt-0.5">
+              {/* <div className="flex items-center gap-1.5 mt-0.5">
                 <Globe size={11} className="text-gray-400 shrink-0" />
                 <span className="text-xs text-gray-400 truncate">
-                  {brand.website ?? `www.${brand.name.toLowerCase()}.com`}
+                  {`www.${brand.slug}.com`}
                 </span>
                 <button
-                  onClick={() =>
-                    navigator.clipboard.writeText(
-                      brand.website ?? `www.${brand.name.toLowerCase()}.com`
-                    )
-                  }
+                  onClick={() => navigator.clipboard.writeText(`www.${brand.slug}.com`)}
                   className="text-purple-500 hover:text-aqua transition-colors shrink-0"
                 >
                   <Copy size={12} />
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </DialogHeader>
 
-        <div className="px-5 pb-5 space-y-3">
+        <div className="space-y-4">
           {/* Detail Rows */}
           <div className="space-y-2">
             <div className="flex items-center gap-1.5">
               <span className="text-sm text-gray-500 shrink-0">{t("status")}:</span>
               <span className={cn("text-sm font-semibold", isActive ? "text-aqua" : "text-red-500")}>
-                {brand.status[locale]}
+                {isActive ? t("active") : t("closed")}
               </span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="text-sm text-gray-500 shrink-0">{t("registrationDate")}:</span>
-              <span className="text-sm font-medium text-gray-700">{brand.registrationDate}</span>
+              <span className="text-sm font-medium text-gray-700">{regDate}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-sm text-gray-500 shrink-0">{t("brandCode")}:</span>
-              <span className="text-sm font-medium text-gray-700">{brand.brandCode}</span>
-            </div>
+            {displayDesc && (
+               <div className="space-y-1">
+                 <span className="text-sm text-gray-500">{t("description")}:</span>
+                 <p className="text-xs text-gray-600 bg-gray-50 p-2 rounded-md italic">
+                    {displayDesc}
+                 </p>
+               </div>
+            )}
           </div>
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-2 gap-3 pt-1">
+          {/* <div className="grid grid-cols-2 gap-3 pt-1">
             <Button
               variant="outline"
               className="border-red-200 bg-red-100 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-md h-10 font-medium"
@@ -105,9 +105,9 @@ export default function BrandDetailDialog({
               variant="primary"
               className="bg-amber-50 border border-amber-400 hover:bg-amber-100 text-amber-500 rounded-md h-10 font-medium"
             >
-              {t("suspendTemporarily")}
+              {t("suspend")}
             </Button>
-          </div>
+          </div> */}
         </div>
       </DialogContent>
     </Dialog>
