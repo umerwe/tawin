@@ -21,7 +21,7 @@ export const getUserProfile = async () => {
   return data;
 };
 
-export const updateUserProfile = async (data: File | { firstName: string; lastName: string; username: string }) => {
+export const updateUserProfile = async (data: File | any) => {
   if (data instanceof File) {
     const formData = new FormData();
     formData.append('profileImage', data);
@@ -33,9 +33,12 @@ export const updateUserProfile = async (data: File | { firstName: string; lastNa
     return response.data;
   } else {
     const formData = new FormData();
-    formData.append('firstName', data.firstName);
-    formData.append('lastName', data.lastName);
-    formData.append('username', data.username);
+    if (data.firstName !== undefined) formData.append('firstName', data.firstName);
+    if (data.lastName !== undefined) formData.append('lastName', data.lastName);
+    if (data.username !== undefined) formData.append('username', data.username);
+    if (data.password) {
+      formData.append('password', data.password);
+    }
     const response = await api.patch("/api/users/profile-picture", formData, {
       headers: {
         'Content-Type': 'multipart/form-data',

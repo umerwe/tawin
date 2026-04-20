@@ -556,7 +556,13 @@
     "noOrdersFound": "لا توجد طلبات",
     "currency": "العملة",
     "currencySymbol": "رمز العملة",
-    "transferId": "معرف التحويل"
+    "transferId": "معرف التحويل",
+    "save" : "حفظ",
+    "daily": "يومي",
+  "weekly": "أسبوعي",
+  "monthly": "شهري",
+  "dailyReport": "تقرير يومي",
+  "monthlyReport": "تقرير شهري"
   },
   "confirm": {
     "logout": {

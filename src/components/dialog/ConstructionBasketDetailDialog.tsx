@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Home } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useSettings } from "@/hooks/useSettings";
 
 interface ConstructionBasketDetailDialogProps {
   basket: any;
@@ -13,6 +14,7 @@ interface ConstructionBasketDetailDialogProps {
 
 const ConstructionBasketDetailDialog = ({ basket, open, onClose }: ConstructionBasketDetailDialogProps) => {
   const t = useTranslations("translation");
+  const {data: settings} = useSettings();
 
   if (!basket) return null;
 
@@ -49,8 +51,7 @@ const ConstructionBasketDetailDialog = ({ basket, open, onClose }: ConstructionB
               <div className="space-y-1">
                 <label className="text-sm font-medium text-gray-400">{t('monthlyIncome')}</label>
                 <p className="font-semibold text-gray-900">
-                  {basket.constructionBasket?.monthlyIncome?.toLocaleString()}
-                  <span className="text-xs text-gray-400 ms-1 font-normal">IQD</span>
+                  {settings?.currencySymbol}{basket.constructionBasket?.monthlyIncome?.toLocaleString()}
                 </p>
               </div>
             </CardContent>

@@ -91,7 +91,7 @@ const Orders = () => {
     return (
         <div className="space-y-6 p-1">
             {/* Top Action Bar */}
-            <div className="flex items-center justify-end gap-3">
+            {/* <div className="flex items-center justify-end gap-3">
                 <Button
                     variant="outline"
                     size="sm"
@@ -99,7 +99,7 @@ const Orders = () => {
                 >
                     <MoreVertical className="h-4 w-4 mr-2" /> {t("more")}
                 </Button>
-            </div>
+            </div> */}
 
             {/* Statistics Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

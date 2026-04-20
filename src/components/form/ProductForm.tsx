@@ -10,8 +10,10 @@ import {
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useFormContext, Controller } from "react-hook-form";
+import { useSettings } from "@/hooks/useSettings";
 
 const ProductForm = ({ isEdit = false }: any) => {
+  const {data: settings} = useSettings();
   const t = useTranslations("translation");
 
   const { register, control, formState: { errors } } = useFormContext();
@@ -125,7 +127,7 @@ const ProductForm = ({ isEdit = false }: any) => {
                     errorMessage={(errors.price as any)?.message}
                   />
                   <div className={`absolute left-4 -translate-y-1/2 pr-2 border-r border-gray-200 ${errors.price ? "top-6.5" : "top-6.5"}`}>
-                    <span className="text-base">🇺🇸</span>
+                    <span className="text-sm">{settings?.currency || "🇺🇸"}</span>
                   </div>
                 </div>
               </div>

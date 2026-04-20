@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import ConfirmDialog from "../dialog/ConfirmDialog";
 import { useDeleteProduct } from "@/hooks/useProducts";
+import { useSettings } from "@/hooks/useSettings";
 
 interface ProductTableProps {
   activeTab: string;
@@ -26,6 +27,7 @@ interface ProductTableProps {
 
 
 const ProductTable = ({ activeTab, data, isLoading, pagination, page, setPage }: ProductTableProps) => {
+  const {data:settings} = useSettings();
   const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
 
   const router = useRouter();
@@ -37,10 +39,14 @@ const ProductTable = ({ activeTab, data, isLoading, pagination, page, setPage }:
     return item.status?.en === activeTab;
   });
 
+  const handleNavigate = (locale: string, slug: string) => {
+    router.push(`/${locale}/admin/low-stock/${slug}`);
+  };
+
   const row = (item: any, index: number, locale: "en" | "ar") => (
     <>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>
+      <TableCell className="cursor-pointer" onClick={() => handleNavigate(locale, item.slug)}>{index + 1}</TableCell>
+      <TableCell className="cursor-pointer" onClick={() => handleNavigate(locale, item.slug)}>
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 relative overflow-hidden">
             <Image
@@ -53,8 +59,8 @@ const ProductTable = ({ activeTab, data, isLoading, pagination, page, setPage }:
           <span className="font-medium text-sm capitalize">{item.title[locale]}</span>
         </div>
       </TableCell>
-      <TableCell className="text-sm font-medium">${item.price}</TableCell>
-      <TableCell className="text-sm">{new Date(item.createdAt?.$date || item.createdAt).toLocaleDateString()}</TableCell>
+      <TableCell className="text-sm font-medium cursor-pointer" onClick={() => handleNavigate(locale, item.slug)}>{settings?.currencySymbol}{item.price}</TableCell>
+      <TableCell className="text-sm cursor-pointer" onClick={() => handleNavigate(locale, item.slug)}>{new Date(item.createdAt?.$date || item.createdAt).toLocaleDateString()}</TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
           <Button

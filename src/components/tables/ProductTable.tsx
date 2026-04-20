@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import ConfirmDialog from "../dialog/ConfirmDialog";
 import { useDeleteProduct } from "@/hooks/useProducts";
+import { useSettings } from "@/hooks/useSettings";
 
 interface ProductTableProps {
   activeTab: string;
@@ -25,6 +26,7 @@ interface ProductTableProps {
 }
 
 const ProductTable = ({ activeTab, data, isLoading, pagination, page, setPage }: ProductTableProps) => {
+  const { data: settings } = useSettings();
   const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
   const router = useRouter();
 
@@ -59,12 +61,12 @@ const ProductTable = ({ activeTab, data, isLoading, pagination, page, setPage }:
         </div>
       </TableCell>
       <TableCell className="text-sm font-medium cursor-pointer" onClick={() => handleNavigate(locale, item.slug)}>
-        ${item.price}
+        {settings?.currencySymbol}{item.price}
       </TableCell>
       <TableCell className="text-sm cursor-pointer" onClick={() => handleNavigate(locale, item.slug)}>
         {new Date(item.createdAt?.$date || item.createdAt).toLocaleDateString()}
       </TableCell>
-      
+
       {/* Actions Cell - Stop propagation here so clicking buttons doesn't trigger the row navigation */}
       <TableCell onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center gap-2">

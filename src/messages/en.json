@@ -474,7 +474,7 @@
     "upload": "Upload",
     "create": "Create Category",
     "update": "Update Category",
-    "updateBrand" : "Update Brand",
+    "updateBrand": "Update Brand",
     "saving": "Saving...",
     "updateSuccess": "Category updated successfully",
     "createSuccess": "Category created successfully",
@@ -543,7 +543,7 @@
     "orderSuccess": "Order Placed Successfully",
     "variant": "Variant",
     "viewOrder": "View Order",
-    "basket" : "Basket",
+    "basket": "Basket",
     "shopPageText": "Shop Page Description",
     "uploadShopImage": "Upload Shop Header Image",
     "editBrand": "Edit Brand",
@@ -556,7 +556,13 @@
     "noProductFound": "No product found",
     "currency": "Currency",
     "currencySymbol": "Currency Symbol",
-    "transferId": "Transfer ID"
+    "transferId": "Transfer ID",
+    "save": "Save",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "dailyReport": "Daily Report",
+  "monthlyReport": "Monthly Report"
   },
   "confirm": {
     "logout": {

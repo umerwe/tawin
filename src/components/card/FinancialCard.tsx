@@ -2,17 +2,11 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, Plus, TrendingDown, TrendingUp } from "lucide-react";
+import { MoreVertical, TrendingDown, TrendingUp } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 
-export const FinancialCard = ({ data }: { data: any }) => {
+export const FinancialCard = ({ data, currencySymbol }: { data: any, currencySymbol: string }) => {
   const t = useTranslations("translation");
-  const locale = useLocale() as "en" | "ar";
-
-  // Example data that might come from props or API
-  const cardData = {
-    holder: { en: "Noman Manzoor", ar: "نعمان منظور" }
-  };
 
   return (
     <Card className="border shadow-none h-full">
@@ -38,7 +32,7 @@ export const FinancialCard = ({ data }: { data: any }) => {
               <p className="text-aqua text-xs font-semibold">{t("statusActive")}</p>
               <div className="flex items-center gap-1 mt-1">
               </div>
-              <h4 className="text-2xl font-bold text-gray-900 leading-tight">{t("revenue")}: ${data?.revenue || 0}</h4>
+              <h4 className="text-2xl font-bold text-gray-900 leading-tight">{t("revenue")}: {currencySymbol}{data?.revenue || 0}</h4>
               {/* <p className="text-sm font-medium text-gray-400">${data?.returns || 0} {t("returns")}</p> */}
               <span className={`flex items-center gap-0.5 text-xs font-semibold ${data?.change?.type === "increase" ? "text-green-500" : "text-red-500"}`}>
                   {data?.change?.type === "increase"

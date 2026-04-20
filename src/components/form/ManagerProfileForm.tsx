@@ -1,86 +1,208 @@
 "use client";
 
-import Image from "@/components/MyImage";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { EyeOff } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { useTranslations } from "next-intl";
+import { useState, useRef, useEffect } from "react";
+import { useUpdateUserProfile } from "@/hooks/useAuth";
+import MyImage from "@/components/MyImage";
 
-const ManagerProfileForm = () => {
+interface UserData {
+    firstName?: string;
+    lastName?: string;
+    username?: string;
+    email?: string;
+    role?: string;
+    profileImage?: string;
+}
+
+interface Props {
+    data?: { data?: UserData } | UserData;
+}
+
+const ManagerProfileForm = ({ data }: Props) => {
     const t = useTranslations("translation");
+    const user: UserData = (data as any)?.data ?? data ?? {};
+
+    const [isEditing, setIsEditing] = useState(false);
+
+    const [form, setForm] = useState({
+        firstName: user.firstName ?? "",
+        lastName: user.lastName ?? "",
+        username: user.username ?? "",
+    });
+
+    useEffect(() => {
+        setForm({
+            firstName: user.firstName ?? "",
+            lastName: user.lastName ?? "",
+            username: user.username ?? "",
+        });
+    }, [user.firstName, user.lastName, user.username]);
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const { mutate: updateProfile, isPending } = useUpdateUserProfile();
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    };
+
+    const handleSave = () => {
+        updateProfile(form, {
+            onSuccess: () => setIsEditing(false),
+        });
+    };
+
+    const handleCancel = () => {
+        setForm({
+            firstName: user.firstName ?? "",
+            lastName: user.lastName ?? "",
+            username: user.username ?? "",
+        });
+        setIsEditing(false);
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        
+        // FIX: Send the raw file directly. 
+        // The mutation function now handles wrapping this in FormData.
+        updateProfile(file); 
+    };
 
     return (
         <Card className="lg:col-span-2 border shadow-none">
-            <CardHeader className="flex flex-row items-center justify-between">
-                <h2 className="text-lg font-bold text-gray-800">{t("editProfile")}</h2>
-                <Button variant="outline" size="sm" className="text-gray-400 px-6">
-                    {t("edit")}
-                </Button>
+            <CardHeader className="flex flex-row items-center justify-between gap-2 flex-wrap">
+                <h2 className="text-lg font-bold text-gray-800 shrink-0">{t("editProfile")}</h2>
+
+                <div className="flex items-center gap-2">
+                    {isEditing ? (
+                        <div className="flex justify-end gap-2">
+                            <Button
+                                variant="primary"
+                                size="sm"
+                                className="shrink-0 w-auto px-6"
+                                onClick={handleSave}
+                                disabled={isPending}
+                            >
+                                {isPending ? t("saving") : t("save")}
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-gray-400 shrink-0 w-auto px-6"
+                                onClick={handleCancel}
+                                disabled={isPending}
+                            >
+                                {t("cancel")}
+                            </Button>
+                        </div>
+                    ) : (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-gray-400 px-6"
+                            onClick={() => setIsEditing(true)}
+                        >
+                            {t("edit")}
+                        </Button>
+                    )}
+                </div>
             </CardHeader>
 
             <CardContent className="space-y-6">
-                {/* Profile Image Section */}
                 <div className="flex items-center gap-4">
                     <div className="h-20 w-20 relative rounded-full overflow-hidden border-2 border-aqua/20">
-                        <Image
-                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&auto=format&fit=crop"
+                        <MyImage
+                            src={user.profileImage || ""}
                             alt="Profile Avatar"
                             fill
                             className="object-cover"
                         />
                     </div>
                     <div className="flex gap-2">
-                        <Button variant="primary" size="sm" className="w-auto px-6">
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            name="profileImage"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleImageChange}
+                        />
+                        <Button
+                            variant="primary"
+                            size="sm"
+                            className="w-auto px-6"
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={isPending}
+                        >
                             {t("uploadImage")}
-                        </Button>
-                        <Button variant="outline" size="sm" className="text-gray-400">
-                            {t("remove")}
                         </Button>
                     </div>
                 </div>
 
-                {/* Main Form Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                     <div className="space-y-2">
                         <Label>{t("firstName")}</Label>
-                        <Input placeholder={t("ahmed")} className="rounded-md" />
+                        <Input
+                            name="firstName"
+                            value={form.firstName}
+                            onChange={handleChange}
+                            disabled={!isEditing}
+                            placeholder={t("ahmed")}
+                            className="rounded-md"
+                        />
                     </div>
                     <div className="space-y-2">
                         <Label>{t("lastName")}</Label>
-                        <Input placeholder={t("complete")} className="rounded-md" />
+                        <Input
+                            name="lastName"
+                            value={form.lastName}
+                            onChange={handleChange}
+                            disabled={!isEditing}
+                            placeholder={t("complete")}
+                            className="rounded-md"
+                        />
                     </div>
-                    <div className="space-y-2">
-                        <Label>{t("phone")}</Label>
-                        <div className="relative">
-                            <Input placeholder="(406) 555-0120" className="pl-14 rounded-md" />
-                            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 border-r pr-2 border-gray-200">
-                                <span className="text-base">🇮🇶</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="space-y-2">
-                        <Label>{t("password")}</Label>
-                        <div className="relative">
-                            <Input type="password" placeholder="**********" className="rounded-md" />
-                            <EyeOff className="absolute rtl:left-4 ltr:right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 cursor-pointer" />
-                        </div>
-                    </div>
+                </div>
+
+                <div className="space-y-2">
+                    <Label>{t("username")}</Label>
+                    <Input
+                        name="username"
+                        value={form.username}
+                        onChange={handleChange}
+                        disabled={!isEditing}
+                        placeholder="username"
+                        className="rounded-md"
+                    />
                 </div>
 
                 <div className="space-y-2">
                     <Label>{t("email")}</Label>
-                    <Input placeholder="wade.warren@example.com" className="rounded-md" />
+                    <Input
+                        value={user.email ?? ""}
+                        readOnly
+                        disabled
+                        className="rounded-md bg-muted text-muted-foreground cursor-not-allowed"
+                    />
                 </div>
 
                 <div className="space-y-2">
                     <Label>{t("role")}</Label>
-                    <Input placeholder={t("manager")} className="rounded-md" />
+                    <Input
+                        value={user.role ?? ""}
+                        readOnly
+                        disabled
+                        className="rounded-md bg-muted text-muted-foreground cursor-not-allowed"
+                    />
                 </div>
             </CardContent>
         </Card>
-    )
-}
+    );
+};
 
 export default ManagerProfileForm;

@@ -1,4 +1,5 @@
 "use client"
+import { useState } from "react";
 import StatsCard from "@/components/card/StatsCard";
 import DashboardChart from "@/components/charts/DashboardChart";
 import SalesByRegion from "@/components/charts/SalesByRegion";
@@ -8,10 +9,15 @@ import TopSellingProducts from "./TopSellingProducts";
 import { useGetAdminSummary } from "@/hooks/useAdmin";
 import DashboardSkeleton from "@/components/skeletons/DashboardSkeleton";
 import { useSettings } from "@/hooks/useSettings";
+import DateRangeFilter, { FilterRange } from "@/components/DateRange";
+import { useTranslations } from "next-intl";
 
 const Dashboard = () => {
+  const t = useTranslations("translation");
+  const [filter, setFilter] = useState<FilterRange>("daily");
+
   const { data: settings } = useSettings();
-  const { data: adminSummary, isLoading } = useGetAdminSummary();
+  const { data: adminSummary, isLoading } = useGetAdminSummary(filter);
 
   if (isLoading) return <DashboardSkeleton />;
 
@@ -65,7 +71,12 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* <AlertBanner /> */}
+
+      {/* Header row with filter */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold text-gray-800">{t("dashboard")}</h1>
+        <DateRangeFilter value={filter} onChange={setFilter} />
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {statsData.map((stat, index) => (
@@ -73,13 +84,9 @@ const Dashboard = () => {
         ))}
       </div>
 
-      {/* Grid for Chart and Regional Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <DashboardChart
-            statsData={inventoryStats}
-            chartData={report?.revenueHistory}
-          />
+          <DashboardChart title={`${filter}Report`} statsData={inventoryStats} chartData={report?.revenueHistory} />
         </div>
         <div className="lg:col-span-1">
           <SalesByRegion data={region} />
@@ -96,13 +103,11 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-6">
-        {/* <div className="lg:col-span-1">
-          <AddNewProduct />
-        </div> */}
         <div className="lg:col-span-2">
           <TopSellingProducts data={products} currencySymbol={settings?.currencySymbol || "$"} />
         </div>
       </div>
+
     </div>
   );
 };

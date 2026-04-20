@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { useFinancialTransfers, useDeleteFinancialTransfer, useGetFinancialStats } from "@/hooks/useFinancialTransfer";
 import { useDebounce } from "@/hooks/useDebounce";
-import { toast } from "sonner";
+import { useSettings } from "@/hooks/useSettings";
 
 const FinancialTransfers = () => {
   const t = useTranslations("translation");
@@ -22,6 +22,7 @@ const FinancialTransfers = () => {
   const [page, setPage] = useState(1);
   const [isReversed, setIsReversed] = useState(false);
   
+  const {data: settings} = useSettings();
   const { data: financialStats } = useGetFinancialStats();
 
   const statsData = financialStats?.data?.summary?.cards || [];
@@ -78,22 +79,6 @@ const FinancialTransfers = () => {
     return isReversed ? [...rawTransfers].reverse() : rawTransfers;
   }, [rawTransfers, isReversed]);
 
-  // Delete Mutation
-  const { mutate: deleteTransfer, isPending: isDeleting } = useDeleteFinancialTransfer();
-
-  const handleDelete = (id: string, closeDialog: () => void) => {
-    deleteTransfer(id, {
-      onSuccess: () => {
-        toast.success(t("transferDeletedSuccess"));
-        closeDialog();
-        refetch();
-      },
-      onError: (error: any) => {
-        toast.error(error?.message || "Failed to delete transfer");
-      }
-    });
-  };
-
   return (
     <div className="space-y-6 p-1">
       {/* Top Action Bar */}
@@ -116,7 +101,7 @@ const FinancialTransfers = () => {
         </div>
 
         <div className="lg:col-span-2">
-          <FinancialCard data={revenue} />
+          <FinancialCard data={revenue} currencySymbol={settings?.currencySymbol || "$"} />
         </div>
       </div>
 
@@ -147,11 +132,10 @@ const FinancialTransfers = () => {
           <FinancialTable
             data={displayedTransfers}
             isLoading={isLoading || isFetching}
+            currencySymbol={settings?.currencySymbol || "$"}
             pagination={pagination}
             page={page}
             setPage={setPage}
-            onDelete={handleDelete}
-            isDeleting={isDeleting}
           />
         </CardContent>
       </Card>
