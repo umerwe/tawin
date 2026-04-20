@@ -78,13 +78,13 @@ const FilterSection = ({
       color: "text-gray-500",
       onClick: onRefetch
     },
-    { icon: <Filter className="h-4 w-4" />, color: "text-gray-500" },
+    // { icon: <Filter className="h-4 w-4" />, color: "text-gray-500" },
     {
       icon: <ArrowUpDown className="h-4 w-4" />,
       color: isReversed ? "text-aqua font-bold" : "text-gray-500",
       onClick: () => setIsReversed?.(!isReversed)
     },
-    { icon: <MoreHorizontal className="h-4 w-4" />, color: "text-gray-500" },
+    // { icon: <MoreHorizontal className="h-4 w-4" />, color: "text-gray-500" },
     { icon: <FileText className="h-4 w-4" />, color: "text-red-500" },
   ];
 

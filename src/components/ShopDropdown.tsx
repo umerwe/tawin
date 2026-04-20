@@ -27,7 +27,7 @@ export function ShopDropdown({ isMain }: { isMain: boolean }) {
       <DropdownMenuTrigger asChild>
         <button
           className={cn(
-            "flex items-center gap-1 text-sm font-medium transition-all relative pb-1 outline-none",
+            "flex items-center gap-1 text-sm font-medium transition-all cursor-pointer relative pb-1 outline-none",
             isMain
               ? "text-white/80 hover:text-white"
               : "text-gray-500 hover:text-gray-900"
@@ -55,7 +55,7 @@ export function ShopDropdown({ isMain }: { isMain: boolean }) {
                   <DropdownMenuSubContent className="w-48">
                     {category.subcategories.map((sub: any) => (
                       <DropdownMenuItem key={sub._id} asChild>
-                        <Link href={`/shop?category=${sub._id}`}>
+                        <Link href={`/shop?category=${sub._id}`} className="cursor-pointer">
                           {sub?.name?.[locale]}
                         </Link>
                       </DropdownMenuItem>

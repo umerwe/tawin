@@ -31,9 +31,9 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
     const updateQty = (productId: string, currentQty: number, delta: number) => {
         const newQty = Math.max(1, currentQty + delta);
         if (newQty !== currentQty) {
-            updateCartQty({ 
-                productId: productId, 
-                quantity: newQty 
+            updateCartQty({
+                productId: productId,
+                quantity: newQty
             });
         }
     }
@@ -42,7 +42,7 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
         deleteItem(productId);
     }
 
-    const subtotal = cartItems.reduce((acc, item) => 
+    const subtotal = cartItems.reduce((acc, item) =>
         acc + (item.product.price * item.quantity), 0
     )
     const grandTotal = Math.max(0, subtotal - discount)
@@ -54,64 +54,70 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
 
                 {/* Items List */}
                 <div className="space-y-6 max-h-[400px] overflow-y-auto ltr:pr-2 rtl:pl-2 custom-scrollbar">
-                    {cartItems.map((item,i) => (
-                        <div key={i} className="flex justify-between items-center border-b border-gray-50 pb-6 group">
-                            <div className="flex items-center ltr:space-x-3 rtl:space-x-reverse">
-                                <button
-                                    onClick={() => removeItem(item.product._id)}
-                                    className="text-gray-300 hover:text-red-500 transition-colors"
-                                >
-                                    <X className="w-4 h-4" />
-                                </button>
-                                <div className="w-20 h-20 bg-gray-100 rounded-xl overflow-hidden shadow-inner">
-                                    <Image
-                                        width={64}
-                                        height={80}
-                                        src={item.product.photo || ""} 
-                                        alt={locale === "en" ? item.product.title.en : item.product.title.ar}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                            </div>
-                            
-                            <div className="space-y-2 text-left rtl:text-right">
-                                <span className="text-sm font-semibold text-gray-900">
-                                    ${(item.product.price * item.quantity).toFixed(2)}
-                                </span>
-                                <div className="text-[11px] leading-tight">
-                                    <p className="font-semibold text-gray-800 uppercase tracking-tight">
-                                        {locale === "en" ? item.product.title.en : item.product.title.ar}
-                                    </p>
-                                    {
-                                        item.product?.variant && (
-                                            <p className="text-gray-400">
-                                                {item.product?.variant}
-                                            </p>
-                                        )
-                                    }
+                    {cartItems.length === 0 ? (
+                        <div className="flex items-center justify-center text-sm text-gray-400">
+                            {t("noProductFound")}
+                        </div>
+                    ) : (
+                        cartItems.map((item, i) => (
+                            <div key={i} className="flex justify-between items-center border-b border-gray-50 pb-6 group">
+                                <div className="flex items-center ltr:space-x-3 rtl:space-x-reverse">
+                                    <button
+                                        onClick={() => removeItem(item.product._id)}
+                                        className="text-gray-300 hover:text-red-500 transition-colors"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                    <div className="w-20 h-20 bg-gray-100 rounded-xl overflow-hidden shadow-inner">
+                                        <Image
+                                            width={64}
+                                            height={80}
+                                            src={item.product.photo || ""}
+                                            alt={locale === "en" ? item.product.title.en : item.product.title.ar}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
                                 </div>
 
-                                {/* Quantity Toggle */}
-                                <div className="flex items-center border border-gray-200 rounded-lg w-20 h-8 overflow-hidden bg-white">
-                                    <button
-                                        onClick={() => updateQty(item.product._id, item.quantity, -1)}
-                                        className="px-2 text-gray-400 hover:text-black transition-colors"
-                                    >
-                                        <Minus className="w-3 h-3" />
-                                    </button>
-                                    <span className="flex-1 text-center text-xs font-semibold text-gray-700">
-                                        {item.quantity}
+                                <div className="space-y-2 text-left rtl:text-right">
+                                    <span className="text-sm font-semibold text-gray-900">
+                                        ${(item.product.price * item.quantity).toFixed(2)}
                                     </span>
-                                    <button
-                                        onClick={() => updateQty(item.product._id, item.quantity, 1)}
-                                        className="px-2 text-gray-400 hover:text-black transition-colors"
-                                    >
-                                        <Plus className="w-3 h-3" />
-                                    </button>
+                                    <div className="text-[11px] leading-tight">
+                                        <p className="font-semibold text-gray-800 uppercase tracking-tight">
+                                            {locale === "en" ? item.product.title.en : item.product.title.ar}
+                                        </p>
+                                        {
+                                            item.product?.variant && (
+                                                <p className="text-gray-400">
+                                                    {item.product?.variant}
+                                                </p>
+                                            )
+                                        }
+                                    </div>
+
+                                    {/* Quantity Toggle */}
+                                    <div className="flex items-center border border-gray-200 rounded-lg w-20 h-8 overflow-hidden bg-white">
+                                        <button
+                                            onClick={() => updateQty(item.product._id, item.quantity, -1)}
+                                            className="px-2 text-gray-400 hover:text-black transition-colors"
+                                        >
+                                            <Minus className="w-3 h-3" />
+                                        </button>
+                                        <span className="flex-1 text-center text-xs font-semibold text-gray-700">
+                                            {item.quantity}
+                                        </span>
+                                        <button
+                                            onClick={() => updateQty(item.product._id, item.quantity, 1)}
+                                            className="px-2 text-gray-400 hover:text-black transition-colors"
+                                        >
+                                            <Plus className="w-3 h-3" />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    )}
                 </div>
 
                 {/* Coupon Section - Reverted to your exact Original Design */}
@@ -127,10 +133,13 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
 
                 {/* Summary Totals */}
                 <div className="space-y-4 pt-4 border-t border-gray-100">
-                    <div className="flex justify-between items-center text-aqua">
-                        <span className="text-base font-semibold">{t("discount")}</span>
-                        <span className="text-lg">-${discount.toFixed(2)}</span>
-                    </div>
+                    {
+                        discount > 0 &&
+                        <div className="flex justify-between items-center text-aqua">
+                            <span className="text-base font-semibold">{t("discount")}</span>
+                            <span className="text-lg">-${discount.toFixed(2)}</span>
+                        </div>
+                    }
 
                     <div className="flex justify-between items-center">
                         <span className="text-base font-semibold text-gray-400">{t("shipping")}</span>

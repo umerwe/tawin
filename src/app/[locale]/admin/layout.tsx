@@ -1,4 +1,4 @@
-import AuthGuard from "@/components/auth/AuthGuard";
+import AdminGuard from "@/components/auth/AdminGuard";
 import Container from "@/components/common/Container";
 import Navbar from "@/components/layout/admin/Navbar";
 import Sidebar from "@/components/layout/admin/Sidebar";
@@ -16,7 +16,7 @@ export default function WebLayout({
 }>) {
     return (
         <SidebarProvider>
-            <AuthGuard requireAdmin={true}>
+            <AdminGuard>
                 <Sidebar />
                 <SidebarInset className="min-h-screen">
                     <Navbar />
@@ -24,7 +24,7 @@ export default function WebLayout({
                         {children}
                     </Container>
                 </SidebarInset>
-            </AuthGuard>
+            </AdminGuard>
         </SidebarProvider>
     );
 }

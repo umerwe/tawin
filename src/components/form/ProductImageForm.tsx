@@ -8,7 +8,17 @@ import {
   Select, SelectContent, SelectItem,
   SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { useTranslations } from "next-intl";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useTranslations, useLocale } from "next-intl";
 import { useRef, useState, useEffect } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { useGetCategories } from "@/hooks/useCategories";
@@ -16,6 +26,7 @@ import { HexColorPicker } from "react-colorful";
 import MyImage from "@/components/MyImage";
 import { productFormSchema } from "@/validations/product";
 import z from "zod";
+import { ChevronDownIcon } from "lucide-react";
 
 interface ProductImageFormProps {
   existingPhoto?: string;
@@ -27,6 +38,7 @@ type ProductFormValues = z.infer<typeof productFormSchema>;
 
 const ProductImageForm = ({ existingPhoto, existingImages = [], isEdit = false }: ProductImageFormProps) => {
   const t = useTranslations("translation");
+  const locale = useLocale() as "en" | "ar";
   const { control, watch, setValue, formState: { errors } } = useFormContext<ProductFormValues>();
 
   const mainInputRef = useRef<HTMLInputElement>(null);
@@ -40,6 +52,7 @@ const ProductImageForm = ({ existingPhoto, existingImages = [], isEdit = false }
 
   const photo = watch("photo");
   const images = watch("images") || [];
+  const selectedCategory = watch("category");
   // const selectedColors: string[] = watch("colors") ?? [];
 
   useEffect(() => {
@@ -79,6 +92,17 @@ const ProductImageForm = ({ existingPhoto, existingImages = [], isEdit = false }
   //   }
   //   setShowPicker(false);
   // };
+
+  // Get display label for active category (same logic as FilterBar)
+  const getActiveCategoryLabel = () => {
+    if (!selectedCategory) return categoriesLoading ? "Loading..." : t("selectCategory");
+    for (const cat of categories) {
+      if (cat._id === selectedCategory) return cat.name[locale] || cat.name?.en || cat.name;
+      const sub = cat.subcategories?.find((s: any) => s._id === selectedCategory);
+      if (sub) return sub.name[locale] || sub.name?.en || sub.name;
+    }
+    return t("selectCategory");
+  };
 
   const ErrorMessage = ({ error }: { error: any }) => (
     error ? <p className="text-red-500 text-xs mt-1 font-medium">{error.message}</p> : null
@@ -136,7 +160,7 @@ const ProductImageForm = ({ existingPhoto, existingImages = [], isEdit = false }
             </div>
           </div>
 
-          {/* Category */}
+          {/* Category — with flyout subcategories, same as FilterBar */}
           {!isEdit && (
             <div className="space-y-2 pt-2">
               <Label>{t("productCategory")}</Label>
@@ -144,18 +168,67 @@ const ProductImageForm = ({ existingPhoto, existingImages = [], isEdit = false }
                 control={control}
                 name="category"
                 render={({ field }) => (
-                  <Select value={field.value ?? ""} onValueChange={field.onChange} disabled={categoriesLoading}>
-                    <SelectTrigger className={`rounded-md ${errors.category ? "border-red-500" : ""}`}>
-                      <SelectValue placeholder={categoriesLoading ? "Loading..." : t("selectCategory")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((category: any) => (
-                        <SelectItem key={category._id} value={category._id}>
-                          {category.name?.en || category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        type="button"
+                        disabled={categoriesLoading}
+                        className={`h-[52px] px-4 rounded-md bg-gray-50 flex w-full items-center justify-between gap-2 text-sm outline-none ${errors.category ? "border-red-500" : "border-transparent"}`}
+                      >
+                        <span className="line-clamp-1">{getActiveCategoryLabel()}</span>
+                        <ChevronDownIcon className="size-4 opacity-50 shrink-0" />
+                      </button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent
+                      align={locale === "ar" ? "end" : "start"}
+                      className="w-full min-w-(--radix-dropdown-menu-trigger-width)"
+                    >
+                      {categories.map((category: any) => {
+                        const hasSubcategories =
+                          category.subcategories && category.subcategories.length > 0;
+
+                        if (hasSubcategories) {
+                          return (
+                            <DropdownMenuSub key={category._id}>
+                              <DropdownMenuSubTrigger className="cursor-pointer">
+                                {category.name[locale] || category.name?.en || category.name}
+                              </DropdownMenuSubTrigger>
+                              <DropdownMenuPortal>
+                                <DropdownMenuSubContent className="w-48">
+                                  {category.subcategories.map((sub: any) => (
+                                    <DropdownMenuItem
+                                      key={sub._id}
+                                      onSelect={() => field.onChange(sub._id)}
+                                      className="cursor-pointer flex items-center justify-between"
+                                    >
+                                      {sub.name[locale] || sub.name?.en || sub.name}
+                                      {field.value === sub._id && (
+                                        <Check className="size-4 text-aqua shrink-0" />
+                                      )}
+                                    </DropdownMenuItem>
+                                  ))}
+                                </DropdownMenuSubContent>
+                              </DropdownMenuPortal>
+                            </DropdownMenuSub>
+                          );
+                        }
+
+                        return (
+                          <DropdownMenuItem
+                            key={category._id}
+                            onSelect={() => field.onChange(category._id)}
+                            className="cursor-pointer flex items-center justify-between"
+                          >
+                            {category.name[locale] || category.name?.en || category.name}
+                            {field.value === category._id && (
+                              <Check className="size-4 text-aqua shrink-0" />
+                            )}
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 )}
               />
               <ErrorMessage error={errors.category} />

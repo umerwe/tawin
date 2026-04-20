@@ -5,6 +5,8 @@ import StarRating from "@/components/StarRating"
 import { useLocale, useTranslations } from "next-intl"
 import Image from "@/components/MyImage"
 import { Product } from "@/types/product"
+import { LoginDialog } from "@/components/dialog/LoginDialog"
+import { useState } from "react"
 
 export function ReviewHeader({
   product
@@ -26,17 +28,28 @@ export function ReviewHeader({
 
 export function WriteReviewButton({ onClick }: { onClick?: () => void }) {
   const t = useTranslations("translation");
+  const [loginOpen, setLoginOpen] = useState(false);
+
+  const handleClick = () => {
+    const token = localStorage.getItem("token");
+    if (!token) { setLoginOpen(true); return; }
+    onClick?.();
+  };
 
   return (
-    <div className="w-full border border-gray-200 rounded-2xl p-8 flex items-center shadow-sm">
-      <Button
-        onClick={onClick}
-        className="bg-black text-white px-10 hover:bg-gray-800 border-0 rounded-full"
-        size="sm"
-      >
-        {t("writeReview")}
-      </Button>
-    </div>
+    <>
+      <div className="w-full border border-gray-200 rounded-2xl p-8 flex items-center shadow-sm">
+        <Button
+          onClick={handleClick}
+          className="bg-black text-white px-10 hover:bg-gray-800 border-0 rounded-full"
+          size="sm"
+        >
+          {t("writeReview")}
+        </Button>
+      </div>
+
+      <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
+    </>
   )
 }
 

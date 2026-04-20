@@ -13,6 +13,7 @@ import { Product } from "@/types/product"
 import { useAddToCart, useCart } from "@/hooks/useCart"
 import { useToggleFavorite, useFavorites } from "@/hooks/useFavorite"
 import { cn } from "@/lib/utils"
+import { LoginDialog } from "@/components/dialog/LoginDialog"
 
 interface ProductInfoProps {
   product: Product
@@ -43,6 +44,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [quantity, setQuantity] = useState(1);
+  const [loginOpen, setLoginOpen] = useState(false); // added
 
   const isInCart = cartData?.data?.items?.some((item: any) => item.productId === _id);
   const isWished = favData?.data?.some((fav: any) => fav.product?._id === _id);
@@ -62,6 +64,9 @@ export function ProductInfo({ product }: ProductInfoProps) {
   };
 
   const handleAddToCart = () => {
+    const token = localStorage.getItem("token") // added
+    if (!token) { setLoginOpen(true); return } // added
+
     if (!isInCart) {
       addToCartApi({
         productId: _id,
@@ -76,6 +81,9 @@ export function ProductInfo({ product }: ProductInfoProps) {
   };
 
   const handleToggleFavorite = () => {
+    const token = localStorage.getItem("token") // added
+    if (!token) { setLoginOpen(true); return } // added
+
     toggleFavApi(_id);
   };
 
@@ -177,6 +185,8 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </Button>
 
       <Separator />
+
+      <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} />
     </div>
   )
 }

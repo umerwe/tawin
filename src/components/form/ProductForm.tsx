@@ -124,7 +124,7 @@ const ProductForm = ({ isEdit = false }: any) => {
                     error={!!(errors.price as any)?.message}
                     errorMessage={(errors.price as any)?.message}
                   />
-                  <div className={`absolute left-4 -translate-y-1/2 pr-2 border-r border-gray-200 ${errors.price ? "top-6.5" : "top-7"}`}>
+                  <div className={`absolute left-4 -translate-y-1/2 pr-2 border-r border-gray-200 ${errors.price ? "top-6.5" : "top-6.5"}`}>
                     <span className="text-base">🇺🇸</span>
                   </div>
                 </div>

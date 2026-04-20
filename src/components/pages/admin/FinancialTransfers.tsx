@@ -1,137 +1,159 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import FilterSection from "@/components/FilterSection";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FinancialTable from "@/components/tables/FinancialTable";
 import { FinancialCard } from "@/components/card/FinancialCard";
 import StatsCard from "@/components/card/StatsCard";
-
-const transferStats = [
-  {
-    title: { en: "Transfers in Progress", ar: "تحويلات قيد التنفيذ" },
-    value: "150",
-    trend: "85%",
-    isUp: true,
-    footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" },
-  },
-  {
-    title: { en: "Total Transfers", ar: "إجمالي التحويلات" },
-    value: "3,150",
-    trend: "20%",
-    isUp: true,
-    footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" },
-  },
-  {
-    title: { en: "Completed Transfers", ar: "التحويلات المكتملة" },
-    value: "150",
-    trend: "85%",
-    isUp: true,
-    footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" },
-  },
-  {
-    title: { en: "Cancelled Transfers", ar: "التحويلات الملغاة" },
-    value: "75",
-    trend: "15%",
-    isUp: false,
-    footerLabel: { en: "Last 7 Days", ar: "آخر ٧ أيام" },
-  },
-];
-
-const financialData = [
-  {
-    id: 1,
-    userCode: "#CUST001",
-    name: { en: "John Doe", ar: "جون دو" },
-    date: "01-01-2025",
-    total: "$2,904",
-    method: { en: "Debit Card", ar: "بطاقة مدى" },
-    status: { en: "Completed", ar: "مكتمل" },
-  },
-  {
-    id: 2,
-    userCode: "#CUST002",
-    name: { en: "Jane Smith", ar: "جين سميث" },
-    date: "03-01-2025",
-    total: "$1,250",
-    method: { en: "Visa Card", ar: "بطاقة فيزا" },
-    status: { en: "Cancelled", ar: "ملغى" },
-  },
-  {
-    id: 3,
-    userCode: "#CUST003",
-    name: { en: "Ali Hassan", ar: "علي حسن" },
-    date: "05-01-2025",
-    total: "$3,600",
-    method: { en: "Visa Card", ar: "بطاقة فيزا" },
-    status: { en: "In Progress", ar: "قيد التنفيذ" },
-  },
-  {
-    id: 4,
-    userCode: "#CUST004",
-    name: { en: "Sarah Lee", ar: "سارة لي" },
-    date: "08-01-2025",
-    total: "$780",
-    method: { en: "Debit Card", ar: "بطاقة مدى" },
-    status: { en: "Completed", ar: "مكتمل" },
-  },
-  {
-    id: 5,
-    userCode: "#CUST005",
-    name: { en: "Omar Khalid", ar: "عمر خالد" },
-    date: "10-01-2025",
-    total: "$5,100",
-    method: { en: "Visa Card", ar: "بطاقة فيزا" },
-    status: { en: "In Progress", ar: "قيد التنفيذ" },
-  },
-  {
-    id: 6,
-    userCode: "#CUST006",
-    name: { en: "Emily Clark", ar: "إيملي كلارك" },
-    date: "12-01-2025",
-    total: "$430",
-    method: { en: "Debit Card", ar: "بطاقة مدى" },
-    status: { en: "Cancelled", ar: "ملغى" },
-  },
-  {
-    id: 7,
-    userCode: "#CUST007",
-    name: { en: "Nour Mahmoud", ar: "نور محمود" },
-    date: "15-01-2025",
-    total: "$2,200",
-    method: { en: "Visa Card", ar: "بطاقة فيزا" },
-    status: { en: "Completed", ar: "مكتمل" },
-  },
-];
+import { MoreVertical } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
+import { useFinancialTransfers, useDeleteFinancialTransfer, useGetFinancialStats } from "@/hooks/useFinancialTransfer";
+import { useDebounce } from "@/hooks/useDebounce";
+import { toast } from "sonner";
 
 const FinancialTransfers = () => {
+  const t = useTranslations("translation");
+
+  // Table States
   const [activeTab, setActiveTab] = useState("All Orders");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [isReversed, setIsReversed] = useState(false);
+
+  const { data: financialStats, isLoading: isFinancialStatsLoading } = useGetFinancialStats();
+  console.log(financialStats);
+
+  const statsData = financialStats?.data?.summary?.cards || [];
+  const revenue = financialStats?.data?.Revenue || 0;
+
+  const transferStats = [
+    {
+      title: { en: "Transfers in Progress", ar: "transfer_transfer" },
+      value: statsData?.find((s: any) => s.title === "Transfers in Progress")?.value ?? 0,
+      trend: `${statsData?.find((s: any) => s.title === "Transfers in Progress")?.change?.percentage ?? 0}%`,
+      isUp: statsData?.find((s: any) => s.title === "Transfers in Progress")?.change?.type === "increase",
+      footerLabel: { en: "Last 7 Days", ar: "transfer_7_transfer" },
+    },
+    {
+      title: { en: "Total Transfers", ar: "transfer_transfer" },
+      value: statsData?.find((s: any) => s.title === "Total Transfers")?.value ?? 0,
+      trend: `${statsData?.find((s: any) => s.title === "Total Transfers")?.change?.percentage ?? 0}%`,
+      isUp: statsData?.find((s: any) => s.title === "Total Transfers")?.change?.type === "increase",
+      footerLabel: { en: "Last 7 Days", ar: "transfer_7_transfer" },
+    },
+    {
+      title: { en: "Completed Transfers", ar: "transfer_transfer" },
+      value: statsData?.find((s: any) => s.title === "Completed Transfers")?.value ?? 0,
+      trend: `${statsData?.find((s: any) => s.title === "Completed Transfers")?.change?.percentage ?? 0}%`,
+      isUp: statsData?.find((s: any) => s.title === "Completed Transfers")?.change?.type === "increase",
+      footerLabel: { en: "Last 7 Days", ar: "transfer_7_transfer" },
+    },
+    {
+      title: { en: "Cancelled Transfers", ar: "transfer_transfer" },
+      value: statsData?.find((s: any) => s.title === "Cancelled Transfers")?.value ?? 0,
+      trend: `${statsData?.find((s: any) => s.title === "Cancelled Transfers")?.change?.percentage ?? 0}%`,
+      isUp: statsData?.find((s: any) => s.title === "Cancelled Transfers")?.change?.type === "increase",
+      footerLabel: { en: "Last 7 Days", ar: "transfer_7_transfer" },
+    },
+  ];
+
+  // Debounce search to prevent excessive API calls
+  const debouncedSearch = useDebounce(search, 500);
+
+  // Fetch Financial Transfers with Query Params
+  const queryParams = useMemo(() => ({
+    status: activeTab === "All Orders" ? undefined : activeTab.toLowerCase(),
+    page,
+    search: debouncedSearch,
+  }), [activeTab, page, debouncedSearch]);
+
+  const { data, isLoading, refetch, isFetching } = useFinancialTransfers(queryParams);
+
+  const rawTransfers = data?.data || [];
+  const pagination = data?.meta || {};
+
+  const displayedTransfers = useMemo(() => {
+    if (!rawTransfers) return [];
+    return isReversed ? [...rawTransfers].reverse() : rawTransfers;
+  }, [rawTransfers, isReversed]);
+
+  // Delete Mutation
+  const { mutate: deleteTransfer, isPending: isDeleting } = useDeleteFinancialTransfer();
+
+  const handleDelete = (id: string, closeDialog: () => void) => {
+    deleteTransfer(id, {
+      onSuccess: () => {
+        toast.success(t("transferDeletedSuccess"));
+        closeDialog();
+        refetch();
+      },
+      onError: (error: any) => {
+        toast.error(error?.message || "Failed to delete transfer");
+      }
+    });
+  };
 
   return (
     <div className="space-y-6 p-1">
+      {/* Top Action Bar */}
+      <div className="flex items-center justify-end gap-3">
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-32"
+        >
+          <MoreVertical className="h-4 w-4 mr-2" /> {t("more")}
+        </Button>
+      </div>
+
+      {/* Statistics Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
           {transferStats.map((stat, i) => (
-            <StatsCard key={i} data={stat} />
+            <StatsCard key={i} data={stat} isTrendingAllowed={true} />
           ))}
         </div>
 
         <div className="lg:col-span-2">
-          <FinancialCard />
+          <FinancialCard data={revenue} />
         </div>
       </div>
 
+      {/* Financial Transfers Table Card */}
       <Card className="border shadow-none overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between pb-6">
+        <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <FilterSection
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            data={financialData}
             type="order"
+            activeTab={activeTab}
+            setActiveTab={(tab) => {
+              setActiveTab(tab);
+              setPage(1);
+            }}
+            data={rawTransfers}
+            search={search}
+            setSearch={(val) => {
+              setSearch(val);
+              setPage(1);
+            }}
+            isReversed={isReversed}
+            setIsReversed={setIsReversed}
+            onRefetch={refetch}
+            isFetching={isFetching}
           />
         </CardHeader>
-        <CardContent>
-          <FinancialTable data={financialData} activeTab={activeTab} />
+
+        <CardContent className="p-0 sm:p-6">
+          <FinancialTable
+            data={displayedTransfers}
+            isLoading={isLoading || isFetching}
+            pagination={pagination}
+            page={page}
+            setPage={setPage}
+            onDelete={handleDelete}
+            isDeleting={isDeleting}
+          />
         </CardContent>
       </Card>
     </div>

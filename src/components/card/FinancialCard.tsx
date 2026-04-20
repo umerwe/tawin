@@ -2,10 +2,10 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, Plus } from "lucide-react";
+import { MoreVertical, Plus, TrendingDown, TrendingUp } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 
-export const FinancialCard = () => {
+export const FinancialCard = ({ data }: { data: any }) => {
   const t = useTranslations("translation");
   const locale = useLocale() as "en" | "ar";
 
@@ -34,16 +34,26 @@ export const FinancialCard = () => {
           {/* RIGHT COLUMN: Info + Deactivate Button */}
           <div className="flex flex-col justify-between">
             <div className="space-y-1">
-              <p className="text-aqua text-xs font-bold uppercase tracking-wide">{t("statusActive")}</p>
-              <h4 className="text-2xl font-bold text-gray-900 leading-tight">{t("revenue")}: 1,250</h4>
-              <p className="text-sm font-medium text-gray-400">50,000 {t("returns")}</p>
-              <button className="text-purple-500 text-sm font-bold hover:underline mt-3 block">
+              <p className="text-xs font-semibold">{t("cashOnDelivery")}</p>
+              <p className="text-aqua text-xs font-semibold">{t("statusActive")}</p>
+              <div className="flex items-center gap-1 mt-1">
+              </div>
+              <h4 className="text-2xl font-bold text-gray-900 leading-tight">{t("revenue")}: ${data?.revenue || 0}</h4>
+              {/* <p className="text-sm font-medium text-gray-400">${data?.returns || 0} {t("returns")}</p> */}
+              <span className={`flex items-center gap-0.5 text-xs font-semibold ${data?.change?.type === "increase" ? "text-green-500" : "text-red-500"}`}>
+                  {data?.change?.type === "increase"
+                    ? <TrendingUp className="h-3 w-3" />
+                    : <TrendingDown className="h-3 w-3" />
+                  }
+                  {data?.change?.percentage ?? 0}%
+                </span>
+              {/* <button className="text-purple-500 text-sm font-bold hover:underline mt-3 block">
                 {t("viewDetails")}
-              </button>
+              </button> */}
             </div>
 
             {/* The Deactivate button is now pushed to the bottom to match the Add button level */}
-            <div className="mt-14">
+            {/* <div className="mt-14">
               <Button
                 variant="destructive"
                 size="sm"
@@ -51,7 +61,7 @@ export const FinancialCard = () => {
               >
                 {t("deactivate")}
               </Button>
-            </div>
+            </div> */}
           </div>
 
         </div>

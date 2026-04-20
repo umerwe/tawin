@@ -9,9 +9,10 @@ import { useLocale } from 'next-intl';
 interface StatCardProps {
   data: any;
   isHome?: boolean;
+  isTrendingAllowed?: boolean;
 }
 
-const StatsCard = ({ data, isHome = false }: StatCardProps) => {
+const StatsCard = ({ data, isHome = false, isTrendingAllowed = false }: StatCardProps) => {
   const locale = useLocale() as "en" | "ar";
 
   const title = data.title[locale];
@@ -77,15 +78,19 @@ const StatsCard = ({ data, isHome = false }: StatCardProps) => {
         <div className="flex flex-col">
           <div className="flex items-center gap-3">
             <span className="text-2xl font-bold">{value}</span>
-            {/* <span className={cn(
-              "text-xs font-medium flex items-center gap-1",
-              isUp ? "text-aqua" : "text-red-500"
-            )}>
-               <div className={cn(locale === 'ar' && "rtl:scale-x-[-1]")}>
-                {isUp ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-              </div>
-              {trend}
-            </span> */}
+            {
+              isTrendingAllowed && (
+                <span className={cn(
+                  "text-xs font-medium flex items-center gap-1",
+                  isUp ? "text-aqua" : "text-red-500"
+                )}>
+                  <div className={cn(locale === 'ar' && "rtl:scale-x-[-1]")}>
+                    {isUp ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                  </div>
+                  {trend}
+                </span>
+              )
+            }
           </div>
 
           {/* <span className="text-sm text-muted-foreground whitespace-nowrap pt-3">

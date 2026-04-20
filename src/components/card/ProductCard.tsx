@@ -11,7 +11,7 @@ import { useLocale, useTranslations } from "next-intl"
 import Image from "@/components/MyImage"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { useAddToCart, useCart } from "@/hooks/useCart"
+import { useAddToCart } from "@/hooks/useCart"
 import { useFavorites, useToggleFavorite } from "@/hooks/useFavorite"
 import { LoginDialog } from "../dialog/LoginDialog"
 import { SpinnerLoader } from "../common/SpinnerLoader"
@@ -34,8 +34,6 @@ export function ProductCard({
     const [loginOpen, setLoginOpen] = useState(false)
     const hasBadge = isNew || !!discount
 
-    // Cart API Hooks
-    const { data: cartData } = useCart();
     const { mutate: addToCartApi, isPending: isAddingToCart } = useAddToCart();
 
     // Favorite API Hooks

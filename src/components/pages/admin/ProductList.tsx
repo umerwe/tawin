@@ -4,9 +4,7 @@ import { useState, useMemo } from "react";
 import {
     Plus,
     RefreshCcw,
-    Filter,
     ArrowUpDown,
-    MoreHorizontal,
     FileText,
     CirclePlus,
     ChevronLeft,
@@ -88,9 +86,9 @@ const ProductList = () => {
 
     const actions = [
         { icon: <RefreshCcw className={cn("h-4 w-4", isFetching && "animate-spin")} />, color: "text-gray-500", onClick: () => refetch() },
-        { icon: <Filter className="h-4 w-4" />, color: "text-gray-500" },
+        // { icon: <Filter className="h-4 w-4" />, color: "text-gray-500" },
         { icon: <ArrowUpDown className="h-4 w-4" />, color: isReversed ? "text-aqua font-bold" : "text-gray-500", onClick: () => setIsReversed(!isReversed) },
-        { icon: <MoreHorizontal className="h-4 w-4" /> },
+        // { icon: <MoreHorizontal className="h-4 w-4" /> },
         { icon: <FileText className="h-4 w-4" />, color: "text-red-500" },
     ];
 
@@ -105,12 +103,12 @@ const ProductList = () => {
 
             {/* Category Grid with backend pagination */}
             <div>
-                <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm text-muted-foreground">
+                <div className="flex items-center justify-end mb-3">
+                    {/* <span className="text-sm text-muted-foreground">
                         {!categoriesLoading && categoriesData?.meta
                             ? `${categoriesData.meta.total} ${t("categories") || "categories"}`
                             : ""}
-                    </span>
+                    </span> */}
                     <div className="flex items-center gap-1.5">
                         <Button
                             variant="outline"

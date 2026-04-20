@@ -24,6 +24,5 @@ export const cartData = [
 
 export const steps = [
     { id: "1", label: "Cart" },
-    { id: "2", label: "Checkout Details" },
-    { id: "3", label: "Checkout" },
+    { id: "2", label: "Checkout" },
 ]

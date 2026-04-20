@@ -82,9 +82,9 @@ const LowStock = () => {
 
     const actions = [
         { icon: <RefreshCcw className={cn("h-4 w-4", isFetching && "animate-spin")} />, color: "text-gray-500", onClick: () => refetch() },
-        { icon: <Filter className="h-4 w-4" />, color: "text-gray-500" },
+        // { icon: <Filter className="h-4 w-4" />, color: "text-gray-500" },
         { icon: <ArrowUpDown className="h-4 w-4" />, color: isReversed ? "text-aqua font-bold" : "text-gray-500", onClick: () => setIsReversed(!isReversed) },
-        { icon: <MoreHorizontal className="h-4 w-4" /> },
+        // { icon: <MoreHorizontal className="h-4 w-4" /> },
         { icon: <FileText className="h-4 w-4" />, color: "text-red-500" },
     ];
 

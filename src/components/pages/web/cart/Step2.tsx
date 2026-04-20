@@ -33,7 +33,7 @@ const Step2 = () => {
     // Get coupon data from URL parameters
     const couponCode = searchParams.get('couponCode')
     const discountFromUrl = searchParams.get('discountAmount')
-    const discount = discountFromUrl ? parseFloat(discountFromUrl) : 25.00
+    const discount = discountFromUrl ? parseFloat(discountFromUrl) : 0
 
     // Dynamic calculation based on Redux items
     const subtotal = cartItems.reduce((acc: number, item: any) => acc + item.price * item.quantity, 0)
@@ -143,7 +143,7 @@ const Step2 = () => {
                 </div>
 
                 <div className="border border-gray-200 rounded-md p-6 space-y-6">
-                    <h2 className="text-xl font-semibold">{t("paymentMethod")}</h2>
+                    <h2 className="text-xl font-semibold">{t("paymentType")}</h2>
                     <div className="space-y-3">
                         {/* Commented out for now - backend only supports COD */}
                         {/* <div

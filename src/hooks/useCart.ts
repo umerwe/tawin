@@ -3,9 +3,12 @@ import { getCart, addToCart, updateCartQuantity, removeFromCart, clearCart } fro
 import { toast } from "sonner";
 
 export const useCart = () => {
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
   return useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
+    enabled: !!token,
   });
 };
 

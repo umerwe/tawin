@@ -51,12 +51,10 @@ export default function Cart() {
             </div>
 
             {currentStep === "1" ? (
-                <Step1 />
-            ) : currentStep === "2" ? (
-                <Step2 />
-            ) : (
-                <Step3 />
-            )}
+    <Step1 />
+) : (
+    <Step2 />
+)}
         </div>
     )
 }

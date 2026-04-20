@@ -61,11 +61,14 @@ export const useUserSignupByAdmin = () => {
 };
 
 export const useUserProfile = () => {
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") || localStorage.getItem("admin_token") : null;
+
   return useQuery({
     queryKey: ["userProfile"],
     queryFn: getUserProfile,
     staleTime: 5 * 60 * 1000,
     retry: 1,
+    enabled: !!token,
   });
 };
 

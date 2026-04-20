@@ -1,13 +1,6 @@
 "use client"
 
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -79,7 +72,7 @@ export function FilterBar({
                     <Label>{t("categories")}</Label>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <button className="h-[52px] px-4 rounded-full bg-gray-50 border border-transparent flex w-full sm:w-54 items-center justify-between gap-2 text-sm outline-none focus:ring focus:ring-purple-100 disabled:cursor-not-allowed disabled:opacity-50 ltr:text-left rtl:text-right">
+                            <button className="h-[52px] px-4 rounded-full bg-gray-50 border border-transparent cursor-pointer flex w-full sm:w-54 items-center justify-between gap-2 text-sm outline-none focus:ring focus:ring-purple-100 disabled:cursor-not-allowed disabled:opacity-50 ltr:text-left rtl:text-right">
                                 <span className="line-clamp-1">{getActiveCategoryLabel()}</span>
                                 <ChevronDownIcon className="size-4 opacity-50 shrink-0" />
                             </button>
@@ -107,8 +100,8 @@ export function FilterBar({
                                 if (hasSubcategories) {
                                     return (
                                         <DropdownMenuSub key={category._id}>
-                                            <DropdownMenuSubTrigger className="cursor-pointer py-2.5 ltr:pl-2 ltr:pr-8 rtl:pr-2 rtl:pl-8 focus:bg-purple-50 text-sm">
-                                                {category.name[locale]}
+                                            <DropdownMenuSubTrigger className="cursor-pointer">
+                                                <span>{category.name[locale]}</span>
                                             </DropdownMenuSubTrigger>
                                             <DropdownMenuPortal>
                                                 <DropdownMenuSubContent className="w-48">
@@ -116,11 +109,11 @@ export function FilterBar({
                                                         <DropdownMenuItem
                                                             key={sub._id}
                                                             onSelect={() => onCategoryChange(sub._id)}
-                                                            className="cursor-pointer flex items-center justify-between py-2.5 ltr:pl-2 ltr:pr-8 rtl:pr-2 rtl:pl-8 focus:bg-purple-50 text-sm"
+                                                            className="cursor-pointer flex items-center justify-between"
                                                         >
                                                             {sub.name[locale]}
                                                             {activeCategory === sub._id && (
-                                                                <Check className="size-4 text-aqua shrink-0" />
+                                                                <Check className="size-4 text-aqua" />
                                                             )}
                                                         </DropdownMenuItem>
                                                     ))}
@@ -134,9 +127,9 @@ export function FilterBar({
                                     <DropdownMenuItem
                                         key={category._id}
                                         onSelect={() => onCategoryChange(category._id)}
-                                        className="cursor-pointer flex items-center justify-between py-2.5 ltr:pl-2 ltr:pr-8 rtl:pr-2 rtl:pl-8 focus:bg-purple-50 text-sm"
+                                        className="cursor-pointer flex items-center justify-between"
                                     >
-                                        {category.name[locale]}
+                                        <span>{category.name[locale]}</span>
                                         {activeCategory === category._id && (
                                             <Check className="size-4 text-aqua shrink-0" />
                                         )}
@@ -148,7 +141,7 @@ export function FilterBar({
                 </div>
 
                 {/* Brand — unchanged */}
-                <div className="flex flex-col gap-2 flex-1 sm:flex-none">
+                {/* <div className="flex flex-col gap-2 flex-1 sm:flex-none">
                     <Label>{t("brand")}</Label>
                     <Select defaultValue="all">
                         <SelectTrigger className="w-full sm:w-54">
@@ -160,7 +153,7 @@ export function FilterBar({
                             <SelectItem value="brand2">{t("brandB")}</SelectItem>
                         </SelectContent>
                     </Select>
-                </div>
+                </div> */}
             </div>
         </div>
     )

@@ -130,7 +130,7 @@ export function DataTable<T>({
                 </Table>
             )}
 
-            {showPagination && pagination && !isLoading && (
+            {showPagination && pagination && !isLoading && Math.ceil((total ?? 0) / (limit ?? 10)) > 1 && (
                 <Pagination
                     pagination={{ total, page, limit }}
                     changePage={(newPage) => setPage(newPage)}

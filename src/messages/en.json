@@ -133,7 +133,7 @@
     "unavailableContactText": "Is what you're looking for unavailable? Contact us to get it for you as soon as possible.",
     "requestPlaceholder": "And write your request here.",
     "cartStep1": "Cart",
-    "cartStep2": "Checkout Details",
+    "cartStep2": "Checkout",
     "cartStep3": "Checkout",
     "originalPrice": "Original Price",
     "totalPrice": "Total Price",
@@ -551,7 +551,9 @@
     "delivered": "Delivered",
     "noDataFound": "No data found",
     "noFavorites": "No favorites found",
-    "noOrdersFound": "No orders found"
+    "noOrdersFound": "No orders found",
+    "paymentType": "Payment Type",
+    "noProductFound": "No product found"
   },
   "confirm": {
     "logout": {
@@ -580,6 +582,7 @@
       "totalOrders": "Total Orders",
       "status": "Status",
       "price": "Price",
+      "transferId": "Transfer ID",
       "user": "User",
       "userCode": "User Code",
       "orderDate": "Order Date",
@@ -600,6 +603,7 @@
       "totalRevenues": "Total Revenues",
       "process": "Process",
       "paymentMethod": "Payment Method",
+      "paymentType": "Payment Type",
       "transactions": "Transactions",
       "dateCreated": "Date Created",
       "operations": "Operations",

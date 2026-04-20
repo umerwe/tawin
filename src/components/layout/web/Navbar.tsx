@@ -200,7 +200,7 @@ export default function Navbar() {
               {navLinks.map((link) => {
                 if (link.label.toLowerCase() === "shop") {
                   return (
-                    <div key={link.href} className="relative">
+                    <div key={link.href} className="relative cursor-pointer">
                       <ShopDropdown isMain={false} />
                       {normalizedPath.startsWith("/shop") && (
                         <span className="absolute bottom-[-2px] left-0 w-full h-0.5 bg-aqua" />

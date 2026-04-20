@@ -13,7 +13,6 @@ import Container from "@/components/common/Container"
 import { useProducts, useProductsByCategory } from "@/hooks/useProducts"
 import { Product } from "@/types/product"
 import ProductSkeleton from "@/components/skeletons/ProductSkeleton"
-import { useSettings } from "@/hooks/useSettings"
 
 const Shop = () => {
     const t = useTranslations("translation");

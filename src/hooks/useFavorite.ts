@@ -3,9 +3,12 @@ import { getFavorites, toggleFavorite } from "@/services/favourite";
 import { toast } from "sonner";
 
 export const useFavorites = () => {
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  
   return useQuery({
     queryKey: ["favorites"],
     queryFn: getFavorites,
+    enabled: !!token,
   });
 };
 
