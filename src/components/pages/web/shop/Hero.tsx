@@ -5,28 +5,12 @@ import { useGetCategoryById } from "@/hooks/useCategories"
 import Breadcrumb from '@/components/ui/breadcrumb'
 import Image from '@/components/MyImage'
 import { useSettings } from "@/hooks/useSettings"
+import { HeroSkeleton } from "@/components/skeletons/HeroSkeleton"
 
 interface HeroProps {
     activeCategory: string | null;
     isLoading?: boolean;
 }
-
-const HeroSkeleton = () => (
-    <section className="relative h-[400px] md:h-[600px] w-full overflow-hidden bg-gray-200 animate-pulse">
-        <div className="absolute inset-0 bg-gray-300/60" />
-        <div className="absolute inset-0 flex items-center justify-center px-4">
-            <div className="flex flex-col items-center space-y-4 w-full">
-                {/* Breadcrumb Skeleton */}
-                <div className="h-4 w-32 rounded-md bg-gray-400/50" />
-                {/* Title Skeleton */}
-                <div className="h-10 md:h-12 w-3/4 max-w-md rounded-md bg-gray-400/50" />
-                {/* Subtitle Skeleton Lines */}
-                <div className="h-4 w-full max-w-lg rounded-md bg-gray-400/50" />
-                <div className="h-4 w-2/3 max-w-sm rounded-md bg-gray-400/50" />
-            </div>
-        </div>
-    </section>
-)
 
 const Hero = ({ activeCategory, isLoading }: HeroProps) => {
     const locale = useLocale() as "en" | "ar";
@@ -37,7 +21,7 @@ const Hero = ({ activeCategory, isLoading }: HeroProps) => {
     const { data: categoryData, isLoading: isCategoryLoading } = useGetCategoryById(activeCategory || "");
 
     if (isLoading || isCategoryLoading) {
-        return <HeroSkeleton />
+        return <HeroSkeleton variant="shop" />
     }
 
     const title = categoryData?.name[locale] || settingsData?.header?.shop?.text?.[locale];
@@ -66,10 +50,10 @@ const Hero = ({ activeCategory, isLoading }: HeroProps) => {
                             { title: t("breadcrumbShop") },
                         ]}
                     />
-                    <h1 className="text-2xl md:text-4xl font-semibold text-white leading-tight">
+                    <h1 className="text-2xl md:text-4xl font-semibold text-white leading-tight capitalize">
                         {title}
                     </h1>
-                    <p className="text-base max-w-2xl mx-auto text-white/90">
+                    <p className="text-base max-w-2xl mx-auto text-white/90 first-letter:uppercase">
                         {subTitle}
                     </p>
                 </div>

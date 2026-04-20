@@ -100,7 +100,7 @@ const Shop = () => {
                         <Button
                             variant="link"
                             className="mt-2 text-aqua"
-                            onClick={() => window.location.href = '/shop'}
+                            onClick={() => router.push('/shop')}
                         >
                             {t("viewAllProducts")}
                         </Button>

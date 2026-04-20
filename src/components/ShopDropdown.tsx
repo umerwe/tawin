@@ -53,16 +53,9 @@ export function ShopDropdown({ isMain }: { isMain: boolean }) {
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent className="w-48">
-                    {/* Option to view all in this category */}
-                    {/* <DropdownMenuItem asChild>
-                      <Link href={`/shop?category=${category._id}`} className="font-semibold text-aqua">
-                        {t("viewAll")}
-                      </Link>
-                    </DropdownMenuItem> */}
-
                     {category.subcategories.map((sub: any) => (
                       <DropdownMenuItem key={sub._id} asChild>
-                        <Link href={`/shop?category=${category._id}`}>
+                        <Link href={`/shop?category=${sub._id}`}>
                           {sub?.name?.[locale]}
                         </Link>
                       </DropdownMenuItem>
@@ -73,7 +66,7 @@ export function ShopDropdown({ isMain }: { isMain: boolean }) {
             );
           }
 
-          // If no subcategories, render as a direct navigation link
+          // If no subcategories, render as a direct navigation link to category
           return (
             <DropdownMenuItem key={category._id} asChild>
               <Link href={`/shop?category=${category._id}`} className="cursor-pointer w-full">

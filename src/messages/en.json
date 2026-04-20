@@ -549,7 +549,9 @@
     "editBrand": "Edit Brand",
     "shipped": "Shipped",
     "delivered": "Delivered",
-    "noDataFound": "No data found"
+    "noDataFound": "No data found",
+    "noFavorites": "No favorites found",
+    "noOrdersFound": "No orders found"
   },
   "confirm": {
     "logout": {

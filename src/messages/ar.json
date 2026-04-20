@@ -549,7 +549,9 @@
     "editBrand": "تعديل العلامة التجارية",
     "shipped": "تم الشحن",
     "delivered": "تم التسليم",
-    "noDataFound": "لا توجد بيانات"
+    "noDataFound": "لا توجد بيانات",
+    "noFavorites": "لا توجد مفضلة",
+    "noOrdersFound": "لا توجد طلبات"
   },
   "confirm": {
     "logout": {

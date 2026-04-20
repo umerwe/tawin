@@ -21,14 +21,13 @@ export default function FavoritesList() {
     const favorites = favResponse?.data || [];
 
     if (isLoading) {
-        return <div className="py-10 text-center text-gray-500">{t("loading")}</div>;
+        return <div className="min-h-[514px] flex items-center justify-center text-center text-gray-500">{t("loading")}</div>;
     }
 
     if (favorites.length === 0) {
         return (
-            <div className="py-20 text-center space-y-4 animate-in fade-in duration-300">
-                <h2 className="text-xl font-semibold text-gray-900">{t("favorites")}</h2>
-                <p className="text-gray-400 text-sm">{t("noFavorites") ?? "Your wishlist is empty"}</p>
+            <div className="min-h-[514px] flex items-center justify-center text-center space-y-4 animate-in fade-in duration-300">
+                <p className="text-gray-400 text-sm">{t("noFavorites")}</p>
             </div>
         );
     }

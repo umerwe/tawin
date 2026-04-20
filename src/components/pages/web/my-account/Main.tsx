@@ -130,7 +130,7 @@ export default function MyAccount() {
                   <button
                     key={item.id}
                     onClick={() => setTab(item.id)}
-                    className={`w-full ltr:text-left rtl:text-right py-3 px-2 text-sm transition-all relative ${currentTab === item.id
+                    className={`w-full ltr:text-left rtl:text-right py-3 px-2 text-sm cursor-pointer transition-all relative ${currentTab === item.id
                       ? "text-aqua font-semibold"
                       : "text-gray-500 hover:text-gray-900"
                       }`}
