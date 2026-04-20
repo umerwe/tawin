@@ -45,7 +45,7 @@ const CouponsTable = ({
         {item.type || "-"}
       </TableCell>
       <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
-        {item.type === "percentage" ? `%${item.value}` : `${item.value} QAR`}
+        {item.type === "percentage" ? `${item.value}%` : `${item.value} QAR`}
       </TableCell>
       <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
         {item.minOrderAmount || 0}
@@ -119,7 +119,7 @@ const CouponsTable = ({
         isLoading={isLoading}
         headerClassName="bg-aqua/5 border-none"
         pagination={{ 
-          total: meta?.total || 0, 
+          total: meta?.totalDocs || 0, 
           page: meta?.page || 1, 
           limit: meta?.limit || 10, 
           setPage 

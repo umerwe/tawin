@@ -23,8 +23,8 @@ const ConstructionBasket = () => {
 
   const { data, isLoading, refetch, isFetching } = useAdminBasketRequests(queryParams);
 
-  const rawData = data?.data?.data || [];
-  const meta = data?.data?.meta || {};
+  const rawData = data?.data || [];
+  const meta = data?.meta || {};
   
   const displayedData = useMemo(() => {
     if (!rawData) return [];

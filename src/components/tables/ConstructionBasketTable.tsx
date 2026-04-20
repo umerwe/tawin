@@ -4,8 +4,7 @@ import { useState } from "react";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 import { cn } from "@/lib/utils";
-import { MessageSquare, Trash2, CheckCircle, XCircle, Clock, Package, Truck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Trash2, CheckCircle, XCircle, Clock, Package, Truck } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -32,20 +31,7 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
         },
       }
     );
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "pending": return <Clock size={14} className="text-orange-500" />;
-      case "processing": return <Package size={14} className="text-blue-500" />;
-      case "shipped": return <Truck size={14} className="text-purple-500" />;
-      case "delivered": return <CheckCircle size={14} className="text-green-500" />;
-      case "cancelled": return <XCircle size={14} className="text-red-500" />;
-      case "approved": return <CheckCircle size={14} className="text-green-500" />;
-      case "rejected": return <XCircle size={14} className="text-red-500" />;
-      default: return null;
-    }
-  };
+  }
 
   return (
     <Select
@@ -60,7 +46,6 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-2">
-          {getStatusIcon(currentStatus)}
           <SelectValue />
         </div>
       </SelectTrigger>
@@ -196,14 +181,14 @@ const ConstructionBasketTable = ({
 
       <TableCell>
         <div className="flex items-center gap-2">
-          <Button
+          {/* <Button
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-gray-400 hover:text-aqua"
             onClick={() => handleRowClick(item)}
           >
             <MessageSquare size={16} />
-          </Button>
+          </Button> */}
           <div onClick={(e) => e.stopPropagation()}>
             <ConfirmDialog
               title={tConfirm("delete.title", { value: t("basket") })}

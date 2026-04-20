@@ -11,7 +11,6 @@ import {
     CirclePlus,
     ChevronLeft,
     ChevronRight,
-    MoreVertical
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -24,6 +23,7 @@ import { useLowStockProducts } from "@/hooks/useProducts";
 import { useDebounce } from "@/hooks/useDebounce";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import CategoryFormDialog from "@/components/dialog/CategoryFormDialog";
 
 const CATEGORY_PAGE_SIZE = 8;
 
@@ -32,6 +32,8 @@ const LowStock = () => {
     const t = useTranslations("translation");
 
     const [activeTab, setActiveTab] = useState("All Products");
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [isReversed, setIsReversed] = useState(false);
@@ -46,18 +48,21 @@ const LowStock = () => {
         isAdmin: true,
     });
 
-    const categories = categoriesData?.data?.categories || [];
-    const categoryTotalPages = categoriesData?.data?.pagination?.pages ?? 1;
+    const categories = categoriesData?.data || [];
+    const categoryTotalPages = categoriesData?.meta?.totalPages ?? 1;
 
     // Low Stock Products
-    const queryParams = useMemo(() => ({
-        allProducts: activeTab === "All Products",
-        featuredProducts: activeTab === "Featured Products",
-        reduced: activeTab === "Reduced",
-        outOfStock: activeTab === "Out of Stock",
-        page,
-        search: debouncedSearch,
-    }), [activeTab, page, debouncedSearch]);
+    const queryParams = useMemo(() => {
+        const rawParams = {
+            featuredProducts: activeTab === "Featured Products" || undefined,
+            reduced: activeTab === "Reduced" || undefined,
+            outOfStock: activeTab === "Out of Stock" || undefined,
+            page,
+            search: debouncedSearch || undefined,
+        };
+
+        return rawParams;
+    }, [activeTab, page, debouncedSearch]);
 
     const { data: productsData, isLoading: productsLoading, refetch, isFetching } = useLowStockProducts(queryParams);
     const products = productsData?.data || [];
@@ -87,22 +92,14 @@ const LowStock = () => {
         <div className="space-y-6 p-1">
             {/* Header */}
             <div className="flex items-center justify-end gap-3">
-                <Button variant="outline" size="sm" className="w-32">
-                    <MoreVertical className="h-4 w-4 mr-2" /> {t('more')}
-                </Button>
-                <Button onClick={() => router.push("/admin/products/add")} variant="primary" className="w-44" size="sm">
-                    <Plus className="h-4 w-4 mr-2" /> {t('addProduct')}
+                <Button variant="primary" className="w-32" onClick={() => setIsAddDialogOpen(true)} size="sm">
+                    <Plus className="h-4 w-4 mr-2" /> {t('addCategory')}
                 </Button>
             </div>
 
             {/* Category Grid with backend pagination */}
             <div>
-                <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm text-muted-foreground">
-                        {!categoriesLoading && categoriesData?.data?.pagination
-                            ? `${categoriesData.data.pagination.total} ${t("categories") || "categories"}`
-                            : ""}
-                    </span>
+                <div className="flex items-center justify-end mb-3">
                     <div className="flex items-center gap-1.5">
                         <Button
                             variant="outline"
@@ -184,7 +181,7 @@ const LowStock = () => {
                         <Button
                             variant="primary"
                             size="sm"
-                            className="w-full lg:w-40 gap-2 shrink-0 h-9"
+                            className="w-full lg:w-auto gap-2 shrink-0 h-9"
                             onClick={() => router.push("/admin/products/add")}
                         >
                             <span className="truncate">{t("addProduct")}</span>
@@ -204,6 +201,9 @@ const LowStock = () => {
                     />
                 </CardContent>
             </Card>
+
+            <CategoryFormDialog open={isAddDialogOpen} onClose={() => setIsAddDialogOpen(false)} />
+
         </div>
     );
 };

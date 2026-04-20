@@ -24,25 +24,30 @@ interface ProductTableProps {
   setPage: (p: number) => void;
 }
 
-
 const ProductTable = ({ activeTab, data, isLoading, pagination, page, setPage }: ProductTableProps) => {
   const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
-
   const router = useRouter();
 
-  const cols = ["no", "product", "price", "dateCreated", "operations"];
+  const cols = ["no", "product", "price", "dateCreated", "actions"];
 
   const filteredData = data.filter((item) => {
     if (activeTab === "All Products") return true;
     return item.status?.en === activeTab;
   });
 
+  // Navigation handler
+  const handleNavigate = (locale: string, slug: string) => {
+    router.push(`/${locale}/admin/product-list/${slug}`);
+  };
+
   const row = (item: any, index: number, locale: "en" | "ar") => (
     <>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>
+      <TableCell className="cursor-pointer" onClick={() => handleNavigate(locale, item.slug)}>
+        {index + 1}
+      </TableCell>
+      <TableCell className="cursor-pointer" onClick={() => handleNavigate(locale, item.slug)}>
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 relative overflow-hidden">
+          <div className="h-8 w-8 relative overflow-hidden rounded-md border">
             <Image
               src={item?.photo || ""}
               alt={item.title[locale]}
@@ -53,15 +58,21 @@ const ProductTable = ({ activeTab, data, isLoading, pagination, page, setPage }:
           <span className="font-medium text-sm capitalize">{item.title[locale]}</span>
         </div>
       </TableCell>
-      <TableCell className="text-sm font-medium">${item.price}</TableCell>
-      <TableCell className="text-sm">{new Date(item.createdAt?.$date || item.createdAt).toLocaleDateString()}</TableCell>
-      <TableCell>
+      <TableCell className="text-sm font-medium cursor-pointer" onClick={() => handleNavigate(locale, item.slug)}>
+        ${item.price}
+      </TableCell>
+      <TableCell className="text-sm cursor-pointer" onClick={() => handleNavigate(locale, item.slug)}>
+        {new Date(item.createdAt?.$date || item.createdAt).toLocaleDateString()}
+      </TableCell>
+      
+      {/* Actions Cell - Stop propagation here so clicking buttons doesn't trigger the row navigation */}
+      <TableCell onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-gray-400 hover:text-aqua"
-            onClick={() => router.push(`/${locale}/admin/product-list/${item.slug}`)}
+            onClick={() => handleNavigate(locale, item.slug)}
           >
             <Edit3 size={16} />
           </Button>

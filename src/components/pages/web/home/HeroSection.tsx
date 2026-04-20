@@ -20,6 +20,7 @@ const HeroSection = () => {
     const locale = useLocale();
 
     const { data, isLoading } = useSettings();
+    
     const settings = data?.header?.home
 
     if (isLoading) {

@@ -24,9 +24,9 @@ export default function Navbar() {
         <div className="flex items-center gap-3 md:gap-4">
           
           {/* SearchInput: Hidden on mobile/small screens, shows on large */}
-          <div className="hidden lg:block">
+          {/* <div className="hidden lg:block">
             <SearchInput placeholder={t("search")} className="w-[320px]" />
-          </div>
+          </div> */}
 
           <div className="flex items-center gap-3 md:gap-4">
             <LanguageSwitcher />

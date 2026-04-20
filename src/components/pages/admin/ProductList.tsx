@@ -53,19 +53,22 @@ const ProductList = () => {
         isAdmin: true,
     });
 
-    const categories = categoriesData?.data?.categories || [];
-    const categoryTotalPages = categoriesData?.data?.pagination?.pages ?? 1;
+    const categories = categoriesData?.data || [];
+    const categoryTotalPages = categoriesData?.meta?.totalPages ?? 1;
 
 
     // Products Logic
-    const queryParams = useMemo(() => ({
-        allProducts: activeTab === "All Products",
-        featuredProducts: activeTab === "Featured Products",
-        reduced: activeTab === "Reduced",
-        outOfStock: activeTab === "Out of Stock",
-        page,
-        search: debouncedSearch,
-    }), [activeTab, page, debouncedSearch]);
+    const queryParams = useMemo(() => {
+        const rawParams = {
+            featuredProducts: activeTab === "Featured Products" || undefined,
+            reduced: activeTab === "Reduced" || undefined,
+            outOfStock: activeTab === "Out of Stock" || undefined,
+            page,
+            search: debouncedSearch || undefined,
+        };
+        
+        return rawParams;
+    }, [activeTab, page, debouncedSearch]);
 
     const { data: productsData, isLoading: productsLoading, refetch, isFetching } = useProducts(queryParams);
     const products = productsData?.data || [];
@@ -105,7 +108,7 @@ const ProductList = () => {
                 <div className="flex items-center justify-between mb-3">
                     <span className="text-sm text-muted-foreground">
                         {!categoriesLoading && categoriesData?.meta
-                            ? `${categoriesData.meta.totalDocs} ${t("categories") || "categories"}`
+                            ? `${categoriesData.meta.total} ${t("categories") || "categories"}`
                             : ""}
                     </span>
                     <div className="flex items-center gap-1.5">
@@ -175,7 +178,7 @@ const ProductList = () => {
                                 ))}
                             </div>
                         </div>
-                        <Button variant="primary" size="sm" className="w-full lg:w-40 gap-2 shrink-0 h-9" onClick={() => router.push("/admin/products/add")}>
+                        <Button variant="primary" size="sm" className="w-full lg:w-auto gap-2 shrink-0 h-9" onClick={() => router.push("/admin/products/add")}>
                             <span className="truncate">{t("addProduct")}</span>
                             <CirclePlus className="h-3 w-3" />
                         </Button>

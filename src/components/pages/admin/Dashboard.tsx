@@ -1,15 +1,17 @@
 "use client"
 import StatsCard from "@/components/card/StatsCard";
-import WeeklyReportChart from "@/components/charts/DashboardChart";
+import DashboardChart from "@/components/charts/DashboardChart";
 import SalesByRegion from "@/components/charts/SalesByRegion";
 import TopCategories from "./TopCategories";
 import FinancialTransfers from "../../FinancialTransfers";
-import AddNewProduct from "./AddNewProduct";
 import TopSellingProducts from "./TopSellingProducts";
 import { useGetAdminSummary } from "@/hooks/useAdmin";
+import DashboardSkeleton from "@/components/skeletons/DashboardSkeleton";
 
 const Dashboard = () => {
-  const { data: adminSummary } = useGetAdminSummary();
+  const { data: adminSummary, isLoading } = useGetAdminSummary();
+
+  if (isLoading) return <DashboardSkeleton />;
 
   const stats = adminSummary?.data?.stats || [];
   const categories = adminSummary?.data?.categories || [];
@@ -56,8 +58,8 @@ const Dashboard = () => {
     { label: { en: "Low Stock", ar: "مخزون منخفض" }, value: report?.inventory?.lowStock || 0 },
     { label: { en: "Out of Stock", ar: "نفدت الكمية" }, value: report?.inventory?.outOfStock || 0 },
     { label: { en: "Total Customers", ar: "إجمالي العملاء" }, value: report?.inventory?.totalCustomers || 0 },
-    { label: { en: "Total Sales", ar: "إجمالي المبيعات" }, value: report?.inventory?.totalSales || 0 },
-];
+    { label: { en: "Total Sales", ar: "إجمالي المبيعات" }, value: `$${report?.inventory?.totalSales || 0}` },
+  ];
 
   return (
     <div className="space-y-6">
@@ -72,7 +74,7 @@ const Dashboard = () => {
       {/* Grid for Chart and Regional Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <WeeklyReportChart
+          <DashboardChart
             statsData={inventoryStats}
             chartData={report?.revenueHistory}
           />

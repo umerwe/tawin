@@ -11,8 +11,8 @@ import { useTranslations } from "next-intl";
 import AddBrandDialog from "@/components/dialog/AddBrandDialog";
 import { useGetCategories } from "@/hooks/useCategories";
 import { useBrands } from "@/hooks/useBrand";
-import { SpinnerLoader } from "@/components/common/SpinnerLoader";
 import { useDebounce } from "@/hooks/useDebounce";
+import CategoryFormDialog from "@/components/dialog/CategoryFormDialog";
 
 const CATEGORY_PAGE_SIZE = 8;
 
@@ -43,11 +43,11 @@ const Brand = () => {
         isAdmin: true,
     });
 
-    const brandsList = brandsResponse?.data?.data || [];
-    const brandsMeta = brandsResponse?.data?.meta || { totalPages: 1, page: 1 };
+    const brandsList = brandsResponse?.data || [];
+    const brandsMeta = brandsResponse?.meta;
 
-    const categories = categoriesData?.data?.categories || [];
-    const categoryTotalPages = categoriesData?.data?.pagination?.pages ?? 1;
+    const categories = categoriesData?.data || [];
+    const categoryTotalPages = categoriesData?.meta?.totalPages ?? 1;
 
     const displayedBrands = useMemo(() => {
         if (!brandsList) return [];
@@ -56,17 +56,12 @@ const Brand = () => {
 
     return (
         <div className="space-y-6 p-1">
-            {/* Header */}
             <div className="flex items-center justify-end gap-3">
-                <Button variant="outline" size="sm" className="w-32">
-                    <MoreVertical className="h-4 w-4 mr-2" /> {t('more')}
-                </Button>
-                <Button variant="primary" className="w-44" size="sm" onClick={() => setIsAddDialogOpen(true)}>
-                    <Plus className="h-4 w-4 mr-2" /> {t('addBrand')}
+                <Button variant="primary" className="w-fit" size="sm" onClick={() => setIsAddDialogOpen(true)}>
+                    <Plus className="h-4 w-4 mr-2" /> {t('addCategory')}
                 </Button>
             </div>
 
-            {/* Category Grid with backend pagination */}
             <div>
                 <div className="flex items-center justify-end mb-3">
                     <div className="flex items-center gap-1.5">
@@ -102,7 +97,6 @@ const Brand = () => {
                 </div>
             </div>
 
-            {/* Brands Table Card */}
             <Card className="border shadow-none overflow-hidden">
                 <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <FilterSection
@@ -124,7 +118,7 @@ const Brand = () => {
                         isFetching={isFetching}
                     />
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-0 sm:p-6">
                     <BrandsTable
                         activeTab={activeTab}
                         data={displayedBrands}
@@ -136,6 +130,9 @@ const Brand = () => {
             </Card>
 
             <AddBrandDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />
+
+            <CategoryFormDialog open={isAddDialogOpen} onClose={() => setIsAddDialogOpen(false)} />
+
         </div>
     );
 };

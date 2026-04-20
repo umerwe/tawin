@@ -5,7 +5,7 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianG
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations, useLocale } from "next-intl";
 
-export default function WeeklyReportChart({ 
+export default function DashboardChart({ 
     statsData, 
     chartData,
     title 
@@ -50,9 +50,6 @@ export default function WeeklyReportChart({
                                 <div className="text-xs text-gray-400 mt-1 uppercase tracking-wider">
                                     {typeof stat.label === 'object' ? stat.label[locale] : stat.label}
                                 </div>
-                                {stat.active && (
-                                    <div className="absolute -bottom-[14px] left-0 right-0 h-[3px] bg-aqua rounded-full" />
-                                )}
                             </div>
                         ))}
                     </div>

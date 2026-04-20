@@ -95,7 +95,7 @@ const SuppliersTable = ({
         isLoading={isLoading}
         headerClassName="bg-aqua/5 border-none"
         pagination={{
-          total: pagination?.total || data.length,
+          total: pagination?.totalDocs || data.length,
           page : pagination?.page || 1,
           limit: pagination?.limit || 10,
           setPage,

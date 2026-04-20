@@ -24,7 +24,7 @@ export const getAdminBasketRequests = async (params?: {
   search?: string;
 }) => {
   const { data } = await api.get("/api/admin/construction-basket-requests", { params });
-  return data;
+  return data.data;
 };
 
 export const updateBasketRequestStatus = async (id: string, status: string) => {

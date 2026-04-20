@@ -35,8 +35,8 @@ const Coupons = () => {
   const { data: stats } = useCouponStatsAdmin();
   const { data, isLoading, refetch, isFetching } = useCouponsAdmin(queryParams);
 
-  const couponsData = data?.data?.coupons || [];
-  const meta = data?.data?.pagination;
+  const couponsData = data?.data || [];
+  const meta = data?.meta;
 
   const displayedCoupons = useMemo(() => {
     if (!couponsData) return [];

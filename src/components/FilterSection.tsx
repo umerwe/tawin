@@ -128,7 +128,7 @@ const FilterSection = ({
                 {t("allReviews")}
                 <span className="ms-1 text-aqua font-bold">({reviewsTotal})</span>
               </Button>
-              {[5, 4, 3, 2, 1].map((star) => (
+              {[1,2,3,4,5].map((star) => (
                 <Button
                   key={star}
                   variant="ghost"
@@ -202,7 +202,7 @@ const FilterSection = ({
             <Button
               variant="primary"
               size="sm"
-              className="w-full lg:w-40 gap-2 shrink-0 h-9"
+              className="w-full lg:w-auto gap-2 shrink-0 h-9"
               onClick={() => setIsAddDialogOpen(true)}
             >
               <span className="truncate">

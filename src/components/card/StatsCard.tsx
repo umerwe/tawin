@@ -77,7 +77,7 @@ const StatsCard = ({ data, isHome = false }: StatCardProps) => {
         <div className="flex flex-col">
           <div className="flex items-center gap-3">
             <span className="text-2xl font-bold">{value}</span>
-            <span className={cn(
+            {/* <span className={cn(
               "text-xs font-medium flex items-center gap-1",
               isUp ? "text-aqua" : "text-red-500"
             )}>
@@ -85,12 +85,12 @@ const StatsCard = ({ data, isHome = false }: StatCardProps) => {
                 {isUp ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
               </div>
               {trend}
-            </span>
+            </span> */}
           </div>
 
-          <span className="text-sm text-muted-foreground whitespace-nowrap pt-3">
+          {/* <span className="text-sm text-muted-foreground whitespace-nowrap pt-3">
             {subtitle}
-          </span>
+          </span> */}
         </div>
       </CardContent>
     </Card>

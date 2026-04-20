@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 const SalesByRegion = ({ data }: { data: any[] }) => {
- const router = useRouter();
+  const router = useRouter();
   const t = useTranslations("translation");
 
   const totalSales = (data || []).reduce((sum, r) => sum + (r.totalSales || 0), 0);
@@ -57,7 +57,7 @@ const SalesByRegion = ({ data }: { data: any[] }) => {
                         ? `${(region.totalSales / 1000).toFixed(1)}k`
                         : region.totalSales}
                     </span>
-                    <span className="text-muted-foreground">{region.city}</span>
+                    <span className="text-muted-foreground capitalize">{region.city}</span>
                   </div>
                   <span className="text-aqua">▲ {percentage}%</span>
                 </div>
