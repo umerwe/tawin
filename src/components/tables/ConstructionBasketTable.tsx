@@ -56,30 +56,6 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
             <span>{t("pending")}</span>
           </div>
         </SelectItem>
-        <SelectItem value="processing" className="cursor-pointer">
-          <div className="flex items-center gap-2">
-            <Package size={14} className="text-blue-500" />
-            <span>{t("processing")}</span>
-          </div>
-        </SelectItem>
-        <SelectItem value="shipped" className="cursor-pointer">
-          <div className="flex items-center gap-2">
-            <Truck size={14} className="text-purple-500" />
-            <span>{t("shipped")}</span>
-          </div>
-        </SelectItem>
-        <SelectItem value="delivered" className="cursor-pointer">
-          <div className="flex items-center gap-2">
-            <CheckCircle size={14} className="text-green-500" />
-            <span>{t("delivered")}</span>
-          </div>
-        </SelectItem>
-        <SelectItem value="cancelled" className="cursor-pointer">
-          <div className="flex items-center gap-2">
-            <XCircle size={14} className="text-red-500" />
-            <span>{t("cancelled")}</span>
-          </div>
-        </SelectItem>
         <SelectItem value="approved" className="cursor-pointer">
           <div className="flex items-center gap-2">
             <CheckCircle size={14} className="text-green-500" />
@@ -140,7 +116,7 @@ const ConstructionBasketTable = ({
     });
   };
 
-  const row = (item: any, index: number) => (
+  const row = (item: any) => (
     <>
       <TableCell
         className="text-muted-foreground cursor-pointer"

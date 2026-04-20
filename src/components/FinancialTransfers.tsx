@@ -7,7 +7,7 @@ import { DataTable } from "@/components/DataTable";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
-const FinancialTransfers = ({data}: {data: any}) => {
+const FinancialTransfers = ({data, currencySymbol}: {data: any, currencySymbol?: string}) => {
   const t = useTranslations("translation");
   
   const cols = ["no", "email", "orderDate", "status", "totalAmount"];
@@ -28,7 +28,7 @@ const FinancialTransfers = ({data}: {data: any}) => {
             </span>
           </div>
         </TableCell>
-        <TableCell className="font-semibold">${item.totalAmount?.toLocaleString()}</TableCell>
+        <TableCell className="font-semibold">{currencySymbol}{item.totalAmount?.toLocaleString()}</TableCell>
       </>
     );
   };

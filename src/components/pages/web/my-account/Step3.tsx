@@ -3,18 +3,20 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useTranslations } from "next-intl";
 import { useGetOrders } from "@/hooks/useOrder";
+import { useSettings } from "@/hooks/useSettings";
 
 export default function OrderHistory() {
   const t = useTranslations("translation");
-  
+
   // Integrating API
+  const { data: settings } = useSettings();
   const { data: response, isLoading } = useGetOrders();
   const orders = response?.data || [];
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       <h2 className="text-lg font-semibold text-gray-900">{t("orderHistory")}</h2>
-      
+
       <div className="border border-gray-100 rounded-2xl overflow-hidden">
         <Table>
           <TableHeader>
@@ -52,7 +54,7 @@ export default function OrderHistory() {
                     <span className="capitalize">{order.status}</span>
                   </TableCell>
                   <TableCell className="text-sm font-semibold py-4">
-                    ${order.finalAmount}
+                    {settings?.currencySymbol}{order.finalAmount}
                   </TableCell>
                 </TableRow>
               ))

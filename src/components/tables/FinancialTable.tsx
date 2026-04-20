@@ -17,6 +17,7 @@ import ConfirmDialog from "../dialog/ConfirmDialog";
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useUpdateFinancialTransferStatus } from "@/hooks/useFinancialTransfer";
+import { useSettings } from "@/hooks/useSettings";
 
 interface FinancialTableProps {
   data: any[];
@@ -37,12 +38,13 @@ const FinancialTable = ({
   onDelete, 
   isDeleting 
 }: FinancialTableProps) => {
+  const {data: settings} = useSettings();
   const [selectedTransaction, setSelectedTransaction] = useState<any | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const tConfirm = useTranslations("confirm");
   const { mutate: updateTransferStatus } = useUpdateFinancialTransferStatus();
 
-  const cols = ["transferId", "user", "amount", "status", "date", "action"];
+  const cols = ["transferId", "user", "amount", "status", "date"];
 
   const handleViewDetails = (item: any) => {
     setSelectedTransaction(item);
@@ -134,7 +136,7 @@ const FinancialTable = ({
           </div>
         </TableCell>
         <TableCell className="cursor-pointer font-semibold" onClick={() => handleViewDetails(item)}>
-          ${item.totalAmount}
+          {settings?.currencySymbol}{item.totalAmount}
         </TableCell>
         <TableCell className="capitalize" onClick={(e) => e.stopPropagation()}>
           {item.status}
@@ -142,33 +144,6 @@ const FinancialTable = ({
         </TableCell>
         <TableCell className="cursor-pointer" onClick={() => handleViewDetails(item)}>
           {formattedDate}
-        </TableCell>
-        {/* Action Column */}
-        <TableCell>
-          <div onClick={(e) => e.stopPropagation()}>
-            <ConfirmDialog
-              title={tConfirm("delete.title", { value: "Financial Transfer" })}
-              description={tConfirm("delete.description", { value: "this financial transfer" })}
-              variant="destructive"
-              loading={isDeleting}
-              onConfirm={(closeDialog) => {
-                if (onDelete) {
-                  onDelete(item._id, closeDialog);
-                } else {
-                  console.log("Delete ID:", item._id);
-                  closeDialog();
-                }
-              }}
-              asChild
-            >
-              <button
-                className="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-md hover:bg-red-50 cursor-pointer disabled:opacity-50"
-                title="Delete Transfer"
-              >
-                <Trash2 size={18} />
-              </button>
-            </ConfirmDialog>
-          </div>
         </TableCell>
       </>
     );
@@ -196,6 +171,7 @@ const FinancialTable = ({
         transaction={selectedTransaction}
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
+        currencySymbol={settings?.currencySymbol || "$"}
       />
     </>
   );

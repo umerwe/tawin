@@ -553,7 +553,10 @@
     "delivered": "تم التسليم",
     "noDataFound": "لا توجد بيانات",
     "noFavorites": "لا توجد مفضلة",
-    "noOrdersFound": "لا توجد طلبات"
+    "noOrdersFound": "لا توجد طلبات",
+    "currency": "العملة",
+    "currencySymbol": "رمز العملة",
+    "transferId": "معرف التحويل"
   },
   "confirm": {
     "logout": {

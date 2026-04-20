@@ -79,14 +79,18 @@ const Shop = () => {
                             ))}
                         </div>
 
-                        <div className="flex items-center justify-center">
-                            <Button
-                                className="border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-10 rounded-full"
-                                size="sm"
-                            >
-                                {t("showMore")}
-                            </Button>
-                        </div>
+                        {
+                            data.length > 8 && (
+                                <div className="flex items-center justify-center">
+                                    <Button
+                                        className="border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-10 rounded-full"
+                                        size="sm"
+                                    >
+                                        {t("showMore")}
+                                    </Button>
+                                </div>
+                            )
+                        }
                     </>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-20 text-center">

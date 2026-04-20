@@ -10,9 +10,10 @@ type PaymentSummaryProps = {
     discountAmount: number
     appliedCoupon: any
     setStep: (step: string) => void
+    currencySymbol: string
 }
 
-const PaymentSummary = ({ subtotal, total, discountAmount, appliedCoupon, setStep }: PaymentSummaryProps) => {
+const PaymentSummary = ({ subtotal, total, discountAmount, appliedCoupon, setStep, currencySymbol }: PaymentSummaryProps) => {
     const t = useTranslations("translation");
 
     return (
@@ -59,19 +60,19 @@ const PaymentSummary = ({ subtotal, total, discountAmount, appliedCoupon, setSte
                 <div className="space-y-4 pt-4 border-t border-gray-50">
                     <div className="flex justify-between items-center">
                         <span className="text-base text-gray-400">{t("originalPrice")}</span>
-                        <span className="text-lg font-semibold text-gray-900">${subtotal.toFixed(2)}</span>
+                        <span className="text-lg font-semibold text-gray-900">{currencySymbol}{subtotal.toFixed(2)}</span>
                     </div>
                     
                     {discountAmount > 0 && (
                         <div className="flex justify-between items-center">
                             <span className="text-base text-green-600">{t("discount")}</span>
-                            <span className="text-lg font-semibold text-green-600">-${discountAmount.toFixed(2)}</span>
+                            <span className="text-lg font-semibold text-green-600">-{currencySymbol}{discountAmount.toFixed(2)}</span>
                         </div>
                     )}
                     
                     <div className="flex justify-between items-center border-t border-gray-50 pt-4">
                         <span className="text-base text-gray-400 font-medium">{t("totalPrice")}</span>
-                        <span className="text-xl font-semibold text-gray-900">${total.toFixed(2)}</span>
+                        <span className="text-xl font-semibold text-gray-900">{currencySymbol}{total.toFixed(2)}</span>
                     </div>
                 </div>
 

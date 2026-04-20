@@ -56,7 +56,7 @@ export const MultilingualInput = ({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <Label className="text-gray-700 font-medium">{label}</Label>
+        <Label>{label}</Label>
         <div className="flex gap-1">
           <LangButton l="en" />
           <LangButton l="ar" />

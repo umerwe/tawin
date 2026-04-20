@@ -18,6 +18,7 @@ import ConfirmDialog from "@/components/dialog/ConfirmDialog"; // Assuming this 
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useUpdateOrderStatus } from "@/hooks/useOrder";
+import { useSettings } from "@/hooks/useSettings";
 
 interface OrderTableProps {
   data: any[];
@@ -35,6 +36,8 @@ const OrderTable = ({ data, pagination, isLoading, page, setPage, onDelete, isDe
   const t = useTranslations();
   // Assuming you have a 'confirm' namespace for translations based on your snippet
   const tConfirm = useTranslations("confirm");
+
+  const {data: settings} = useSettings();
   const { mutate: updateOrderStatus } = useUpdateOrderStatus();
 
   // Removed "no" and added "action"
@@ -162,7 +165,7 @@ const OrderTable = ({ data, pagination, isLoading, page, setPage, onDelete, isDe
           {formattedDate}
         </TableCell>
         <TableCell className="cursor-pointer font-semibold" onClick={() => handleRowClick(item)}>
-          ${item.finalAmount}
+          {settings?.currencySymbol || "$"}{item.finalAmount}
         </TableCell>
         <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
           <div className="flex items-center gap-2 text-sm">
@@ -190,8 +193,6 @@ const OrderTable = ({ data, pagination, isLoading, page, setPage, onDelete, isDe
                 if (onDelete) {
                   onDelete(item._id, closeDialog);
                 } else {
-                  // Fallback if no delete function passed
-                  console.log("Delete ID:", item._id);
                   closeDialog();
                 }
               }}
@@ -232,6 +233,7 @@ const OrderTable = ({ data, pagination, isLoading, page, setPage, onDelete, isDe
         order={selectedOrder}
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
+        currencySymbol={settings?.currencySymbol || "$"}
       />
     </>
   );

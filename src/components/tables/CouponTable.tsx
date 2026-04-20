@@ -4,20 +4,20 @@ import { useState } from "react";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 import { cn } from "@/lib/utils";
-import { MessageSquare, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import CouponDetailDialog from "@/components/dialog/CouponDetailDialog";
 import { useDeleteCouponAdmin } from "@/hooks/useCoupon";
 import ConfirmDialog from "../dialog/ConfirmDialog";
+import { useSettings } from "@/hooks/useSettings";
 
-const CouponsTable = ({ 
-  data, 
-  isLoading, 
-  meta, 
+const CouponsTable = ({
+  data,
+  isLoading,
+  meta,
   setPage,
-}: { 
-  data: any[]; 
+}: {
+  data: any[];
   isLoading: boolean;
   meta: any;
   setPage: (p: number) => void;
@@ -25,6 +25,9 @@ const CouponsTable = ({
 }) => {
   const t = useTranslations('translation');
   const tConfirm = useTranslations('confirm');
+
+  const { data: settings } = useSettings();
+
   const [selectedCoupon, setSelectedCoupon] = useState<any | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { mutate: deleteCoupon, isPending: isDeleting } = useDeleteCouponAdmin();
@@ -45,10 +48,10 @@ const CouponsTable = ({
         {item.type || "-"}
       </TableCell>
       <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
-        {item.type === "percentage" ? `${item.value}%` : `${item.value} QAR`}
+        {item.type === "percentage" ? `${item.value}%` : `${item.value} ${settings?.currencySymbol || '$'}`}
       </TableCell>
       <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
-        {item.minOrderAmount || 0}
+        {settings?.currencySymbol || '$'}{item.minOrderAmount || 0}
       </TableCell>
       <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
         <span className="text-gray-500">{item.usedCount || 0}</span> / {item.usageLimit || 0}
@@ -84,7 +87,7 @@ const CouponsTable = ({
           >
             <MessageSquare size={16} />
           </Button> */}
-          
+
           <ConfirmDialog
             title={tConfirm("delete.title", { value: t("coupon") })}
             description={tConfirm("delete.description", { value: t("coupon") })}
@@ -118,17 +121,18 @@ const CouponsTable = ({
         row={row}
         isLoading={isLoading}
         headerClassName="bg-aqua/5 border-none"
-        pagination={{ 
-          total: meta?.totalDocs || 0, 
-          page: meta?.page || 1, 
-          limit: meta?.limit || 10, 
-          setPage 
+        pagination={{
+          total: meta?.totalDocs || 0,
+          page: meta?.page || 1,
+          limit: meta?.limit || 10,
+          setPage
         }}
       />
       <CouponDetailDialog
         coupon={selectedCoupon}
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
+        currencySymbol={settings?.currencySymbol || '$'}
       />
     </>
   );

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2 } from "lucide-react";
+import { Edit2, Plus, Trash2 } from "lucide-react";
 import { useAllAddresses, useDeleteAddress } from "@/hooks/useAuth";
 import AddAddressDialog from "@/components/dialog/AddAddressDialog";
 import EditAddressDialog from "@/components/dialog/EditAddressDialog";
@@ -49,7 +49,7 @@ export default function AddressBook() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {addresses?.map((addr: any) => (
-            <div key={addr.id} className="border border-gray-200 rounded-2xl p-6 space-y-4 relative group">
+            <div key={addr._id} className="border border-gray-200 rounded-2xl p-6 space-y-4 relative group">
               <div className="flex justify-between items-start">
                 <div className="flex flex-col gap-1">
                   <span className="text-sm font-semibold text-gray-900 capitalize">
@@ -65,9 +65,9 @@ export default function AddressBook() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleEdit(addr)}
-                    className="text-xs text-gray-400 font-medium hover:text-aqua transition-colors"
+                    className="text-xs text-gray-400 cursor-pointer font-medium hover:text-aqua transition-colors"
                   >
-                    {t("edit")}
+                    <Edit2 size={16} />
                   </button>
 
                   <ConfirmDialog
@@ -82,7 +82,7 @@ export default function AddressBook() {
                     }}
                     asChild
                   >
-                    <button className="text-gray-400 hover:text-red-500 transition-colors p-1">
+                    <button className="text-gray-400 cursor-pointer hover:text-red-500 transition-colors p-1">
                       <Trash2 size={16} />
                     </button>
                   </ConfirmDialog>

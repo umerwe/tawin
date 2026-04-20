@@ -7,8 +7,10 @@ import FinancialTransfers from "../../FinancialTransfers";
 import TopSellingProducts from "./TopSellingProducts";
 import { useGetAdminSummary } from "@/hooks/useAdmin";
 import DashboardSkeleton from "@/components/skeletons/DashboardSkeleton";
+import { useSettings } from "@/hooks/useSettings";
 
 const Dashboard = () => {
+  const { data: settings } = useSettings();
   const { data: adminSummary, isLoading } = useGetAdminSummary();
 
   if (isLoading) return <DashboardSkeleton />;
@@ -58,7 +60,7 @@ const Dashboard = () => {
     { label: { en: "Low Stock", ar: "مخزون منخفض" }, value: report?.inventory?.lowStock || 0 },
     { label: { en: "Out of Stock", ar: "نفدت الكمية" }, value: report?.inventory?.outOfStock || 0 },
     { label: { en: "Total Customers", ar: "إجمالي العملاء" }, value: report?.inventory?.totalCustomers || 0 },
-    { label: { en: "Total Sales", ar: "إجمالي المبيعات" }, value: `$${report?.inventory?.totalSales || 0}` },
+    { label: { en: "Total Sales", ar: "إجمالي المبيعات" }, value: `${settings?.currencySymbol || "$"}${report?.inventory?.totalSales || 0}` },
   ];
 
   return (
@@ -86,10 +88,10 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         <div className="lg:col-span-1">
-          <TopCategories data={categories} />
+          <TopCategories data={categories} currencySymbol={settings?.currencySymbol || "$"} />
         </div>
         <div className="lg:col-span-2">
-          <FinancialTransfers data={financials} />
+          <FinancialTransfers data={financials} currencySymbol={settings?.currencySymbol || "$"} />
         </div>
       </div>
 
@@ -98,7 +100,7 @@ const Dashboard = () => {
           <AddNewProduct />
         </div> */}
         <div className="lg:col-span-2">
-          <TopSellingProducts data={products} />
+          <TopSellingProducts data={products} currencySymbol={settings?.currencySymbol || "$"} />
         </div>
       </div>
     </div>

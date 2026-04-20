@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation"
 import Image from "@/components/MyImage"
 import { Button } from "./ui/button"
 import { useCart, useUpdateCartQuantity, useRemoveFromCart } from "@/hooks/useCart"
+import { useSettings } from "@/hooks/useSettings"
 
 interface CartSheetProps {
     open: boolean
@@ -27,6 +28,7 @@ export default function CartSheet({ open, onOpenChange, cartItems, isLoading }: 
 
     const updateQuantityMutation = useUpdateCartQuantity()
     const removeItemMutation = useRemoveFromCart();
+    const {data: settingsData} = useSettings();
 
     // Calculate totals locally based on items array
     const subtotal = cartItems?.reduce(
@@ -110,7 +112,7 @@ export default function CartSheet({ open, onOpenChange, cartItems, isLoading }: 
                                 {/* Right: price + qty */}
                                 <div className="flex flex-col items-end gap-2 shrink-0">
                                     <span className="text-sm font-semibold text-gray-900">
-                                        ${(item.product?.price * item.quantity)?.toFixed(2)}
+                                        {settingsData?.currencySymbol}{(item.product?.price * item.quantity)?.toFixed(2)}
                                     </span>
                                     <div className="flex items-center border border-gray-200 rounded-md">
                                         <button
@@ -146,14 +148,14 @@ export default function CartSheet({ open, onOpenChange, cartItems, isLoading }: 
                     <div className="flex items-center justify-between text-sm text-gray-500">
                         <span>{t("originalPrice") ?? "Original Price"}</span>
                         <span className="font-medium text-gray-900">
-                            ${subtotal?.toFixed(2)}
+                            {settingsData?.currencySymbol}{subtotal?.toFixed(2)}
                         </span>
                     </div>
 
                     {/* Total */}
                     <div className="flex items-center justify-between text-sm font-semibold text-gray-900">
                         <span>{t("totalPrice") ?? "Total Price"}</span>
-                        <span>${total?.toFixed(2)}</span>
+                        <span>{settingsData?.currencySymbol}{total?.toFixed(2)}</span>
                     </div>
 
                     {/* Checkout Button */}

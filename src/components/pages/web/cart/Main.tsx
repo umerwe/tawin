@@ -4,13 +4,16 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { steps } from "@/constants/cart"
 import Step1 from "@/components/pages/web/cart/Step1"
 import Step2 from "@/components/pages/web/cart/Step2"
-import Step3 from "@/components/pages/web/cart/Step3"
 import { useTranslations } from "next-intl"
+import { useSettings } from "@/hooks/useSettings"
 
 export default function Cart() {
     const t = useTranslations("translation");
     const router = useRouter()
-    const searchParams = useSearchParams()
+    const searchParams = useSearchParams();
+
+    const { data: settingData } = useSettings();
+
     const currentStep = searchParams.get("step") || "1"
 
     const setStep = (step: string) => {
@@ -26,7 +29,7 @@ export default function Cart() {
             </h1>
 
             <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mb-8 md:mb-16 px-4">
-                {steps.map((step,index) => (
+                {steps.map((step, index) => (
                     <div
                         key={index}
                         onClick={() => setStep(step.id)}
@@ -51,10 +54,10 @@ export default function Cart() {
             </div>
 
             {currentStep === "1" ? (
-    <Step1 />
-) : (
-    <Step2 />
-)}
+                <Step1 currencySymbol={settingData?.currencySymbol || "$"} />
+            ) : (
+                <Step2 currencySymbol={settingData?.currencySymbol || "$"} />
+            )}
         </div>
     )
 }

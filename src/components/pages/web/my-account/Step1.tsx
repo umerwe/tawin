@@ -6,7 +6,7 @@ import { useUserProfile, useUpdateUserProfile } from "@/hooks/useAuth";
 import { ProfileUpdateSchema, ProfileUpdate } from "@/validations/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 export default function AccountInfo() {
   const t = useTranslations("translation");

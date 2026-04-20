@@ -21,9 +21,8 @@ const FinancialTransfers = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [isReversed, setIsReversed] = useState(false);
-
-  const { data: financialStats, isLoading: isFinancialStatsLoading } = useGetFinancialStats();
-  console.log(financialStats);
+  
+  const { data: financialStats } = useGetFinancialStats();
 
   const statsData = financialStats?.data?.summary?.cards || [];
   const revenue = financialStats?.data?.Revenue || 0;

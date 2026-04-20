@@ -10,7 +10,7 @@ import { useTranslations } from "next-intl";
 import MyImage from "@/components/MyImage";
 import Link from "next/link";
 
-const TopSellingProducts = ({ data }: { data: any[] }) => {
+const TopSellingProducts = ({ data, currencySymbol }: { data: any[], currencySymbol?: string }) => {
   const t = useTranslations("translation");
   const cols = ["product", "totalOrders", "price"];
 
@@ -28,7 +28,7 @@ const TopSellingProducts = ({ data }: { data: any[] }) => {
         </div>
       </TableCell>
       <TableCell>{item.totalSold}</TableCell>
-      <TableCell>${item.price}</TableCell>
+      <TableCell>{currencySymbol}{item.price}</TableCell>
     </>
   );
 

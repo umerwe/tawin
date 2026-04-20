@@ -553,7 +553,10 @@
     "noFavorites": "No favorites found",
     "noOrdersFound": "No orders found",
     "paymentType": "Payment Type",
-    "noProductFound": "No product found"
+    "noProductFound": "No product found",
+    "currency": "Currency",
+    "currencySymbol": "Currency Symbol",
+    "transferId": "Transfer ID"
   },
   "confirm": {
     "logout": {

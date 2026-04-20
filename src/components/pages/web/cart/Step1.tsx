@@ -19,7 +19,11 @@ import { useCart, useUpdateCartQuantity, useRemoveFromCart } from "@/hooks/useCa
 import { useValidateCoupon } from "@/hooks/useCoupon"
 import { SpinnerLoader } from "@/components/common/SpinnerLoader"
 
-const Step1 = () => {
+interface Step1Props {
+    currencySymbol: string;
+}
+
+const Step1 = ({ currencySymbol }: Step1Props) => {
     const locale = useLocale() as "en" | "ar";
     const t = useTranslations("translation");
     const router = useRouter()
@@ -138,10 +142,10 @@ const Step1 = () => {
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-gray-900 font-medium">
-                                        ${item.product?.price?.toFixed(2)}
+                                        {currencySymbol}{item.product?.price?.toFixed(2)}
                                     </TableCell>
                                     <TableCell className="text-gray-900 font-semibold">
-                                        ${(item.product?.price * item.quantity).toFixed(2)}
+                                        {currencySymbol}{(item.product?.price * item.quantity).toFixed(2)}
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex items-center border border-gray-200 rounded-md w-24 mx-auto">
@@ -222,6 +226,7 @@ const Step1 = () => {
                 subtotal={subtotal}
                 total={total}
                 discountAmount={discountAmount}
+                currencySymbol={currencySymbol}
                 appliedCoupon={appliedCoupon}
                 setStep={(step) => {
                     const params = new URLSearchParams(searchParams)

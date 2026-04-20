@@ -14,6 +14,7 @@ import { useAddToCart, useCart } from "@/hooks/useCart"
 import { useToggleFavorite, useFavorites } from "@/hooks/useFavorite"
 import { cn } from "@/lib/utils"
 import { LoginDialog } from "@/components/dialog/LoginDialog"
+import { useSettings } from "@/hooks/useSettings"
 
 interface ProductInfoProps {
   product: Product
@@ -22,6 +23,7 @@ interface ProductInfoProps {
 export function ProductInfo({ product }: ProductInfoProps) {
   const locale = useLocale() as "en" | "ar";
   const t = useTranslations("translation");
+  const { data: settingsData } = useSettings();
 
   const {
     _id,
@@ -94,15 +96,15 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <span className="text-sm text-muted-foreground">{product.reviewCount} {t("reviews")}</span>
       </div>
 
-      <h1 className="text-2xl font-semibold text-foreground">{title[locale]}</h1>
-      <p className="text-sm text-muted-foreground leading-relaxed">{description?.[locale]}</p>
+      <h1 className="text-2xl font-semibold text-foreground capitalize">{title[locale]}</h1>
+      <p className="text-sm text-muted-foreground leading-relaxed first-letter:uppercase">{description?.[locale]}</p>
 
       <Separator />
 
       <div className="flex items-center gap-3">
-        <span className="text-2xl font-semibold text-foreground">${price.toFixed(2)}</span>
+        <span className="text-2xl font-semibold text-foreground">{settingsData?.currencySymbol}{price.toFixed(2)}</span>
         {originalPrice && originalPrice > price && (
-          <span className="text-base text-muted-foreground line-through">${originalPrice.toFixed(2)}</span>
+          <span className="text-base text-muted-foreground line-through">{settingsData?.currencySymbol}{originalPrice.toFixed(2)}</span>
         )}
       </div>
 

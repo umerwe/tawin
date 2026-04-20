@@ -13,7 +13,7 @@ import { useCreateOrder } from "@/hooks/useOrder"
 import { useAllAddresses } from "@/hooks/useAuth"
 import { SpinnerLoader } from "@/components/common/SpinnerLoader"
 
-const Step2 = () => {
+const Step2 = ({ currencySymbol }: { currencySymbol: string }) => {
     const t = useTranslations("translation");
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -209,6 +209,7 @@ const Step2 = () => {
             <OrderSummary
                 cartItems={cartItems}
                 discount={discount}
+                currencySymbol={currencySymbol}
             />
         </div>
     )

@@ -24,11 +24,13 @@ const AdminSettingsPage = () => {
             businessName: { en: "", ar: "" },
             tagline: { en: "", ar: "" },
             enableContactEmail: true,
+            currency: "",
+            currencySymbol: "",
             socialLinks: { whatsapp: "", facebook: "", instagram: "", youtube: "" },
             header: {
                 landing_page: { text: { en: "", ar: "" } },
                 home: { text: { en: "", ar: "" } },
-                shop: { text: { en: "", ar: "" } }, // Added Shop default
+                shop: { text: { en: "", ar: "" } },
             },
             pages: {
                 privacyPolicy: { en: "", ar: "" },
@@ -62,6 +64,8 @@ const AdminSettingsPage = () => {
         formData.append("businessName[ar]", data.businessName.ar);
         formData.append("tagline[en]", data.tagline.en);
         formData.append("tagline[ar]", data.tagline.ar);
+        formData.append("currency", data.currency);
+        formData.append("currencySymbol", data.currencySymbol);
 
         // Socials
         Object.keys(data.socialLinks).forEach(key => {
@@ -111,7 +115,6 @@ const AdminSettingsPage = () => {
 
             <FormProvider {...methods}>
                 <form className="space-y-10">
-
                     {/* Section: General Branding */}
                     <section className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-xl border shadow-sm">
                         <div className="space-y-6">
@@ -121,10 +124,18 @@ const AdminSettingsPage = () => {
                                     <MyImage src={previews.logo || settings?.logo} alt="logo" width={80} height={80} className="object-contain" />
                                     <input type="file" id="logo-input" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleFilePreview(e, "logo")} />
                                 </div>
-                                <Label className="text-sm text-slate-500">{t("uploadLogo")}</Label>
+                                <Label>{t("uploadLogo")}</Label>
                             </div>
                             <MultilingualInput label={t("businessName")} name="businessName" />
                             <MultilingualInput label={t("tagline")} name="tagline" />
+                            <div className="space-y-1">
+                                <Label>{t("currency")}</Label>
+                                <Input variant="auth" {...methods.register("currency" as any)} placeholder="e.g. USD" />
+                            </div>
+                            <div className="space-y-1">
+                                <Label>{t("currencySymbol")}</Label>
+                                <Input variant="auth" {...methods.register("currencySymbol" as any)} placeholder="e.g. $" />
+                            </div>
                         </div>
 
                         <div className="space-y-6">
@@ -132,7 +143,7 @@ const AdminSettingsPage = () => {
                             <div className="space-y-4">
                                 {["whatsapp", "facebook", "instagram", "youtube"].map((social) => (
                                     <div key={social} className="space-y-1">
-                                        <Label className="capitalize text-xs text-slate-500">{social}</Label>
+                                        <Label className="capitalize">{social}</Label>
                                         <Input variant="auth" {...methods.register(`socialLinks.${social}` as any)} />
                                     </div>
                                 ))}

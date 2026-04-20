@@ -32,6 +32,7 @@ export const useUpdateCartQuantity = () => {
     mutationFn: updateCartQuantity,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
+      toast.success("Cart updated");
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to update quantity");

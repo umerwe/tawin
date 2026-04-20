@@ -15,18 +15,18 @@ export default function OrderDetailDialog({
   order,
   open,
   onClose,
+  currencySymbol,
 }: {
   order: any;
   open: boolean;
   onClose: () => void;
+  currencySymbol: string;
 }) {
   const locale = useLocale() as "en" | "ar";
   const t = useTranslations("translation");
 
   if (!order) return null;
 
-  // Helpers for updated data structure
-  const firstItem = order.items?.[0];
   const formattedDate = new Date(order.createdAt).toLocaleDateString();
   const isCOD = order.paymentMethod === "COD";
 
@@ -35,7 +35,7 @@ export default function OrderDetailDialog({
     { label: t("customer"), value: `${order.user?.firstName} ${order.user?.lastName}` },
     { label: t("phone"), value: order.phone },
     { label: t("date"), value: formattedDate },
-    { label: t("totalPrice"), value: `${order.finalAmount} AED` },
+    { label: t("totalPrice"), value: `${currencySymbol}${order.finalAmount}` },
     {
       label: t("payment"),
       value: order.paymentMethod,
@@ -79,7 +79,7 @@ export default function OrderDetailDialog({
                     {item.product?.title?.[locale]}
                   </p>
                   <p className="text-xs text-gray-400 mt-0.5">
-                    {t("qty")}: {item.quantity} × {item.price} AED
+                    {t("qty")}: {item.quantity} × {currencySymbol}{item.price}
                   </p>
                 </div>
               </div>

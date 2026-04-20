@@ -8,12 +8,14 @@ import Image from "@/components/MyImage";
 import { useFavorites, useToggleFavorite } from "@/hooks/useFavorite";
 import { useAddToCart } from "@/hooks/useCart";
 import Link from "next/link";
+import { useSettings } from "@/hooks/useSettings";
 
 export default function FavoritesList() {
     const locale = useLocale() as "en" | "ar";
     const t = useTranslations("translation");
 
     // API Hooks
+    const { data: settings } = useSettings();
     const { data: favResponse, isLoading } = useFavorites();
     const { mutate: toggleFavorite, isPending: isRemoving } = useToggleFavorite();
     const { mutate: addToCart, isPending: isAdding } = useAddToCart();
@@ -53,7 +55,7 @@ export default function FavoritesList() {
                              className="w-16 h-20 md:w-20 md:h-20 bg-gray-100 rounded-xl overflow-hidden shrink-0">
                                 <Image 
                                     src={item.product?.photo || "/placeholder-product.png"} 
-                                    alt={item.product?.title?.[locale]} 
+                                    alt={item.product?.title?.[locale] || ""} 
                                     width={80} 
                                     height={80} 
                                     className="w-full h-full object-cover" 
@@ -71,7 +73,7 @@ export default function FavoritesList() {
 
                         <div className="flex items-center justify-between sm:justify-end space-x-4 md:space-x-8 w-full sm:w-auto mt-2 sm:mt-0">
                             <span className="text-sm font-semibold text-gray-900">
-                                ${item.product?.price?.toFixed(2)}
+                                {settings?.currencySymbol}{item.product?.price?.toFixed(2)}
                             </span>
                             <Button 
                                 variant="primary" 

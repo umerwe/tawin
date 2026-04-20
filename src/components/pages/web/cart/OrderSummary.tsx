@@ -19,9 +19,10 @@ interface CartItem {
 type OrderSummaryProps = {
     cartItems: CartItem[]
     discount: number
+    currencySymbol: string
 }
 
-const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
+const OrderSummary = ({ cartItems, discount, currencySymbol }: OrderSummaryProps) => {
     const locale = useLocale() as "en" | "ar";
     const t = useTranslations("translation");
 
@@ -81,7 +82,7 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
 
                                 <div className="space-y-2 text-left rtl:text-right">
                                     <span className="text-sm font-semibold text-gray-900">
-                                        ${(item.product.price * item.quantity).toFixed(2)}
+                                        {currencySymbol}{(item.product.price * item.quantity).toFixed(2)}
                                     </span>
                                     <div className="text-[11px] leading-tight">
                                         <p className="font-semibold text-gray-800 uppercase tracking-tight">
@@ -137,7 +138,7 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
                         discount > 0 &&
                         <div className="flex justify-between items-center text-aqua">
                             <span className="text-base font-semibold">{t("discount")}</span>
-                            <span className="text-lg">-${discount.toFixed(2)}</span>
+                            <span className="text-lg">{currencySymbol}-${discount.toFixed(2)}</span>
                         </div>
                     }
 
@@ -148,13 +149,13 @@ const OrderSummary = ({ cartItems, discount }: OrderSummaryProps) => {
 
                     <div className="flex justify-between items-center">
                         <span className="text-base font-semibold text-gray-400">{t("subtotal")}</span>
-                        <span className="text-lg font-semibold text-gray-900">${subtotal.toFixed(2)}</span>
+                        <span className="text-lg font-semibold text-gray-900"> {currencySymbol}{subtotal.toFixed(2)}</span>
                     </div>
 
                     <div className="flex justify-between items-center border-t border-gray-100 pt-5">
                         <span className="text-base font-semibold text-gray-400">{t("grandTotal")}</span>
                         <span className="text-lg font-semibold text-gray-900 tracking-tighter">
-                            ${grandTotal.toFixed(2)}
+                            {currencySymbol}{grandTotal.toFixed(2)}
                         </span>
                     </div>
                 </div>

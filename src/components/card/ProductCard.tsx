@@ -15,6 +15,7 @@ import { useAddToCart } from "@/hooks/useCart"
 import { useFavorites, useToggleFavorite } from "@/hooks/useFavorite"
 import { LoginDialog } from "../dialog/LoginDialog"
 import { SpinnerLoader } from "../common/SpinnerLoader"
+import { useSettings } from "@/hooks/useSettings"
 
 export function ProductCard({
     _id,
@@ -35,6 +36,7 @@ export function ProductCard({
     const hasBadge = isNew || !!discount
 
     const { mutate: addToCartApi, isPending: isAddingToCart } = useAddToCart();
+    const { data: settingsData } = useSettings();
 
     // Favorite API Hooks
     const { data: favData } = useFavorites();
@@ -122,11 +124,11 @@ export function ProductCard({
 
                         <div className="mt-0.5 flex items-center gap-2">
                             <span className="text-sm font-semibold text-foreground">
-                                ${price.toFixed(2)}
+                                {settingsData?.currencySymbol}{price.toFixed(2)}
                             </span>
                             {originalPrice && (
                                 <span className="text-xs text-muted-foreground line-through">
-                                    ${originalPrice.toFixed(2)}
+                                    {settingsData?.currencySymbol}{originalPrice.toFixed(2)}
                                 </span>
                             )}
                         </div>

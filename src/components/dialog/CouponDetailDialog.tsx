@@ -14,10 +14,12 @@ export default function CouponDetailDialog({
   coupon,
   open,
   onClose,
+  currencySymbol,
 }: {
   coupon: any;
   open: boolean;
   onClose: () => void;
+  currencySymbol: string;
 }) {
   const locale = useLocale() as "en" | "ar";
   const t = useTranslations("translation");
@@ -37,9 +39,9 @@ export default function CouponDetailDialog({
     { label: t("type"), value: coupon.type || "-" },
     {
       label: t("discountRate"),
-      value: coupon.type === "percentage" ? `%${coupon.value}` : `${coupon.value} QAR`
+      value: coupon.type === "percentage" ? `${coupon.value}%` : `${currencySymbol}${coupon.value}`
     },
-    { label: t("minOrder"), value: String(coupon.minOrderAmount || 0) },
+    { label: t("minOrder"), value: `${currencySymbol}${coupon.minOrderAmount || 0}` },
     {
       label: t("usageLimit"),
       value: `${coupon.usedCount || 0} / ${coupon.usageLimit || 0}`
@@ -74,7 +76,7 @@ export default function CouponDetailDialog({
           </div>
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-2 gap-3 pt-2">
+          {/* <div className="grid grid-cols-2 gap-3 pt-2">
             <Button
               variant="outline"
               className="border-red-200 bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 rounded-md h-10 font-medium"
@@ -87,7 +89,7 @@ export default function CouponDetailDialog({
             >
               {t("suspendTemporarily")}
             </Button>
-          </div>
+          </div> */}
         </div>
       </DialogContent>
     </Dialog>

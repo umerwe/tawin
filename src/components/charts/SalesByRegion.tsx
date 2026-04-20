@@ -28,14 +28,14 @@ const SalesByRegion = ({ data }: { data: any[] }) => {
       </CardHeader>
 
       <CardContent className="space-y-6">
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <p className="text-xs text-muted-foreground">{t("usersPerMinute")}</p>
           <div className="flex items-end gap-1 h-12">
             {[40, 70, 45, 90, 65, 30, 80, 50, 60].map((h, i) => (
               <div key={i} className="bg-aqua w-full rounded-t-sm" style={{ height: `${h}%` }} />
             ))}
           </div>
-        </div>
+        </div> */}
 
         <div className="flex justify-between text-sm font-semibold">
           <span>{t("salesByRegion")}</span>

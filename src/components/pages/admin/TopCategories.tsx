@@ -7,7 +7,7 @@ import Image from "@/components/MyImage";
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 
-const TopCategories = ({data}: {data: any}) => {
+const TopCategories = ({data, currencySymbol}: {data: any, currencySymbol?: string}) => {
   const t = useTranslations("translation");
   const locale = useLocale() as "en" | "ar";
   const [searchTerm, setSearchTerm] = useState("");
@@ -54,7 +54,7 @@ const TopCategories = ({data}: {data: any}) => {
                     {/* <span className="text-xs text-muted-foreground">{t("productCode")}: {item.id}</span> */}
                   </div>
 
-                  <span className="font-bold text-sm shrink-0">${item.value}</span>
+                  <span className="font-bold text-sm shrink-0">{currencySymbol}{item.value}</span>
                 </div>
                 ))
             ) : (
