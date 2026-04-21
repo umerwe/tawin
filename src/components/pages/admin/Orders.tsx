@@ -4,53 +4,70 @@ import { useState, useMemo } from "react";
 import OrderTable from "@/components/tables/OrderTable";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FilterSection from "@/components/FilterSection";
-import { MoreVertical } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import StatsCard from "@/components/card/StatsCard";
 import { useTranslations } from "next-intl";
-import { useDeleteOrder, useGetOrders } from "@/hooks/useOrder";
+import { useDeleteOrder, useGetOrders, useOrderStats } from "@/hooks/useOrder";
 import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "sonner";
 
-const stats = [
-    {
-        title: { en: "Total Orders", ar: "إجمالي الطلبات" },
-        value: "1,240",
-        trend: "+14.4%",
-        isUp: true,
-        footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" }
-    },
-    {
-        title: { en: "New Orders", ar: "طلبات جديدة" },
-        value: "240",
-        trend: "+20%",
-        isUp: true,
-        footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" }
-    },
-    {
-        title: { en: "Completed Orders", ar: "طلبات مكتملة" },
-        value: "960",
-        trend: "+85%",
-        isUp: true,
-        footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" }
-    },
-    {
-        title: { en: "Cancelled Orders", ar: "طلبات ملغاة" },
-        value: "87",
-        trend: "-5%",
-        isUp: false,
-        footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" }
-    },
-];
-
 const Orders = () => {
     const t = useTranslations("translation");
+
+    // Fetch Real-time Stats
+    const { data: orderStatsData } = useOrderStats();
+    const statsFromApi = orderStatsData?.data;
 
     // Table States
     const [activeTab, setActiveTab] = useState("All Orders");
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [isReversed, setIsReversed] = useState(false);
+
+    // Dynamic Stats Mapping
+    const stats = [
+        {
+            title: { en: "Total Orders", ar: "إجمالي الطلبات" },
+            value: statsFromApi?.total || 0,
+            trend: "+0%", // Trend logic can be added if backend provides it
+            isUp: true,
+            footerLabel: { en: "All time", ar: "كل الوقت" }
+        },
+        {
+            title: { en: "Pending Orders", ar: "طلبات معلقة" },
+            value: statsFromApi?.pending || 0,
+            trend: "+0%",
+            isUp: true,
+            footerLabel: { en: "Current", ar: "حالي" }
+        },
+        {
+            title: { en: "Completed Orders", ar: "طلبات مكتملة" },
+            value: statsFromApi?.delivered || 0,
+            trend: "+0%",
+            isUp: true,
+            footerLabel: { en: "All time", ar: "كل الوقت" }
+        },
+        {
+            title: { en: "Cancelled Orders", ar: "طلبات ملغاة" },
+            value: statsFromApi?.canceled || 0,
+            trend: "0%",
+            isUp: false,
+            footerLabel: { en: "All time", ar: "كل الوقت" }
+        },
+        {
+            title: { en: "Processing Orders", ar: "طلبات قيد التنفيذ" },
+            value: statsFromApi?.processing || 0,
+            trend: "0%",
+            isUp: true,
+            footerLabel: { en: "All time", ar: "كل الوقت" }
+        },
+        {
+            title: { en: "Shipped Orders", ar: "طلبات تم شحنها" },
+            value: statsFromApi?.shipped || 0,
+            trend: "0%",
+            isUp: true,
+            footerLabel: { en: "All time", ar: "كل الوقت" }
+        },
+    ];
 
     // Debounce search to prevent excessive API calls
     const debouncedSearch = useDebounce(search, 500);
@@ -63,14 +80,9 @@ const Orders = () => {
     }), [activeTab, page, debouncedSearch]);
 
     const { data, isLoading, refetch, isFetching } = useGetOrders(queryParams);
-    
+
     const rawOrders = data?.data || [];
     const pagination = data?.meta || {};
-
-    const displayedOrders = useMemo(() => {
-        if (!rawOrders) return [];
-        return isReversed ? [...rawOrders].reverse() : rawOrders;
-    }, [rawOrders, isReversed]);
 
     // Delete Mutation
     const { mutate: deleteOrder, isPending: isDeleting } = useDeleteOrder();
@@ -90,17 +102,6 @@ const Orders = () => {
 
     return (
         <div className="space-y-6 p-1">
-            {/* Top Action Bar */}
-            {/* <div className="flex items-center justify-end gap-3">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-32"
-                >
-                    <MoreVertical className="h-4 w-4 mr-2" /> {t("more")}
-                </Button>
-            </div> */}
-
             {/* Statistics Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {stats.map((stat, i) => (
@@ -133,7 +134,7 @@ const Orders = () => {
 
                 <CardContent className="p-0 sm:p-6">
                     <OrderTable
-                        data={displayedOrders}
+                        data={rawOrders}
                         isLoading={isLoading || isFetching}
                         pagination={pagination}
                         page={page}

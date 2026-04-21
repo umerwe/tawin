@@ -9,6 +9,16 @@ import StatsCard from "@/components/card/StatsCard";
 import { useReviews } from "@/hooks/useReviews";
 import { useDebounce } from "@/hooks/useDebounce";
 
+const mockGraphData = [
+  { label: "2026-04-01", customers: 40 },
+  { label: "2026-04-02", customers: 30 },
+  { label: "2026-04-03", customers: 65 },
+  { label: "2026-04-04", customers: 45 },
+  { label: "2026-04-05", customers: 90 },
+  { label: "2026-04-06", customers: 55 },
+  { label: "2026-04-07", customers: 80 },
+];
+
 const stats = [
   {
     title: { en: "Total Reviews", ar: "إجمالي التقييمات" },
@@ -69,7 +79,7 @@ const Reviews = () => {
     <div className="space-y-6 p-1">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <WeeklyReportChart data={tableStats} title="customerReviewsStatistics" />
+          <WeeklyReportChart data={tableStats} title="customerReviewsStatistics" chartData={mockGraphData} />
         </div>
         <div className="lg:col-span-1 flex flex-col gap-4">
           {stats.map((stat, i) => (

@@ -7,66 +7,88 @@ import UserTable from "@/components/tables/UserTable";
 import FilterSection from "@/components/FilterSection";
 import StatsCard from "@/components/card/StatsCard";
 import { useAdminUsers } from "@/hooks/useAuth";
-import { MoreVertical } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
 import { useDebounce } from "@/hooks/useDebounce";
-import { toast } from "sonner";
-
-const stats = [
-  {
-    title: { en: "Total Users", ar: "إجمالي المستخدمين" },
-    value: "11,040",
-    trend: "+14.4%",
-    isUp: true,
-    footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" }
-  },
-  {
-    title: { en: "New Users", ar: "مستخدمون جدد" },
-    value: "240",
-    trend: "+14.4%",
-    isUp: true,
-    footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" }
-  },
-  {
-    title: { en: "Visitors", ar: "الزوار" },
-    value: "11,040",
-    trend: "+14.4%",
-    isUp: true,
-    footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" }
-  },
-];
-
-const tableStats = [
-  { label: { en: "Active customers", ar: "العملاء النشطون" }, value: "25k", active: true },
-  { label: { en: "Repeat customers", ar: "العملاء المتكررون" }, value: "5.6k" },
-  { label: { en: "Store visitors", ar: "زوار المتجر" }, value: "250k" },
-  { label: { en: "Conversion rate", ar: "معدل التحويل" }, value: "5.5%" },
-];
+import { useUserStats } from "@/hooks/useUser";
+import DateRangeFilter, { FilterRange } from "@/components/DateRange";
 
 const Users = () => {
-  const t = useTranslations("translation");
 
-  // Table States
+  // --- 1. State for Period Filter ---
+  const [period, setPeriod] = useState<FilterRange>("daily");
+
+  // --- 2. Fetching Statistics Data ---
+  const { data: userStatsData } = useUserStats({ filter : period });
+
+  // Extract API Data safely
+  const summaryCards = userStatsData?.data?.summary?.cards || [];
+  const graphData = userStatsData?.data?.graph || [];
+
+  // --- 3. Data Mapping ---
+
+  // Top Summary Row (Inside the Chart Component)
+  const chartSummaryStats = [
+    {
+      label: { en: "Total Customers", ar: "إجمالي العملاء" },
+      value: summaryCards[0]?.value || 0,
+      active: true
+    },
+    {
+      label: { en: "Verified", ar: "متحقق" },
+      value: summaryCards[1]?.value || 0
+    },
+    {
+      label: { en: "Unverified", ar: "غير متحقق" },
+      value: summaryCards[2]?.value || 0
+    },
+    {
+      label: { en: "Growth", ar: "النمو" },
+      value: `${summaryCards[0]?.change?.percentage || 0}%`
+    },
+  ];
+
+  // Right Side Stats Cards
+  const stats = [
+    {
+      title: { en: "Total Users", ar: "إجمالي المستخدمين" },
+      value: summaryCards[0]?.value || "0",
+      trend: `${summaryCards[0]?.change?.percentage || 0}%`,
+      isUp: summaryCards[0]?.change?.type === "increase",
+      footerLabel: { en: "Selected Period", ar: "الفترة المختارة" }
+    },
+    {
+      title: { en: "Verified Users", ar: "مستخدمون متحققون" },
+      value: summaryCards[1]?.value || "0",
+      trend: `${summaryCards[1]?.change?.percentage || 0}%`,
+      isUp: summaryCards[1]?.change?.type === "increase",
+      footerLabel: { en: "Selected Period", ar: "الفترة المختارة" }
+    },
+    {
+      title: { en: "Unverified Users", ar: "مستخدم غير متحقق" },
+      value: summaryCards[2]?.value || "0",
+      trend: `${summaryCards[2]?.change?.percentage || 0}%`,
+      isUp: summaryCards[2]?.change?.type === "increase",
+      footerLabel: { en: "Selected Period", ar: "الفترة المختارة" }
+    },
+  ];
+
+  // --- 4. Table Logic ---
   const [activeTab, setActiveTab] = useState("All Users");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [isReversed, setIsReversed] = useState(false);
 
-  // Debounce search to prevent excessive API calls
   const debouncedSearch = useDebounce(search, 500);
 
-  // Fetch Users with Query Params
   const queryParams = useMemo(() => ({
     status: activeTab === "All Users" ? undefined : activeTab.toLowerCase(),
     page,
     search: debouncedSearch,
   }), [activeTab, page, debouncedSearch]);
 
-  const { data, isLoading, refetch, isFetching } = useAdminUsers(queryParams);
-  
-  const rawUsers = data?.data || [];
-  const pagination = data?.meta || {};
+  const { data: usersData, isLoading: usersLoading, refetch, isFetching: usersFetching } = useAdminUsers(queryParams);
+
+  const rawUsers = usersData?.data || [];
+  const pagination = usersData?.meta || {};
 
   const displayedUsers = useMemo(() => {
     if (!rawUsers) return [];
@@ -75,23 +97,20 @@ const Users = () => {
 
   return (
     <div className="space-y-6 p-1">
-      {/* Top Action Bar */}
-      <div className="flex items-center justify-end gap-3">
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-32"
-        >
-          <MoreVertical className="h-4 w-4 mr-2" /> {t("more")}
-        </Button>
-      </div>
 
       {/* Statistics Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <WeeklyReportChart
             title="userStatistics"
-            data={tableStats}
+            data={chartSummaryStats}
+            chartData={graphData}
+            filter={
+              <DateRangeFilter 
+                value={period} 
+                onChange={(val) => setPeriod(val)} 
+              />
+            }
           />
         </div>
 
@@ -121,14 +140,14 @@ const Users = () => {
             isReversed={isReversed}
             setIsReversed={setIsReversed}
             onRefetch={refetch}
-            isFetching={isFetching}
+            isFetching={usersFetching}
           />
         </CardHeader>
 
         <CardContent className="p-0 sm:p-6">
           <UserTable
             data={displayedUsers}
-            isLoading={isLoading || isFetching}
+            isLoading={usersLoading || usersFetching}
             pagination={pagination}
             page={page}
             setPage={setPage}

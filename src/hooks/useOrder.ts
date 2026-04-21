@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createOrder, getOrderById, updateOrderStatus, deleteOrder, OrderFormData, getOrders } from "@/services/order";
+import { createOrder, getOrderById, updateOrderStatus, deleteOrder, OrderFormData, getOrders, getOrderStats } from "@/services/order";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -65,5 +65,13 @@ export const useDeleteOrder = () => {
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to delete order.");
     },
+  });
+};
+
+export const useOrderStats = () => {
+  return useQuery({
+    queryKey: ["orderStats"],
+    queryFn: () => getOrderStats(),
+    staleTime: 5 * 60 * 1000,
   });
 };
