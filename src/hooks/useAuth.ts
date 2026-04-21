@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { loginUser, signUpUser, getUserProfile, updateUserProfile, getAdminUsers, verifyUser, addAddress, getAllAddresses, deleteAddress, updateAddress, signUpUserByAdmin, deleteUser } from "@/services/auth";
+import { loginUser, signUpUser, getUserProfile, updateUserProfile, getAdminUsers, verifyUser, addAddress, getAllAddresses, deleteAddress, updateAddress, signUpUserByAdmin, deleteUser, updateAdminProfile } from "@/services/auth";
 import { toast } from "sonner";
 
 export const useLogin = () => {
@@ -78,6 +78,21 @@ export const useUpdateUserProfile = () => {
     mutationFn: updateUserProfile,
     onSuccess: () => {
       toast("Profile updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "Failed to update profile.");
+    },
+  });
+};
+
+export const useUpdateAdminProfile = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateAdminProfile,
+    onSuccess: () => {
+      toast("Profile updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["adminProfile"] });
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
     },
     onError: (error: any) => {

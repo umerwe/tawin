@@ -48,6 +48,23 @@ export const updateUserProfile = async (data: File | any) => {
   }
 };
 
+// api.ts or wherever updateAdminProfile is defined
+export const updateAdminProfile = async (data: any) => {
+  const formData = new FormData();
+  
+  if (data instanceof File) {
+    formData.append('profileImage', data);
+  } else {
+    // Append all text keys to the formData
+    Object.keys(data).forEach(key => {
+      formData.append(key, data[key]);
+    });
+  }
+
+  const response = await api.patch("/api/admin/profile", formData);
+  return response.data;
+};
+
 export const deleteUser = async (userId: string) => {
   const { data } = await api.delete(`/api/auth/delete-user/${userId}`);
   return data;

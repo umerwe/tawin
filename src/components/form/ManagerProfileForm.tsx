@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTranslations } from "next-intl";
 import { useState, useRef, useEffect } from "react";
-import { useUpdateUserProfile } from "@/hooks/useAuth";
+import { useUpdateAdminProfile } from "@/hooks/useAuth";
 import MyImage from "@/components/MyImage";
 
 interface UserData {
@@ -32,6 +32,7 @@ const ManagerProfileForm = ({ data }: Props) => {
         firstName: user.firstName ?? "",
         lastName: user.lastName ?? "",
         username: user.username ?? "",
+        email: user.email ?? "",
     });
 
     useEffect(() => {
@@ -39,11 +40,12 @@ const ManagerProfileForm = ({ data }: Props) => {
             firstName: user.firstName ?? "",
             lastName: user.lastName ?? "",
             username: user.username ?? "",
+            email: user.email ?? "",
         });
-    }, [user.firstName, user.lastName, user.username]);
+    }, [user.firstName, user.lastName, user.username, user.email]);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const { mutate: updateProfile, isPending } = useUpdateUserProfile();
+    const { mutate: updateProfile, isPending } = useUpdateAdminProfile();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -60,6 +62,7 @@ const ManagerProfileForm = ({ data }: Props) => {
             firstName: user.firstName ?? "",
             lastName: user.lastName ?? "",
             username: user.username ?? "",
+            email: user.email ?? "",
         });
         setIsEditing(false);
     };
@@ -67,10 +70,8 @@ const ManagerProfileForm = ({ data }: Props) => {
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        
-        // FIX: Send the raw file directly. 
-        // The mutation function now handles wrapping this in FormData.
-        updateProfile(file); 
+
+        updateProfile(file);
     };
 
     return (
@@ -184,17 +185,19 @@ const ManagerProfileForm = ({ data }: Props) => {
                 <div className="space-y-2">
                     <Label>{t("email")}</Label>
                     <Input
-                        value={user.email ?? ""}
-                        readOnly
-                        disabled
-                        className="rounded-md bg-muted text-muted-foreground cursor-not-allowed"
+                        name="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        disabled={!isEditing}
+                        placeholder="email@example.com"
+                        className="rounded-md"
                     />
                 </div>
 
                 <div className="space-y-2">
                     <Label>{t("role")}</Label>
                     <Input
-                        value={user.role ?? ""}
+                        value="Admin"
                         readOnly
                         disabled
                         className="rounded-md bg-muted text-muted-foreground cursor-not-allowed"

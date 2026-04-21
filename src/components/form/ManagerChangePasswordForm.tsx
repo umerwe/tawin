@@ -3,16 +3,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff } from "lucide-react"; // Added Eye icon
+import { Eye, EyeOff } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { useUpdateUserProfile } from "@/hooks/useAuth";
-import { toast } from "sonner"; // Assuming you use sonner or similar for toast
+import { useUpdateAdminProfile } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 const ManagerChangePasswordForm = () => {
     const t = useTranslations("translation");
-    const { mutate: updateProfile, isPending } = useUpdateUserProfile();
+    const { mutate: updateProfile, isPending } = useUpdateAdminProfile();
 
     // State for form and visibility
     const [showPassword, setShowPassword] = useState(false);
@@ -100,7 +100,8 @@ const ManagerChangePasswordForm = () => {
 
                 <Button 
                     variant="primary" 
-                    className="mt-3 rounded-md w-auto px-6"
+                    className="mt-2 rounded-md w-auto px-6"
+                    size="sm"
                     onClick={handleSave}
                     disabled={isPending}
                 >
