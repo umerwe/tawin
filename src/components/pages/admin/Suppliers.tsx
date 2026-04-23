@@ -6,43 +6,18 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FilterSection from "@/components/FilterSection";
 import SuppliersTable from "@/components/tables/SuppliersTable";
 import StatsCard from "@/components/card/StatsCard";
-import { useGetSuppliers, useDeleteSupplier } from "@/hooks/useSupplier";
+import { useGetSuppliers, useDeleteSupplier, useSupplierStats } from "@/hooks/useSupplier";
 import { useDebounce } from "@/hooks/useDebounce";
 
 const mockGraphData = [
-  { label: "2026-04-01", customers: 40 },
-  { label: "2026-04-02", customers: 30 },
-  { label: "2026-04-03", customers: 65 },
-  { label: "2026-04-04", customers: 45 },
-  { label: "2026-04-05", customers: 90 },
-  { label: "2026-04-06", customers: 55 },
-  { label: "2026-04-07", customers: 80 },
+    { label: "2026-04-01", customers: 40 },
+    { label: "2026-04-02", customers: 30 },
+    { label: "2026-04-03", customers: 65 },
+    { label: "2026-04-04", customers: 45 },
+    { label: "2026-04-05", customers: 90 },
+    { label: "2026-04-06", customers: 55 },
+    { label: "2026-04-07", customers: 80 },
 ];
-
-const stats = [
-    {
-        title: { en: "Total suppliers", ar: "إجمالي الموردين" },
-        value: "11,040",
-        trend: "+14.4%",
-        isUp: true,
-        footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" }
-    },
-    {
-        title: { en: "New suppliers", ar: "موردون جدد" },
-        value: "240",
-        trend: "+14.4%",
-        isUp: true,
-        footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" }
-    },
-    {
-        title: { en: "Efficiency", ar: "الكفاءة" },
-        value: "98.2%",
-        trend: "+14.4%",
-        isUp: true,
-        footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" }
-    },
-];
-
 const tableStats = [
     { label: { en: "Active suppliers", ar: "الموردون النشطون" }, value: "25k", active: true },
     { label: { en: "New suppliers", ar: "موردون جدد" }, value: "5.6k" },
@@ -55,6 +30,8 @@ const Suppliers = () => {
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [isReversed, setIsReversed] = useState(false);
+
+    const { data: supplierStats } = useSupplierStats();
 
     const debouncedSearch = useDebounce(search, 500);
 
@@ -85,19 +62,49 @@ const Suppliers = () => {
         });
     };
 
+    const stats = [
+        {
+            title: { en: "Total suppliers", ar: "إجمالي الموردين" },
+            value: supplierStats?.suppliers?.total || "0",
+            label1: { en: "Active", ar: "نشط" },
+            label1Value: supplierStats?.suppliers?.active || "0",
+            label2: { en: "In Active", ar: "غير نشط" },
+            label2Value: supplierStats?.suppliers?.inactive || "0",
+        },
+        {
+            title: { en: "Total Spend", ar: "إجمالي الإنفاق" },
+            value: supplierStats?.procurement?.totalSpend || "0",
+        },
+        {
+            title: { en: "Total Items", ar: "إجمالي العناصر" },
+            value: supplierStats?.procurement?.totalItems || "0",
+            label1: { en: "Tons", ar: "طن" },
+            label1Value: supplierStats?.procurement?.byUnit?.tons || "0",
+            label2: { en: "Pieces", ar: "قطع" },
+            label2Value: supplierStats?.procurement?.byUnit?.pieces || "0",
+        },
+    ];
+
+
     return (
         <div className="space-y-6 p-1">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
-                    <WeeklyReportChart data={tableStats} title="supplierStatistics" chartData={mockGraphData} />
-                </div>
-                <div className="lg:col-span-1 flex flex-col gap-4">
-                    {stats.map((stat, i) => (
-                        <StatsCard key={i} data={stat} />
-                    ))}
-                </div>
+            {/* First Row: Stats cards in a grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {stats.map((stat, i) => (
+                    <StatsCard key={i} data={stat} />
+                ))}
             </div>
 
+            {/* Second Row: Full width graph */}
+            <div className="w-full">
+                <WeeklyReportChart
+                    data={tableStats}
+                    title="supplierStatistics"
+                    chartData={mockGraphData}
+                />
+            </div>
+
+            {/* Third Row: Table and Filters */}
             <Card className="border shadow-none overflow-hidden">
                 <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6">
                     <FilterSection
@@ -120,8 +127,8 @@ const Suppliers = () => {
                     />
                 </CardHeader>
                 <CardContent className="p-0 sm:p-6">
-                    <SuppliersTable 
-                        data={displayedData} 
+                    <SuppliersTable
+                        data={displayedData}
                         isLoading={isLoading || isFetching}
                         pagination={pagination}
                         page={page}

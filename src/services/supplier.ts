@@ -48,3 +48,8 @@ export const addStock = async (formData: AddStockFormData) => {
   const { data } = await api.post("/api/suppliers/add-stock", formData);
   return data;
 };
+
+export const getSupplierStats = async () => {
+  const { data } = await api.get("/api/suppliers/stats");
+  return data.data;
+};

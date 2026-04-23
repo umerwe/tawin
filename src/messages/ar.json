@@ -559,10 +559,11 @@
     "transferId": "معرف التحويل",
     "save" : "حفظ",
     "daily": "يومي",
-  "weekly": "أسبوعي",
-  "monthly": "شهري",
-  "dailyReport": "تقرير يومي",
-  "monthlyReport": "تقرير شهري"
+    "weekly": "أسبوعي",
+    "monthly": "شهري",
+    "dailyReport": "تقرير يومي",
+    "monthlyReport": "تقرير شهري",
+    "customers": "العملاء"
   },
   "confirm": {
     "logout": {

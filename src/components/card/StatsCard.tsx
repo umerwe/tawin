@@ -70,9 +70,9 @@ const StatsCard = ({ data, isHome = false, isTrendingAllowed = false }: StatCard
       <CardContent>
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-lg font-bold text-black">{title}</h3>
-          <Button variant="ghost" size="icon" className="h-6 w-6 text-gray-400">
+          {/* <Button variant="ghost" size="icon" className="h-6 w-6 text-gray-400">
             <MoreVertical className="h-4 w-4" />
-          </Button>
+          </Button> */}
         </div>
 
         <div className="flex flex-col">
@@ -92,6 +92,21 @@ const StatsCard = ({ data, isHome = false, isTrendingAllowed = false }: StatCard
               )
             }
           </div>
+
+          {(data.label1 || data.label2) && (
+            <div className="flex items-center gap-4 mt-2">
+              {data.label1 && (
+                <span className="text-xs text-muted-foreground">
+                  {data.label1[locale]}: <span className="font-semibold text-black">{data.label1Value}</span>
+                </span>
+              )}
+              {data.label2 && (
+                <span className="text-xs text-muted-foreground">
+                  {data.label2[locale]}: <span className="font-semibold text-black">{data.label2Value}</span>
+                </span>
+              )}
+            </div>
+          )}
 
           {/* <span className="text-sm text-muted-foreground whitespace-nowrap pt-3">
             {subtitle}

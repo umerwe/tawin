@@ -7,6 +7,7 @@ import {
   deleteSupplier,
   getSupplierHistory,
   addStock,
+  getSupplierStats,
   AddStockFormData
 } from "@/services/supplier";
 import { toast } from "sonner";
@@ -101,5 +102,13 @@ export const useAddStock = () => {
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to add stock.");
     },
+  });
+};
+
+export const useSupplierStats = () => {
+  return useQuery({
+    queryKey: ["supplier-stats"],
+    queryFn: getSupplierStats,
+    staleTime: 5 * 60 * 1000,
   });
 };

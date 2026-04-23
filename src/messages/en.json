@@ -562,7 +562,8 @@
     "weekly": "Weekly",
     "monthly": "Monthly",
     "dailyReport": "Daily Report",
-  "monthlyReport": "Monthly Report"
+    "monthlyReport": "Monthly Report",
+    "customers": "Customers"
   },
   "confirm": {
     "logout": {

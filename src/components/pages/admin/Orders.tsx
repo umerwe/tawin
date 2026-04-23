@@ -53,20 +53,20 @@ const Orders = () => {
             isUp: false,
             footerLabel: { en: "All time", ar: "كل الوقت" }
         },
-        {
-            title: { en: "Processing Orders", ar: "طلبات قيد التنفيذ" },
-            value: statsFromApi?.processing || 0,
-            trend: "0%",
-            isUp: true,
-            footerLabel: { en: "All time", ar: "كل الوقت" }
-        },
-        {
-            title: { en: "Shipped Orders", ar: "طلبات تم شحنها" },
-            value: statsFromApi?.shipped || 0,
-            trend: "0%",
-            isUp: true,
-            footerLabel: { en: "All time", ar: "كل الوقت" }
-        },
+        // {
+        //     title: { en: "Processing Orders", ar: "طلبات قيد التنفيذ" },
+        //     value: statsFromApi?.processing || 0,
+        //     trend: "0%",
+        //     isUp: true,
+        //     footerLabel: { en: "All time", ar: "كل الوقت" }
+        // },
+        // {
+        //     title: { en: "Shipped Orders", ar: "طلبات تم شحنها" },
+        //     value: statsFromApi?.shipped || 0,
+        //     trend: "0%",
+        //     isUp: true,
+        //     footerLabel: { en: "All time", ar: "كل الوقت" }
+        // },
     ];
 
     // Debounce search to prevent excessive API calls
