@@ -91,9 +91,6 @@ const StatsCard = ({ data, isHome = false, isTrendingAllowed = false, isLoading 
   if (isHome) {
     return (
       <Card className="relative border shadow-sm text-start">
-        <div className="absolute ltr:right-4 rtl:left-4 top-6 text-gray-400 hover:text-gray-600">
-          <MoreVertical size={20} />
-        </div>
 
         <CardHeader className='mb-1'>
           <CardTitle className="text-black text-lg font-bold">{title}</CardTitle>

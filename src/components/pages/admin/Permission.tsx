@@ -1,100 +1,108 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import StatsCard from "@/components/card/StatsCard";
 import FilterSection from "@/components/FilterSection";
 import StaffTable from "@/components/tables/StaffTable";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { useStaff, useStaffStats } from "@/hooks/useStaff";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const StaffAccountsPage = () => {
     const locale = useLocale() as "en" | "ar";
+    const t = useTranslations("translation");
     const [activeTab, setActiveTab] = useState("All Accounts");
+    const [page, setPage] = useState(1);
+    const [search, setSearch] = useState("");
+    const [isReversed, setIsReversed] = useState(false);
 
-    // Localized Statistics Object
+    const debouncedSearch = useDebounce(search, 500);
+
+    // Query parameters
+    const queryParams = useMemo(() => ({
+        page,
+        search: debouncedSearch,
+        status: activeTab === "All Accounts" ? undefined : activeTab.toLowerCase(),
+    }), [page, debouncedSearch, activeTab]);
+
+    // Get both Stats and Data
+    const { data: stats, isLoading: statsLoading, refetch: refetchStats } = useStaffStats();
+    const { data: staffResponse, isLoading: staffLoading, refetch: refetchStaff, isFetching } = useStaff(queryParams);
+
+    const staffData = staffResponse?.data || [];
+    const pagination = staffResponse?.meta;
+
+    // Combined Refresh Function
+    const handleRefresh = () => {
+        refetchStats();
+        refetchStaff();
+    };
+
     const staffStats = [
         {
-            title: { en: "Total Staff Accounts", ar: "إجمالي حسابات الموظفين" },
-            value: "1,240",
+            title: { en: "Total Staff", ar: "إجمالي الموظفين" },
+            value: stats?.[0]?.value || 0,
             trend: "12%",
             isUp: true
         },
         {
-            title: { en: "New Accounts", ar: "الحسابات الجديدة" },
-            value: "240",
+            title: { en: "Active Staff", ar: "الموظفين النشطين" },
+            value: stats?.[1]?.value || 0,
             trend: "85%",
             isUp: true,
             subtitle: { en: "Last 7 days", ar: "آخر 7 أيام" }
         },
         {
-            title: { en: "Pending Accounts", ar: "الحسابات المعلقة" },
-            value: "240",
+            title: { en: "Inactive Staff", ar: "الموظفين غير النشطين" },
+            value: stats?.[2]?.value || 0,
             trend: "2%",
-            isUp: false    
-        },
-        {
-            title: { en: "Closed Accounts", ar: "الحسابات الملغية" },
-            value: "240",
-            trend: "15%",
             isUp: false
-        },
+        }
     ];
 
-    // Localized Table Data
-    const staffData = [
-        { 
-            id: 1, 
-            code: "#CUST001", 
-            name: { en: "Ahmed Shaker", ar: "احمد شاكر" }, 
-            phone: "+1234567890", 
-            role: { en: "Manager", ar: "مدير" }, 
-            status: "Active" 
-        },
-        { 
-            id: 2, 
-            code: "#CUST002", 
-            name: { en: "Ahmed Shaker", ar: "احمد شاكر" }, 
-            phone: "+1234567890", 
-            role: { en: "Uploader", ar: "موظف رفع" }, 
-            status: "Closed" 
-        },
-    ];
+    const displayedStaff = useMemo(() => {
+        if (!staffData) return [];
+        return isReversed ? [...staffData].reverse() : staffData;
+    }, [staffData, isReversed]);
 
     return (
         <div className="space-y-6 p-1">
-            {/* Top Header Buttons */}
-            <div className="flex items-center justify-end gap-3">
-                <Button variant="outline" size="sm" className="w-32">
-                    <MoreHorizontal className="h-4 w-4 mr-2" /> 
-                    {locale === "ar" ? "المزيد" : "More"}
-                </Button>
-                <Button variant="primary" className="w-32" size="sm">
-                    <Plus className="h-4 w-4 mr-2" /> 
-                    {locale === "ar" ? "أضف موظف" : "Add Staff"}
-                </Button>
-            </div>
-
-            {/* Stats Grid using your StatsCard */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {staffStats.map((stat, i) => (
-                    <StatsCard key={i} data={stat} />
+                    <StatsCard key={i} data={stat} isLoading={statsLoading} />
                 ))}
             </div>
 
-            {/* Table Section */}
             <Card className="border shadow-none overflow-hidden">
                 <CardHeader className="flex flex-col md:flex-row items-center justify-between gap-4 pb-6">
                     <FilterSection
                         activeTab={activeTab}
-                        setActiveTab={setActiveTab}
+                        setActiveTab={(tab) => {
+                            setActiveTab(tab);
+                            setPage(1);
+                        }}
                         data={staffData}
-                        type="user"
+                        type="staff"
+                        search={search}
+                        setSearch={(val) => {
+                            setSearch(val);
+                            setPage(1);
+                        }}
+                        onRefetch={handleRefresh}
+                        isFetching={isFetching}
+                        isReversed={isReversed}
+                        setIsReversed={setIsReversed}
                     />
                 </CardHeader>
                 <CardContent>
-                    <StaffTable activeTab={activeTab} />
+                    <StaffTable
+                        data={displayedStaff}
+                        isLoading={staffLoading || isFetching}
+                        activeTab={activeTab}
+                        setPage={setPage}
+                        meta={pagination}
+                    />
                 </CardContent>
             </Card>
         </div>

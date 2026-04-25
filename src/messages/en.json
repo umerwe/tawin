@@ -473,7 +473,7 @@
     "icon": "Icon",
     "upload": "Upload",
     "create": "Create Category",
-    "update": "Update Category",
+    "update": "Update",
     "updateBrand": "Update Brand",
     "saving": "Saving...",
     "updateSuccess": "Category updated successfully",
@@ -569,7 +569,19 @@
     "totalSpend": "Total Spend",
     "yearlyReport": "Yearly Report",
     "all-timeReport": "All Time Report",
-    "count": "Count"
+    "count": "Count",
+    "staffList": "Staff List",
+    "addStaff": "Add Staff",
+    "editStaff": "Edit Staff",
+    "permissions": "Permissions",
+    "staff": "Staff",
+    "selectRole": "Select Role",
+    "staffInfo": "Staff Information",
+    "joinedDate": "Joined Date",
+    "get": "Get",
+    "post": "Post",
+    "patch": "Patch",
+    "closed": "Closed"
   },
   "confirm": {
     "logout": {
@@ -604,6 +616,7 @@
       "orderDate": "Order Date",
       "total": "Total",
       "date": "Date",
+      "role": "Role",
       "amount": "Amount",
       "orderId": "Order ID",
       "payment": "Payment",

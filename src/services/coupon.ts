@@ -66,7 +66,7 @@ export const deleteCouponAdmin = async (id: string): Promise<void> => {
 };
 
 export const toggleCouponStatusAdmin = async (id: string): Promise<Coupon> => {
-  const { data } = await api.patch(`/api/coupon/admin/toggle-status/${id}`);
+  const { data } = await api.patch(`/api/coupons/admin/toggle-status/${id}`);
   return data;
 };
 

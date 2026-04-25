@@ -17,12 +17,13 @@ import { useTranslations } from "next-intl";
 import AddSupplierDialog from "@/components/dialog/AddSupplierDialog";
 import AddBrandDialog from "@/components/dialog/AddBrandDialog";
 import AddUserDialog from "./dialog/AddUserDialog";
+import AddStaffDialog from "./dialog/AddStaffDialog";
 
 interface FilterSectionProps {
   activeTab: string;
   setActiveTab: (val: string) => void;
   data: any[];
-  type?: "order" | "user" | "supplier" | "lowStock" | "brand" | "review" | "coupon" | "constructionBasket";
+  type?: "order" | "user" | "supplier" | "lowStock" | "brand" | "review" | "coupon" | "constructionBasket" | "staff";
   search?: string;
   setSearch?: (val: string) => void;
   isReversed?: boolean;
@@ -93,10 +94,11 @@ const FilterSection = ({
     if (type === "supplier") return t("suppliersList");
     if (type === "brand") return t("brandsList");
     if (type === "constructionBasket") return t("constructionBasket");
+    if (type === "staff") return t("staffList");
     return "";
   };
 
-  const isTitleType = type === "user" || type === "supplier" || type === "brand" || type === "constructionBasket";
+  const isTitleType = type === "user" || type === "supplier" || type === "brand" || type === "constructionBasket" || type === "staff";
   const isTabType = type === "order" || type === "lowStock" || type === "coupon";
   const hasAddButton = !["order", "lowStock", "review", "coupon", "constructionBasket"].includes(type);
 
@@ -162,9 +164,9 @@ const FilterSection = ({
                   )}
                 >
                   {tab.label}
-                  {isAllTabId(tab.id) && (
+                  {/* {isAllTabId(tab.id) && (
                     <span className="ml-1 text-aqua font-bold">({data?.length})</span>
-                  )}
+                  )} */}
                 </Button>
               ))}
             </div>
@@ -212,7 +214,9 @@ const FilterSection = ({
                     ? t("addSupplier")
                     : type === "brand"
                       ? t("addBrand")
-                      : t("addApplication")}
+                      : type === "staff"
+                        ? t("addStaff")
+                        : t("addApplication")}
               </span>
               <CirclePlus className="h-3 w-3" />
             </Button>
@@ -226,6 +230,7 @@ const FilterSection = ({
           {type === "user" && <AddUserDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />}
           {type === "supplier" && <AddSupplierDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />}
           {type === "brand" && <AddBrandDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />}
+          {type === "staff" && <AddStaffDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />}
         </>
       )}
     </>

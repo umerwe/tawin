@@ -7,9 +7,65 @@ import { cn } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import CouponDetailDialog from "@/components/dialog/CouponDetailDialog";
-import { useDeleteCouponAdmin } from "@/hooks/useCoupon";
+import { useDeleteCouponAdmin, useToggleCouponStatusAdmin } from "@/hooks/useCoupon";
 import ConfirmDialog from "../dialog/ConfirmDialog";
 import { useSettings } from "@/hooks/useSettings";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { CheckCircle, XCircle } from "lucide-react";
+
+export const CouponStatusDropdown = ({ item, t }: any) => {
+  const [currentStatus, setCurrentStatus] = useState(item.isActive ? "active" : "cancelled");
+  const { mutate: toggleCouponStatus } = useToggleCouponStatusAdmin();
+
+  const handleStatusChange = (newStatus: string) => {
+    toggleCouponStatus(item._id, {
+      onSuccess: () => {
+        setCurrentStatus(newStatus);
+      },
+    });
+  }
+
+  return (
+    <Select
+      value={currentStatus}
+      onValueChange={handleStatusChange}
+    >
+      <SelectTrigger
+        className={cn(
+          "h-8 w-[120px] px-2 border rounded-md transition-all outline-none focus:ring-0 font-semibold text-xs",
+          currentStatus === "active"
+            ? "bg-green-50 text-green-600 border-green-200"
+            : "bg-red-50 text-red-600 border-red-200"
+        )}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center gap-2">
+          <SelectValue />
+        </div>
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="active" className="cursor-pointer">
+          <div className="flex items-center gap-2">
+            <CheckCircle size={14} className="text-green-500" />
+            <span>{t("active")}</span>
+          </div>
+        </SelectItem>
+        <SelectItem value="cancelled" className="cursor-pointer">
+          <div className="flex items-center gap-2">
+            <XCircle size={14} className="text-red-500" />
+            <span>{t("cancelled")}</span>
+          </div>
+        </SelectItem>
+      </SelectContent>
+    </Select>
+  );
+};
 
 const CouponsTable = ({
   data,
@@ -59,23 +115,8 @@ const CouponsTable = ({
       <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
         {item.expiryDate ? new Date(item.expiryDate).toLocaleDateString('en-GB') : '-'}
       </TableCell>
-      <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
-        <div className="flex items-center gap-2">
-          <span
-            className={cn(
-              "h-1.5 w-1.5 rounded-full",
-              item.isActive ? "bg-aqua" : "bg-red-500"
-            )}
-          />
-          <span
-            className={cn(
-              "text-xs font-medium",
-              item.isActive ? "text-aqua" : "text-red-600"
-            )}
-          >
-            {item.isActive ? t('active') : t('cancelled')}
-          </span>
-        </div>
+      <TableCell onClick={(e) => e.stopPropagation()}>
+        <CouponStatusDropdown item={item} t={t} />
       </TableCell>
       <TableCell>
         <div className="flex items-center gap-2">

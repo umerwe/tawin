@@ -474,7 +474,7 @@
     "icon": "الأيقونة",
     "upload": "رفع",
     "create": "إنشاء الفئة",
-    "update": "تحديث الفئة",
+    "update": "تحديث",
     "saving": "جاري الحفظ...",
     "updateSuccess": "تم تحديث الفئة بنجاح",
     "createSuccess": "تم إنشاء الفئة بنجاح",
@@ -569,7 +569,19 @@
     "totalSpend": "إجمالي الإنفاق",
     "yearlyReport": "تقرير سنوي",
     "all-timeReport": "تقرير كل الوقت",
-    "count" : "عدد"
+    "count" : "عدد",
+    "staffList": "قائمة الموظفين",
+    "addStaff": "إضافة موظف",
+    "editStaff": "تعديل موظف",
+    "permissions": "الصلاحيات",
+    "staff": "الموظف",
+    "selectRole": "اختر الصلاحية",
+    "staffInfo": "معلومات الموظف",
+    "joinedDate": "تاريخ الانضمام",
+    "get": "عرض",
+    "post": "إضافة",
+    "patch": "تعديل",
+    "closed": "مغلق"
   },
   "confirm": {
     "logout": {
@@ -610,6 +622,7 @@
       "no": "ت.",
       "name": "الاسم",
       "sort": "فرز",
+      "role": "الدور",
       "phone": "الهاتف",
       "orderCount": "عدد الطلبات",
       "totalSpending": "إجمالي الإنفاق",

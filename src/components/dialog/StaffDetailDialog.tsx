@@ -1,9 +1,10 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Copy, Phone, MapPin } from "lucide-react";
+import { Copy, Phone, Shield, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocale, useTranslations } from "next-intl";
+import MyImage from "@/components/MyImage";
 import {
   Dialog,
   DialogContent,
@@ -11,12 +12,40 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+// Backend Types
+type Operation = 'get' | 'post' | 'patch' | 'put' | 'delete';
+type StaffModule = 
+    | 'dashboard' | 'orders' | 'users' | 'staff' | 'products'
+    | 'construction-basket' | 'reviews' | 'suppliers' | 'coupon codes'
+    | 'financial transfers' | 'brand' | 'stock';
+
+interface IPermission {
+    module: StaffModule;
+    operations: Operation[];
+}
+
+interface IStaff {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    isActive: boolean;
+    password?: string;
+    phone?: string;
+    profileImage?: string;
+    lastLogout?: Date;
+    permissions: IPermission[];
+    role: "staff";
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
 export default function StaffDetailDialog({
   staff,
   open,
   onClose,
 }: {
-  staff: any;
+  staff: IStaff | null;
   open: boolean;
   onClose: () => void;
 }) {
@@ -25,22 +54,20 @@ export default function StaffDetailDialog({
 
   if (!staff) return null;
 
-  const isActive = staff.status.en === "Active";
+  const staffName = `${staff.firstName} ${staff.lastName}`;
+  const isActive = staff.isActive;
+  const regDate = staff.createdAt ? new Date(staff.createdAt).toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-US') : "N/A";
+  const lastLogout = staff.lastLogout ? new Date(staff.lastLogout).toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-US') : "N/A";
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-sm rounded-2xl p-0 overflow-hidden border border-gray-100 shadow-xl">
+      <DialogContent className="max-w-sm rounded-2xl p-0 pb-3 overflow-hidden border border-gray-100 shadow-xl">
         {/* Header */}
-        <DialogHeader className="px-5 pt-5">
+        <DialogHeader>
           <div className="flex items-center gap-3">
-            <img
-              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=80&h=80&fit=crop&crop=face"
-              alt={staff.name[locale]}
-              className="h-12 w-12 rounded-full object-cover shrink-0 border border-gray-100"
-            />
             <div className="min-w-0">
               <DialogTitle className="text-base font-bold text-gray-800 leading-snug">
-                {staff.name[locale]}
+                {staffName}
               </DialogTitle>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="text-xs text-gray-400 truncate">{staff.email}</span>
@@ -55,20 +82,20 @@ export default function StaffDetailDialog({
           </div>
         </DialogHeader>
 
-        <div className="px-5 pb-5 space-y-4">
-          {/* Employee Info */}
+        <div className="space-y-4">
+          {/* Staff Info */}
           <div>
-            <p className="text-xs text-gray-400 mb-2">{t("employeeInfo")}</p>
+            <p className="text-xs text-gray-400 mb-2">{t("staffInfo") || "Staff Information"}</p>
             <div className="space-y-2">
+              {staff.phone && (
+                <div className="flex items-center gap-3 border border-gray-100 rounded-lg px-3 py-2.5">
+                  <Phone size={15} className="text-gray-400 shrink-0" />
+                  <span className="text-sm text-gray-700 font-medium">{staff.phone}</span>
+                </div>
+              )}
               <div className="flex items-center gap-3 border border-gray-100 rounded-lg px-3 py-2.5">
-                <Phone size={15} className="text-gray-400 shrink-0" />
-                <span className="text-sm text-gray-700 font-medium">{staff.phone}</span>
-              </div>
-              <div className="flex items-center gap-3 border border-gray-100 rounded-lg px-3 py-2.5">
-                <MapPin size={15} className="text-gray-400 shrink-0" />
-                <span className="text-sm text-gray-700 font-medium">
-                  {staff.address?.[locale] ?? "123 Main St, NY"}
-                </span>
+                <Shield size={15} className="text-gray-400 shrink-0" />
+                <span className="text-sm text-gray-700 font-medium capitalize">{staff.role}</span>
               </div>
             </div>
           </div>
@@ -80,39 +107,44 @@ export default function StaffDetailDialog({
               <div className="flex items-center gap-1.5">
                 <span className="text-sm text-gray-600">{t("status")}:</span>
                 <span className={cn("text-sm font-semibold", isActive ? "text-aqua" : "text-red-500")}>
-                  {staff.status[locale]}
+                  {isActive ? (t("active") || "Active") : (t("inactive") || "Inactive")}
                 </span>
               </div>
-              <p className="text-sm text-gray-600">
-                {t("accountRegistered")}:{" "}
-                <span className="font-medium text-gray-700">
-                  {staff.accountRegisteredAt ?? "15.01.2025"}
-                </span>
-              </p>
               <div className="flex items-center gap-1.5">
-                <span className="text-sm text-gray-600">{t("permission")}:</span>
-                <span className="text-sm font-medium text-gray-700">
-                  {staff.role[locale]}
+                <Calendar size={12} className="text-gray-400 shrink-0" />
+                <span className="text-sm text-gray-600">
+                  {t("joinedDate")}: <span className="font-medium text-gray-700">{regDate}</span>
                 </span>
               </div>
+              {staff.lastLogout && (
+                <div className="flex items-center gap-1.5">
+                  <Calendar size={12} className="text-gray-400 shrink-0" />
+                  <span className="text-sm text-gray-600">
+                    {t("lastLogout")}: <span className="font-medium text-gray-700">{lastLogout}</span>
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="grid grid-cols-2 gap-3 pt-1">
-            <Button
-              variant="outline"
-              className="border-red-200 bg-red-100 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-md h-10 font-medium"
-            >
-              {t("cancelAccount")}
-            </Button>
-            <Button
-              variant="primary"
-              className="bg-amber-50 border border-amber-400 hover:bg-amber-100 text-amber-500 rounded-md h-10 font-medium"
-            >
-              {t("suspendTemporarily")}
-            </Button>
-          </div>
+          {/* Permissions */}
+          {staff.permissions && staff.permissions.length > 0 && (
+            <div>
+              <p className="text-xs text-gray-400 mb-2">{t("permissions") || "Permissions"}</p>
+              <div className="space-y-1">
+                {staff.permissions.map((permission, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-gray-700 capitalize">
+                      {permission.module}:
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {permission.operations.join(", ")}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
