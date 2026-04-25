@@ -17,7 +17,7 @@ const Users = () => {
   const [period, setPeriod] = useState<FilterRange>("daily");
 
   // --- 2. Fetching Statistics Data ---
-  const { data: userStatsData } = useUserStats({ filter : period });
+  const { data: userStatsData,isLoading } = useUserStats({ period });
 
   // Extract API Data safely
   const summaryCards = userStatsData?.data?.summary?.cards || [];
@@ -46,7 +46,6 @@ const Users = () => {
     },
   ];
 
-  // Right Side Stats Cards
   const stats = [
     {
       title: { en: "Total Users", ar: "إجمالي المستخدمين" },
@@ -97,14 +96,13 @@ const Users = () => {
 
   return (
     <div className="space-y-6 p-1">
-
-      {/* Statistics Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <WeeklyReportChart
             title="userStatistics"
             data={chartSummaryStats}
             chartData={graphData}
+            isLoading={isLoading}
             filter={
               <DateRangeFilter 
                 value={period} 
@@ -116,7 +114,7 @@ const Users = () => {
 
         <div className="lg:col-span-1 flex flex-col gap-4">
           {stats.map((stat, i) => (
-            <StatsCard key={i} data={stat} />
+            <StatsCard key={i} data={stat} isLoading={isLoading} />
           ))}
         </div>
       </div>

@@ -1,9 +1,9 @@
 import { getAdminSummary } from "@/services/admin";
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetAdminSummary = (filter: string) => {
+export const useGetAdminSummary = (period: string) => {
   return useQuery({
-    queryKey: ["admin-summary", filter],
-    queryFn: () => getAdminSummary(filter),
+    queryKey: ["admin-summary", period],
+    queryFn: () => getAdminSummary(period),
   });
 };

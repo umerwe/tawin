@@ -71,8 +71,6 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-6">
-
-      {/* Header row with filter */}
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-800">{t("dashboard")}</h1>
         <DateRangeFilter value={filter} onChange={setFilter} />

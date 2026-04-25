@@ -1,9 +1,9 @@
 import api from "@/lib/axios";
 
-export const getAdminSummary = async (filter: string) => {
+export const getAdminSummary = async (period: string) => {
   const { data } = await api.get("/api/admin/summary", {
     params: {
-      filter,
+      period,
     },
   });
   return data;

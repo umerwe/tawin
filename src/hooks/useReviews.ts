@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getProductReviews, createReview, getReviews, deleteReview } from "@/services/review";
+import { getProductReviews, createReview, getReviews, deleteReview, getReviewStats } from "@/services/review";
 import { toast } from "sonner";
 
 export const useReviews = (params?: any) => {
@@ -43,5 +43,12 @@ export const useDeleteReview = () => {
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to delete review");
     },
+  });
+};
+
+export const useReviewStats = (params?: any) => {
+  return useQuery({
+    queryKey: ["review-stats", params],
+    queryFn: () => getReviewStats(params),
   });
 };

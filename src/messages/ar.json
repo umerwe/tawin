@@ -563,7 +563,13 @@
     "monthly": "شهري",
     "dailyReport": "تقرير يومي",
     "monthlyReport": "تقرير شهري",
-    "customers": "العملاء"
+    "customers": "العملاء",
+    "yearly": "سنوي",
+    "allTime": "كل الوقت",
+    "totalSpend": "إجمالي الإنفاق",
+    "yearlyReport": "تقرير سنوي",
+    "all-timeReport": "تقرير كل الوقت",
+    "count" : "عدد"
   },
   "confirm": {
     "logout": {

@@ -12,7 +12,7 @@ const FinancialTransfers = ({data, currencySymbol}: {data: any, currencySymbol?:
   
   const cols = ["no", "email", "orderDate", "status", "totalAmount"];
 
-  const row = (item: any, index: number, locale: "en" | "ar") => {
+  const row = (item: any, index: number) => {
     const formattedDate = new Date(item.createdAt).toLocaleDateString();
     const statusColor = item.status === "delivered" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800";
     

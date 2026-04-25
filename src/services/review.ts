@@ -23,3 +23,8 @@ export const deleteReview = async (reviewId: string) => {
   const { data } = await api.delete(`/api/reviews/${reviewId}`);
   return data;
 };
+
+export const getReviewStats = async (params?: any) => {
+  const { data } = await api.get('/api/reviews/stats', { params });
+  return data.data;
+};

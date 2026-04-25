@@ -23,7 +23,7 @@ const FinancialTransfers = () => {
   const [isReversed, setIsReversed] = useState(false);
   
   const {data: settings} = useSettings();
-  const { data: financialStats } = useGetFinancialStats();
+  const { data: financialStats, isLoading : financialStatsLoading } = useGetFinancialStats();
 
   const statsData = financialStats?.data?.summary?.cards || [];
   const revenue = financialStats?.data?.Revenue || 0;
@@ -96,12 +96,12 @@ const FinancialTransfers = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
           {transferStats.map((stat, i) => (
-            <StatsCard key={i} data={stat} isTrendingAllowed={true} />
+            <StatsCard key={i} data={stat} isTrendingAllowed={true}  isLoading={financialStatsLoading} />
           ))}
         </div>
 
         <div className="lg:col-span-2">
-          <FinancialCard data={revenue} currencySymbol={settings?.currencySymbol || "$"} />
+          <FinancialCard data={revenue} currencySymbol={settings?.currencySymbol || "$"} isLoading={financialStatsLoading} />
         </div>
       </div>
 

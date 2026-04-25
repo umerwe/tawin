@@ -563,7 +563,13 @@
     "monthly": "Monthly",
     "dailyReport": "Daily Report",
     "monthlyReport": "Monthly Report",
-    "customers": "Customers"
+    "customers": "Customers",
+    "yearly": "Yearly",
+    "allTime": "All Time",
+    "totalSpend": "Total Spend",
+    "yearlyReport": "Yearly Report",
+    "all-timeReport": "All Time Report",
+    "count": "Count"
   },
   "confirm": {
     "logout": {

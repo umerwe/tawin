@@ -32,7 +32,7 @@ const Coupons = () => {
           : undefined,
   }), [page, debouncedSearch, activeTab]);
 
-  const { data: stats } = useCouponStatsAdmin();
+  const { data: stats, isLoading: couponStatsLoading } = useCouponStatsAdmin();
   const { data, isLoading, refetch, isFetching } = useCouponsAdmin(queryParams);
 
   const couponsData = data?.data || [];
@@ -87,7 +87,7 @@ const Coupons = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {couponStats.map((stat, i) => (
-          <StatsCard key={i} data={stat} />
+          <StatsCard key={i} data={stat} isLoading={couponStatsLoading} />
         ))}
       </div>
 

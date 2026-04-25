@@ -49,7 +49,7 @@ export const addStock = async (formData: AddStockFormData) => {
   return data;
 };
 
-export const getSupplierStats = async () => {
-  const { data } = await api.get("/api/suppliers/stats");
+export const getSupplierStats = async (params?: { period?: string }) => {
+  const { data } = await api.get("/api/suppliers/stats", { params });
   return data.data;
 };

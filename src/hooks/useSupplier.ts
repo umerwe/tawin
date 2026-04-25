@@ -105,10 +105,10 @@ export const useAddStock = () => {
   });
 };
 
-export const useSupplierStats = () => {
+export const useSupplierStats = (params?: { period?: string }) => {
   return useQuery({
-    queryKey: ["supplier-stats"],
-    queryFn: getSupplierStats,
+    queryKey: ["supplier-stats", params?.period],
+    queryFn: () => getSupplierStats(params),
     staleTime: 5 * 60 * 1000,
   });
 };

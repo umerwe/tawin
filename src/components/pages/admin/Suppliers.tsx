@@ -8,30 +8,19 @@ import SuppliersTable from "@/components/tables/SuppliersTable";
 import StatsCard from "@/components/card/StatsCard";
 import { useGetSuppliers, useDeleteSupplier, useSupplierStats } from "@/hooks/useSupplier";
 import { useDebounce } from "@/hooks/useDebounce";
-
-const mockGraphData = [
-    { label: "2026-04-01", customers: 40 },
-    { label: "2026-04-02", customers: 30 },
-    { label: "2026-04-03", customers: 65 },
-    { label: "2026-04-04", customers: 45 },
-    { label: "2026-04-05", customers: 90 },
-    { label: "2026-04-06", customers: 55 },
-    { label: "2026-04-07", customers: 80 },
-];
-const tableStats = [
-    { label: { en: "Active suppliers", ar: "الموردون النشطون" }, value: "25k", active: true },
-    { label: { en: "New suppliers", ar: "موردون جدد" }, value: "5.6k" },
-    { label: { en: "Top 10 Suppliers Sales", ar: "مبيعات أفضل 10 موردين" }, value: "250k" },
-    { label: { en: "Conversion rate", ar: "معدل التحويل" }, value: "5.5%" },
-];
+import DateRangeFilter, { FilterRange } from "@/components/DateRange"; // Added this back
 
 const Suppliers = () => {
+    // 1. Period state for the API
+    const [period, setPeriod] = useState<FilterRange>("daily");
+
     const [activeTab, setActiveTab] = useState("All Suppliers");
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [isReversed, setIsReversed] = useState(false);
 
-    const { data: supplierStats } = useSupplierStats();
+    // 2. Using your variable name: supplierStats
+    const { data: supplierStats, isLoading: supplierStatsLoading } = useSupplierStats({ period });
 
     const debouncedSearch = useDebounce(search, 500);
 
@@ -62,9 +51,10 @@ const Suppliers = () => {
         });
     };
 
+    // 3. Keeping your exact structure: supplierStats?.suppliers...
     const stats = [
         {
-            title: { en: "Total suppliers", ar: "إجمالي الموردين" },
+            title: { en: "Total Suppliers", ar: "إجمالي الموردين" },
             value: supplierStats?.suppliers?.total || "0",
             label1: { en: "Active", ar: "نشط" },
             label1Value: supplierStats?.suppliers?.active || "0",
@@ -85,13 +75,18 @@ const Suppliers = () => {
         },
     ];
 
+    const tableStats = [
+        { label: { en: "Total Suppliers", ar: "إجمالي الموردين" }, value: supplierStats?.suppliers?.total || "0" },
+        { label: { en: "Total Spend", ar: "إجمالي الإنفاق" }, value: supplierStats?.procurement?.totalSpend || "0" },
+        { label: { en: "Total Items", ar: "إجمالي العناصر" }, value: supplierStats?.procurement?.totalItems || "0" }
+    ];
 
     return (
         <div className="space-y-6 p-1">
-            {/* First Row: Stats cards in a grid */}
+            {/* First Row: Stats cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {stats.map((stat, i) => (
-                    <StatsCard key={i} data={stat} />
+                    <StatsCard key={i} data={stat} isLoading={supplierStatsLoading} />
                 ))}
             </div>
 
@@ -100,7 +95,15 @@ const Suppliers = () => {
                 <WeeklyReportChart
                     data={tableStats}
                     title="supplierStatistics"
-                    chartData={mockGraphData}
+                    // Changed mockGraphData to your real API graph data
+                    chartData={supplierStats?.graphData || []} 
+                    dataKey="spend" // Set this to 'spend' as per your API
+                    filter={
+                        <DateRangeFilter 
+                            value={period} 
+                            onChange={(val) => setPeriod(val)} 
+                        />
+                    }
                 />
             </div>
 

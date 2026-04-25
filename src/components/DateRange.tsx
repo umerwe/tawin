@@ -1,4 +1,3 @@
-// components/DateRangeFilter.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -9,10 +8,9 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-export type FilterRange = "daily" | "weekly" | "monthly";
+export type FilterRange = "daily" | "weekly" | "monthly" | "yearly" | "all-time";
 
 interface Props {
     value: FilterRange;
@@ -26,6 +24,8 @@ const DateRangeFilter = ({ value, onChange }: Props) => {
         { label: t("daily"),   value: "daily"   },
         { label: t("weekly"),  value: "weekly"  },
         { label: t("monthly"), value: "monthly" },
+        // { label: t("yearly"), value: "yearly" },
+        // { label: t("allTime"), value: "all-time" },
     ];
 
     const current = options.find((o) => o.value === value);

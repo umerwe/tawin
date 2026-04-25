@@ -14,7 +14,7 @@ const Orders = () => {
     const t = useTranslations("translation");
 
     // Fetch Real-time Stats
-    const { data: orderStatsData } = useOrderStats();
+    const { data: orderStatsData, isLoading: isStatsLoading } = useOrderStats();
     const statsFromApi = orderStatsData?.data;
 
     // Table States
@@ -105,7 +105,7 @@ const Orders = () => {
             {/* Statistics Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {stats.map((stat, i) => (
-                    <StatsCard key={i} data={stat} />
+                    <StatsCard key={i} data={stat} isLoading={isStatsLoading} />
                 ))}
             </div>
 

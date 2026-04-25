@@ -3,13 +3,15 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-/**
- * Main Dashboard Skeleton
- * Matches the grid layout of the Dashboard component
- */
 const DashboardSkeleton = () => {
   return (
     <div className="space-y-6">
+      {/* Header with Title and Dropdown Skeleton */}
+      <div className="flex items-center justify-between">
+        <Skeleton className="h-8 w-8" /> {/* Title Skeleton */}
+        <Skeleton className="h-10 w-28 rounded-md" /> {/* Dropdown Skeleton */}
+      </div>
+
       {/* Stats Cards Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[1, 2, 3].map((i) => (

@@ -6,52 +6,23 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FilterSection from "@/components/FilterSection";
 import ReviewsTable from "@/components/tables/ReviewsTable";
 import StatsCard from "@/components/card/StatsCard";
-import { useReviews } from "@/hooks/useReviews";
+import { useReviews, useReviewStats } from "@/hooks/useReviews";
 import { useDebounce } from "@/hooks/useDebounce";
-
-const mockGraphData = [
-  { label: "2026-04-01", customers: 40 },
-  { label: "2026-04-02", customers: 30 },
-  { label: "2026-04-03", customers: 65 },
-  { label: "2026-04-04", customers: 45 },
-  { label: "2026-04-05", customers: 90 },
-  { label: "2026-04-06", customers: 55 },
-  { label: "2026-04-07", customers: 80 },
-];
-
-const stats = [
-  {
-    title: { en: "Total Reviews", ar: "إجمالي التقييمات" },
-    value: "11,040",
-    trend: "+14.4%",
-    isUp: true,
-    footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" },
-  },
-  {
-    title: { en: "5-Star Reviews", ar: "التقييمات 5 نجمات" },
-    value: "240",
-    trend: "+14.4%",
-    isUp: true,
-    footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" },
-  },
-  {
-    title: { en: "Total Users", ar: "عدد المستخدمين" },
-    value: "11,040",
-    trend: "+14.4%",
-    isUp: true,
-    footerLabel: { en: "Last 7 days", ar: "آخر 7 أيام" },
-  },
-];
-
-const tableStats = [
-  { label: { en: "Reviews", ar: "تقييم" }, value: "25k", active: true },
-  { label: { en: "5-Star Reviews", ar: "تقييم 5 نجمات" }, value: "5.6k" },
-  { label: { en: "Total Users", ar: "عدد المستخدمين" }, value: "250k" },
-  { label: { en: "User Rate", ar: "نسبة المستخدمين" }, value: "5.5%" },
-];
+import DateRangeFilter, { FilterRange } from "@/components/DateRange";
 
 const Reviews = () => {
-  const [activeTab, setActiveTab] = useState("All Orders");
+  // --- 1. Filter & Tab State ---
+  const [period, setPeriod] = useState<FilterRange>("daily");
+  // Added the missing activeTab state here
+  const [activeTab, setActiveTab] = useState("All Reviews"); 
+
+  // --- 2. Fetching Dynamic Stats ---
+  const { data: reviewStatsResponse, isLoading : reviewsLoading } = useReviewStats({ period });
+  const statsData = reviewStatsResponse || {};
+  const starStats = statsData?.starStats || {};
+  const graphData = statsData?.graphData || [];
+
+  // --- 3. Table Logic ---
   const [ratingFilter, setRatingFilter] = useState<number | null>(null);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -75,15 +46,82 @@ const Reviews = () => {
     return isReversed ? [...rawData].reverse() : rawData;
   }, [rawData, isReversed]);
 
+  // --- 4. Data Mapping ---
+
+  const tableStats = [
+    {
+      label: { en: "Total Reviews", ar: "إجمالي التقييمات" },
+      value: statsData?.totalReviews || "0"
+    },
+    {
+      label: { en: "Total Reviewers", ar: "إجمالي المراجعين" },
+      value: statsData?.totalReviewers || "0"
+    },
+    {
+      label: { en: "User Rate", ar: "نسبة المستخدمين" },
+      value: `${statsData?.userReviewRate || 0}%`
+    },
+  ];
+
+  const stats = [
+    {
+      title: { en: "5 Star Reviews", ar: "تقييمات 5 نجوم" },
+      value: (starStats[5] || 0).toString(),
+      trend: "Excellent",
+      isUp: true,
+      footerLabel: { en: "Total Count", ar: "إجمالي العدد" },
+    },
+    {
+      title: { en: "4 Star Reviews", ar: "تقييمات 4 نجوم" },
+      value: (starStats[4] || 0).toString(),
+      trend: "Good",
+      isUp: true,
+      footerLabel: { en: "Total Count", ar: "إجمالي العدد" },
+    },
+    {
+      title: { en: "3 Star Reviews", ar: "تقييمات 3 نجوم" },
+      value: (starStats[3] || 0).toString(),
+      trend: "Average",
+      isUp: false,
+      footerLabel: { en: "Total Count", ar: "إجمالي العدد" },
+    },
+    {
+      title: { en: "2 Star Reviews", ar: "تقييمات نجمتين" },
+      value: (starStats[2] || 0).toString(),
+      trend: "Poor",
+      isUp: false,
+      footerLabel: { en: "Total Count", ar: "إجمالي العدد" },
+    },
+    {
+      title: { en: "1 Star Reviews", ar: "تقييمات نجمة واحدة" },
+      value: (starStats[1] || 0).toString(),
+      trend: "Very Poor",
+      isUp: false,
+      footerLabel: { en: "Total Count", ar: "إجمالي العدد" },
+    },
+  ];
+
   return (
     <div className="space-y-6 p-1">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <WeeklyReportChart data={tableStats} title="customerReviewsStatistics" chartData={mockGraphData} />
+          <WeeklyReportChart
+            data={tableStats}
+            title="customerReviewsStatistics"
+            chartData={graphData}
+            isLoading={reviewsLoading}
+            dataKey="count"
+            filter={
+              <DateRangeFilter
+                value={period}
+                onChange={(val) => setPeriod(val)}
+              />
+            }
+          />
         </div>
         <div className="lg:col-span-1 flex flex-col gap-4">
           {stats.map((stat, i) => (
-            <StatsCard key={i} data={stat} />
+            <StatsCard key={i} data={stat} isLoading={reviewsLoading} />
           ))}
         </div>
       </div>
@@ -91,10 +129,14 @@ const Reviews = () => {
       <Card className="border shadow-none overflow-hidden">
         <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between pb-6">
           <FilterSection
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
             data={rawData}
             type="review"
+            // Now these variables exist!
+            activeTab={activeTab}
+            setActiveTab={(tab) => {
+              setActiveTab(tab);
+              setPage(1);
+            }}
             ratingFilter={ratingFilter}
             setRatingFilter={(val) => {
               setRatingFilter(val);
