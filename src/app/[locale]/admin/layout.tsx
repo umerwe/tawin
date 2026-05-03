@@ -16,7 +16,7 @@ export default function WebLayout({
 }>) {
     return (
         <SidebarProvider>
-            <AdminGuard>
+            {/* <AdminGuard> */}
                 <Sidebar />
                 <SidebarInset className="min-h-screen">
                     <Navbar />
@@ -24,7 +24,7 @@ export default function WebLayout({
                         {children}
                     </Container>
                 </SidebarInset>
-            </AdminGuard>
+            {/* </AdminGuard> */}
         </SidebarProvider>
     );
 }

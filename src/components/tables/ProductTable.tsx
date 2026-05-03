@@ -23,21 +23,37 @@ interface ProductTableProps {
   };
   page: number;
   setPage: (p: number) => void;
+  canDelete?: boolean;
+  canPatch?: boolean;
+  canPost?: boolean;
 }
 
-const ProductTable = ({ activeTab, data, isLoading, pagination, page, setPage }: ProductTableProps) => {
+const ProductTable = ({
+  activeTab,
+  data,
+  isLoading,
+  pagination,
+  page,
+  setPage,
+  canDelete = false,
+  canPatch = false,
+  canPost = false,
+}: ProductTableProps) => {
   const { data: settings } = useSettings();
   const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
   const router = useRouter();
 
-  const cols = ["no", "product", "price", "dateCreated", "actions"];
+  // Show actions column only if at least one action is permitted
+  const showActionsCol = canDelete || canPatch;
+
+  const baseCols = ["no", "product", "price", "dateCreated"];
+  const cols = showActionsCol ? [...baseCols, "actions"] : baseCols;
 
   const filteredData = data.filter((item) => {
     if (activeTab === "All Products") return true;
     return item.status?.en === activeTab;
   });
 
-  // Navigation handler
   const handleNavigate = (locale: string, slug: string) => {
     router.push(`/${locale}/admin/product-list/${slug}`);
   };
@@ -67,37 +83,46 @@ const ProductTable = ({ activeTab, data, isLoading, pagination, page, setPage }:
         {new Date(item.createdAt?.$date || item.createdAt).toLocaleDateString()}
       </TableCell>
 
-      {/* Actions Cell - Stop propagation here so clicking buttons doesn't trigger the row navigation */}
-      <TableCell onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-gray-400 hover:text-aqua"
-            onClick={() => handleNavigate(locale, item.slug)}
-          >
-            <Edit3 size={16} />
-          </Button>
-          <ConfirmDialog
-            title="Delete Product"
-            description={`Are you sure you want to delete ${item.title[locale]}?`}
-            variant="destructive"
-            loading={isDeleting}
-            onConfirm={(close) => {
-              deleteProduct(item._id);
-              close();
-            }}
-          >
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-gray-400 hover:text-red-500"
-            >
-              <Trash2 size={16} />
-            </Button>
-          </ConfirmDialog>
-        </div>
-      </TableCell>
+      {/* Actions column — only rendered when at least one action is allowed */}
+      {showActionsCol && (
+        <TableCell onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center gap-2">
+            {/* Edit — only if patch is allowed */}
+            {canPatch && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-gray-400 hover:text-aqua"
+                onClick={() => handleNavigate(locale, item.slug)}
+              >
+                <Edit3 size={16} />
+              </Button>
+            )}
+
+            {/* Delete — only if delete is allowed */}
+            {canDelete && (
+              <ConfirmDialog
+                title="Delete Product"
+                description={`Are you sure you want to delete ${item.title[locale]}?`}
+                variant="destructive"
+                loading={isDeleting}
+                onConfirm={(close) => {
+                  deleteProduct(item._id);
+                  close();
+                }}
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-gray-400 hover:text-red-500"
+                >
+                  <Trash2 size={16} />
+                </Button>
+              </ConfirmDialog>
+            )}
+          </div>
+        </TableCell>
+      )}
     </>
   );
 
@@ -112,7 +137,7 @@ const ProductTable = ({ activeTab, data, isLoading, pagination, page, setPage }:
         total: pagination?.totalDocs || 0,
         page: pagination?.page || 1,
         limit: pagination?.limit || 10,
-        setPage
+        setPage,
       }}
     />
   );

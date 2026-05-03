@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useUserProfile } from "@/hooks/useAuth";
 import MyImage from "@/components/MyImage";
+import Link from "next/link";
 
 export default function Navbar() {
   const t = useTranslations("translation");
@@ -27,10 +28,10 @@ export default function Navbar() {
             <LanguageSwitcher />
 
             {/* Notification */}
-            <div className="relative cursor-pointer shrink-0">
+            <Link href="/admin/notification" className="relative cursor-pointer shrink-0">
               <AiOutlineBell size={24} className="text-gray-700" />
               <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-            </div>
+            </Link>
 
             {/* Profile Image / Skeleton Wrapper */}
             <div className="cursor-pointer shrink-0">

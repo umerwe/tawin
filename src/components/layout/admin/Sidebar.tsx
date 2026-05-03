@@ -16,13 +16,16 @@ import { Power } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { sidebarMenu } from "@/constants/sidebar";
 import ConfirmDialog from "@/components/dialog/ConfirmDialog";
+import { useUserProfile } from "@/hooks/useAuth";
 
 export default function Sidebar({ className }: { className?: string }) {
   const t = useTranslations("translation");
   const t2 = useTranslations("confirm");
+  const { data } = useUserProfile();
+  const profileData = data?.data;
 
   const router = useRouter();
   const pathname = usePathname();
@@ -45,16 +48,32 @@ export default function Sidebar({ className }: { className?: string }) {
   }, [pathname]);
 
   const handleConfirm = () => {
-   router.push("/auth/admin")
+    router.push("/auth/admin");
   };
 
-  // Sections partitioning
-  // 1-7: items 0 to 6
-  const mainMenu = sidebarMenu.slice(0, 8); 
-  // 8-11: items 7 to 11
-  const productsMenu = sidebarMenu.slice(8, 12); 
-  // 12+: items 12 onwards
-  const adminMenu = sidebarMenu.slice(12); 
+  // Filter menu items based on role and permissions
+  const filteredMenu = useMemo(() => {
+    const isStaff = profileData?.role === "staff";
+    if (!isStaff) return sidebarMenu;
+
+    const allowedModules = new Set(
+      (profileData?.permissions ?? []).map((p: { module: string }) => p.module)
+    );
+
+    return sidebarMenu.filter((item) => allowedModules.has(item.label));
+  }, [profileData]);
+
+  const mainMenuLabels = new Set([
+    "dashboard", "orders", "users", "suppliers",
+    "coupon codes", "financial transfers", "brand", "construction-basket",
+  ]);
+  
+  const productsMenuLabels = new Set(["products", "stock", "reviews"]);
+  const adminMenuLabels = new Set(["staff"]);
+
+  const mainMenu = filteredMenu.filter((item) => mainMenuLabels.has(item.label));
+  const productsMenu = filteredMenu.filter((item) => productsMenuLabels.has(item.label));
+  const adminMenu = filteredMenu.filter((item) => adminMenuLabels.has(item.label));
 
   const SectionHeader = ({ title }: { title: string }) => (
     <div className="px-2 py-2 text-sm font-semibold text-gray-400 group-data-[collapsible=icon]:hidden">
@@ -64,7 +83,7 @@ export default function Sidebar({ className }: { className?: string }) {
 
   const renderMenuItems = (items: typeof sidebarMenu) => (
     <SidebarMenu className="flex flex-col gap-1">
-      {items.map(({ icon: Icon, path, title }: any) => {
+      {items.map(({ icon: Icon, path, title }) => {
         const active = isMenuActive(path);
         return (
           <SidebarMenuItem key={path}>
@@ -93,27 +112,33 @@ export default function Sidebar({ className }: { className?: string }) {
     <SidebarComponent className={cn("border-r border-gray-200", className)} collapsible="icon" dir={dir}>
       <SidebarHeader className="bg-white px-[24px] group-data-[collapsible=icon]:px-2 py-4 h-auto">
         <div className="font-medium text-sm text-gray-900 group-data-[collapsible=icon]:text-center">
-          <span className="group-data-[collapsible=icon]:hidden">{t('constructionManagement')}</span>
+          <span className="group-data-[collapsible=icon]:hidden">{t("constructionManagement")}</span>
           <span className="hidden group-data-[collapsible=icon]:inline">{t("cm")}</span>
         </div>
       </SidebarHeader>
 
       <SidebarContent className="bg-white px-4 no-scrollbar group-data-[collapsible=icon]:overflow-y-auto group-data-[collapsible=icon]:px-2">
-        
-        <div className="mb-2">
-          <SectionHeader title="mainMenu" />
-          {renderMenuItems(mainMenu)}
-        </div>
 
-        <div className="mb-2">
-          <SectionHeader title="products" />
-          {renderMenuItems(productsMenu)}
-        </div>
+        {mainMenu.length > 0 && (
+          <div className="mb-2">
+            <SectionHeader title="mainMenu" />
+            {renderMenuItems(mainMenu)}
+          </div>
+        )}
 
-        <div className="mb-2">
-          <SectionHeader title="administrator" />
-          {renderMenuItems(adminMenu)}
-        </div>
+        {productsMenu.length > 0 && (
+          <div className="mb-2">
+            <SectionHeader title="products" />
+            {renderMenuItems(productsMenu)}
+          </div>
+        )}
+
+        {adminMenu.length > 0 && (
+          <div className="mb-2">
+            <SectionHeader title="administrator" />
+            {renderMenuItems(adminMenu)}
+          </div>
+        )}
 
       </SidebarContent>
 

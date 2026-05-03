@@ -1,24 +1,28 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Login, LoginSchema } from "@/validations/auth";
-import { useRouter } from "next/navigation";
-import { useLogin } from "@/hooks/useAuth";
+import { useLogin, useSigninStaff } from "@/hooks/useAuth"; // Added staff hook
 import { SpinnerLoader } from "../common/SpinnerLoader";
 
 const AdminLoginForm = () => {
     const t = useTranslations("translation");
-    const router = useRouter();
-    const locale = useLocale();
-    const { mutate: login, isPending } = useLogin();
 
+    // Login Hooks
+    const { mutate: login, isPending: isAdminPending } = useLogin();
+    const { mutate: staffLogin, isPending: isStaffPending } = useSigninStaff();
+
+    // State
     const [showPassword, setShowPassword] = useState(false);
+    const [loginType, setLoginType] = useState<"admin" | "staff">("admin");
+
+    const isPending = isAdminPending || isStaffPending;
 
     const {
         register,
@@ -33,20 +37,44 @@ const AdminLoginForm = () => {
     });
 
     const onSubmit = (data: Login) => {
-        login(data, {
-            onSuccess: () => {
-                router.push(`/${locale}/admin`);
-            }
-        });
+        if (loginType === "admin") {
+            login(data);
+        } else {
+            staffLogin(data);
+        }
     };
 
     return (
         <section className="flex w-full flex-col items-center justify-center px-8 lg:w-1/2 xl:px-24">
             <div className="w-full max-w-sm space-y-6">
-                <div className="space-y-1">
+                <div className="space-y-4">
                     <h1 className="text-3xl font-medium tracking-tight text-foreground">
-                        {t("adminSignin")}
+                        {loginType === "admin" ? t("adminSignin") : "Staff Sign In"}
                     </h1>
+
+                    {/* Role Switcher (Radio Toggles) */}
+                    <div className="grid w-full grid-cols-2 gap-2 rounded-lg bg-muted p-1">
+                        <button
+                            type="button"
+                            onClick={() => setLoginType("admin")}
+                            className={`rounded-md px-3 py-1.5 text-sm cursor-pointer font-medium transition-all ${loginType === "admin"
+                                    ? "bg-background text-foreground shadow-sm"
+                                    : "text-muted-foreground hover:bg-background/50"
+                                }`}
+                        >
+                            Admin
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setLoginType("staff")}
+                            className={`rounded-md px-3 py-1.5 text-sm cursor-pointer font-medium transition-all ${loginType === "staff"
+                                    ? "bg-background text-foreground shadow-sm"
+                                    : "text-muted-foreground hover:bg-background/50"
+                                }`}
+                        >
+                            Staff
+                        </button>
+                    </div>
                 </div>
 
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -91,7 +119,7 @@ const AdminLoginForm = () => {
                         {isPending ? (
                             <SpinnerLoader />
                         ) : (
-                            t("signin")
+                            loginType === "admin" ? t("signin") : "Staff Sign In"
                         )}
                     </Button>
                 </form>

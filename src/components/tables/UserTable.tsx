@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 import { cn } from "@/lib/utils";
-import { MessageSquare, Trash2, CheckCircle, XCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Trash2, CheckCircle, XCircle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import UserDetailDialog from "@/components/dialog/UserDetailDialog";
 import ConfirmDialog from "@/components/dialog/ConfirmDialog";
 import { useTranslations } from "next-intl";
 import { useVerifyUser, useDeleteUser } from "@/hooks/useAuth";
+import { RootState } from "@/store/store";
 
 interface UserTableProps {
   data: any[];
@@ -64,6 +65,28 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
   );
 };
 
+// Read-only status badge (no patch permission)
+const StatusBadge = ({ isVerified, t, getStatusColor }: any) => (
+  <span
+    className={cn(
+      "inline-flex items-center gap-1.5 h-8 px-3 border rounded-md font-semibold text-xs",
+      getStatusColor(isVerified)
+    )}
+  >
+    {isVerified ? (
+      <>
+        <CheckCircle size={13} className="text-green-500" />
+        {t("translation.verified")}
+      </>
+    ) : (
+      <>
+        <XCircle size={13} className="text-red-500" />
+        {t("translation.unverified")}
+      </>
+    )}
+  </span>
+);
+
 const UserTable = ({ data, pagination, isLoading, page, setPage }: UserTableProps) => {
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -72,7 +95,18 @@ const UserTable = ({ data, pagination, isLoading, page, setPage }: UserTableProp
 
   const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
 
-  const cols = ["userCode", "name", "email", "username", "verified", "actions"];
+  // --- Permission checks ---
+  const auth = useSelector((state: RootState) => state.auth.staff);
+  const usersPermissions: string[] =
+    auth?.permissions?.find((p: any) => p.module === "users")?.operations ?? [];
+
+  const canDelete = usersPermissions.includes("delete");
+  const canPatch  = usersPermissions.includes("patch");
+  // -------------------------
+
+  // Build columns based on permissions
+  const baseCols = ["userCode", "name", "email", "username", "verified"];
+  const cols = canDelete ? [...baseCols, "actions"] : baseCols;
 
   const handleRowClick = (item: any) => {
     setSelectedUser(item);
@@ -93,37 +127,44 @@ const UserTable = ({ data, pagination, isLoading, page, setPage }: UserTableProp
       <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
         {item.username}
       </TableCell>
+
+      {/* Status: dropdown if patch allowed, badge if not */}
       <TableCell>
-        <StatusDropdown item={item} t={t} getStatusColor={getStatusColor} />
+        {canPatch ? (
+          <StatusDropdown item={item} t={t} getStatusColor={getStatusColor} />
+        ) : (
+          <StatusBadge isVerified={item.isVerified} t={t} getStatusColor={getStatusColor} />
+        )}
       </TableCell>
-      <TableCell>
-        <div className="flex items-center gap-2">
-          {/* <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-blue-500">
-            <MessageSquare size={16} />
-          </Button> */}
-          <div onClick={(e) => e.stopPropagation()}>
-            <ConfirmDialog
-              title={tConfirm("delete.title", { value: t("translation.user") })}
-              description={tConfirm("delete.description", { value: t("translation.user") })}
-              variant="destructive"
-              loading={isDeleting}
-              onConfirm={(closeDialog) => {
-                deleteUser(item._id, {
-                  onSuccess: () => closeDialog(),
-                });
-              }}
-              asChild
-            >
-              <button
-                className="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-md hover:bg-red-50 cursor-pointer disabled:opacity-50"
-                title={t("translation.delete")}
+
+      {/* Actions column only rendered when delete is allowed */}
+      {canDelete && (
+        <TableCell>
+          <div className="flex items-center gap-2">
+            <div onClick={(e) => e.stopPropagation()}>
+              <ConfirmDialog
+                title={tConfirm("delete.title", { value: t("translation.user") })}
+                description={tConfirm("delete.description", { value: t("translation.user") })}
+                variant="destructive"
+                loading={isDeleting}
+                onConfirm={(closeDialog) => {
+                  deleteUser(item._id, {
+                    onSuccess: () => closeDialog(),
+                  });
+                }}
+                asChild
               >
-                <Trash2 size={18} />
-              </button>
-            </ConfirmDialog>
+                <button
+                  className="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-md hover:bg-red-50 cursor-pointer disabled:opacity-50"
+                  title={t("translation.delete")}
+                >
+                  <Trash2 size={18} />
+                </button>
+              </ConfirmDialog>
+            </div>
           </div>
-        </div>
-      </TableCell>
+        </TableCell>
+      )}
     </>
   );
 

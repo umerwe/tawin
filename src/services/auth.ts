@@ -1,8 +1,15 @@
 import api from "@/lib/axios";
+import { setStaff } from "@/store/authSlice";
+import { AppDispatch } from "@/store/store";
 import { Address, Login, Signup } from "@/validations/auth";
 
 export const loginUser = async (credentials: Login) => {
   const { data } = await api.post("/api/auth/login", credentials);
+  return data.data;
+};
+
+export const loginStaff = async (credentials: Login) => {
+  const { data } = await api.post("/api/auth/login/staff", credentials);
   return data.data;
 };
 
@@ -16,8 +23,9 @@ export const signUpUserByAdmin = async (credentials: Signup) => {
   return data.data;
 };
 
-export const getUserProfile = async () => {
+export const getUserProfile = async (dispatch: AppDispatch) => {
   const { data } = await api.get("/api/users/me");
+  dispatch(setStaff(data.data));
   return data;
 };
 
@@ -51,7 +59,7 @@ export const updateUserProfile = async (data: File | any) => {
 // api.ts or wherever updateAdminProfile is defined
 export const updateAdminProfile = async (data: any) => {
   const formData = new FormData();
-  
+
   if (data instanceof File) {
     formData.append('profileImage', data);
   } else {

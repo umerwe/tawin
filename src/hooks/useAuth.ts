@@ -1,7 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { loginUser, signUpUser, getUserProfile, updateUserProfile, getAdminUsers, verifyUser, addAddress, getAllAddresses, deleteAddress, updateAddress, signUpUserByAdmin, deleteUser, updateAdminProfile } from "@/services/auth";
+import { loginUser, loginStaff, signUpUser, getUserProfile, updateUserProfile, getAdminUsers, verifyUser, addAddress, getAllAddresses, deleteAddress, updateAddress, signUpUserByAdmin, deleteUser, updateAdminProfile } from "@/services/auth";
 import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { setStaff } from "@/store/authSlice";
 
 export const useLogin = () => {
   const router = useRouter();
@@ -61,11 +63,14 @@ export const useUserSignupByAdmin = () => {
 };
 
 export const useUserProfile = () => {
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") || localStorage.getItem("admin_token") : null;
+  const dispatch = useDispatch();
+  const token = typeof window !== "undefined"
+    ? localStorage.getItem("token") || localStorage.getItem("admin_token")
+    : null;
 
   return useQuery({
     queryKey: ["userProfile"],
-    queryFn: getUserProfile,
+    queryFn: () => getUserProfile(dispatch),
     staleTime: 5 * 60 * 1000,
     retry: 1,
     enabled: !!token,
@@ -187,4 +192,27 @@ export const useUpdateAddress = () => {
       toast.error(error.response?.data?.message || "Failed to update address.");
     },
   });
+};
+
+export const useSigninStaff = () => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const mutation = useMutation({
+    mutationFn: loginStaff,
+    onSuccess: (data) => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("admin_token");
+      localStorage.setItem("admin_token", data.token!);
+      dispatch(setStaff(data.user));
+      router.replace("/admin");
+      toast.success("Staff logged in successfully!");
+    },
+    onError: (error: any) => {
+      console.log(error)
+      toast.error(error.response?.data?.message || "Staff login failed. Please check your credentials.");
+    },
+  });
+
+  return mutation;
 };

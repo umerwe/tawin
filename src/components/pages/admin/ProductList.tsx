@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useSelector } from "react-redux";
 import {
     Plus,
     RefreshCcw,
@@ -24,6 +25,7 @@ import { useRouter } from "next/navigation";
 import CategoryFormDialog from "@/components/dialog/CategoryFormDialog";
 import CategoryDetailDialog from "@/components/dialog/CategoryDetailDialog";
 import { Category } from "@/types/category";
+import { RootState } from "@/store/store"; // adjust if needed
 
 const CATEGORY_PAGE_SIZE = 8;
 
@@ -44,6 +46,16 @@ const ProductList = () => {
     const router = useRouter();
     const debouncedSearch = useDebounce(search, 500);
 
+    // --- Permission checks ---
+    const auth = useSelector((state: RootState) => state.auth.staff);
+    const productsPermissions: string[] =
+        auth?.permissions?.find((p: any) => p.module === "products")?.operations ?? [];
+
+    const canPost = productsPermissions.includes("post");
+    const canPatch = productsPermissions.includes("patch");
+    const canDelete = productsPermissions.includes("delete");
+    // -------------------------
+
     // Categories — fetch only current page of 8 from backend
     const { data: categoriesData, isLoading: categoriesLoading } = useGetCategories({
         limit: CATEGORY_PAGE_SIZE,
@@ -54,7 +66,6 @@ const ProductList = () => {
     const categories = categoriesData?.data || [];
     const categoryTotalPages = categoriesData?.meta?.totalPages ?? 1;
 
-
     // Products Logic
     const queryParams = useMemo(() => {
         const rawParams = {
@@ -64,7 +75,6 @@ const ProductList = () => {
             page,
             search: debouncedSearch || undefined,
         };
-        
         return rawParams;
     }, [activeTab, page, debouncedSearch]);
 
@@ -86,15 +96,13 @@ const ProductList = () => {
 
     const actions = [
         { icon: <RefreshCcw className={cn("h-4 w-4", isFetching && "animate-spin")} />, color: "text-gray-500", onClick: () => refetch() },
-        // { icon: <Filter className="h-4 w-4" />, color: "text-gray-500" },
         { icon: <ArrowUpDown className="h-4 w-4" />, color: isReversed ? "text-aqua font-bold" : "text-gray-500", onClick: () => setIsReversed(!isReversed) },
-        // { icon: <MoreHorizontal className="h-4 w-4" /> },
         { icon: <FileText className="h-4 w-4" />, color: "text-red-500" },
     ];
 
     return (
         <div className="space-y-6 p-1">
-            {/* Header */}
+            {/* Header — Add Category button only if post is allowed */}
             <div className="flex items-center justify-end gap-3">
                 <Button variant="primary" className="w-32" onClick={() => setIsAddDialogOpen(true)} size="sm">
                     <Plus className="h-4 w-4 mr-2" /> {t('addCategory')}
@@ -104,11 +112,6 @@ const ProductList = () => {
             {/* Category Grid with backend pagination */}
             <div>
                 <div className="flex items-center justify-end mb-3">
-                    {/* <span className="text-sm text-muted-foreground">
-                        {!categoriesLoading && categoriesData?.meta
-                            ? `${categoriesData.meta.total} ${t("categories") || "categories"}`
-                            : ""}
-                    </span> */}
                     <div className="flex items-center gap-1.5">
                         <Button
                             variant="outline"
@@ -164,10 +167,16 @@ const ProductList = () => {
                             ))}
                         </div>
                     </div>
+
                     {/* Search & Actions Container */}
                     <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 w-full xl:w-auto">
                         <div className="flex items-center gap-2 flex-1">
-                            <SearchInput value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} placeholder={`${t("search")}...`} className="flex-1 md:w-[200px] lg:w-[240px]" />
+                            <SearchInput
+                                value={search}
+                                onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                                placeholder={`${t("search")}...`}
+                                className="flex-1 md:w-[200px] lg:w-[240px]"
+                            />
                             <div className="flex items-center gap-1 shrink-0">
                                 {actions.map((action, idx) => (
                                     <Button key={idx} variant="outline" size="icon" onClick={action.onClick} className={cn("h-9 w-9 border-gray-200 bg-white shrink-0", action.color)}>
@@ -176,10 +185,14 @@ const ProductList = () => {
                                 ))}
                             </div>
                         </div>
-                        <Button variant="primary" size="sm" className="w-full lg:w-auto gap-2 shrink-0 h-9" onClick={() => router.push("/admin/products/add")}>
-                            <span className="truncate">{t("addProduct")}</span>
-                            <CirclePlus className="h-3 w-3" />
-                        </Button>
+
+                        {/* Add Product button — only if post is allowed */}
+                        {canPost && (
+                            <Button variant="primary" size="sm" className="w-full lg:w-auto gap-2 shrink-0 h-9" onClick={() => router.push("/admin/products/add")}>
+                                <span className="truncate">{t("addProduct")}</span>
+                                <CirclePlus className="h-3 w-3" />
+                            </Button>
+                        )}
                     </div>
                 </CardHeader>
 
@@ -191,6 +204,9 @@ const ProductList = () => {
                         pagination={pagination}
                         page={page}
                         setPage={setPage}
+                        canDelete={canDelete}
+                        canPatch={canPatch}
+                        canPost={canPost}
                     />
                 </CardContent>
             </Card>
