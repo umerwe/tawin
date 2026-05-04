@@ -5,7 +5,6 @@ import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
@@ -43,7 +42,6 @@ interface IStaff {
     profileImage?: string;
     lastLogout?: Date;
     permissions: IPermission[];
-    role: "staff";
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -54,7 +52,6 @@ const CreateStaffSchema = z.object({
     email: z.string().email("Valid email is required"),
     phone: z.string().optional(),
     password: z.string().min(6, "Password must be at least 6 characters"),
-    role: z.literal("staff"),
     permissions: z.array(z.object({
         module: z.enum(["dashboard", "orders", "users", "staff", "products", "construction-basket", "reviews", "suppliers", "coupon codes", "financial transfers", "brand", "stock"]),
         operations: z.array(z.enum(["get", "post", "patch", "put", "delete"]))
@@ -67,7 +64,6 @@ const EditStaffSchema = z.object({
     email: z.string().email("Valid email is required"),
     phone: z.string().optional(),
     password: z.union([z.string().length(0), z.string().min(6, "Password must be at least 6 characters")]).optional(),
-    role: z.literal("staff"),
     permissions: z.array(z.object({
         module: z.enum(["dashboard", "orders", "users", "staff", "products", "construction-basket", "reviews", "suppliers", "coupon codes", "financial transfers", "brand", "stock"]),
         operations: z.array(z.enum(["get", "post", "patch", "put", "delete"]))
@@ -82,15 +78,11 @@ interface AddStaffDialogProps {
     staff?: IStaff;
 }
 
-const ROLES = [
-    { value: "staff", label: "Staff" },
-];
-
 const PERMISSIONS = [
     { id: "dashboard", name: "dashboard", operations: ["get", "post", "patch", "delete"] as Operation[] },
     { id: "orders", name: "orders", operations: ["get", "post", "patch", "delete"] as Operation[] },
     { id: "users", name: "users", operations: ["get", "post", "patch", "delete"] as Operation[] },
-    { id: "staff", name: "staff", operations: ["get", "post", "patch", "delete"] as Operation[] },
+    // { id: "staff", name: "staff", operations: ["get", "post", "patch", "delete"] as Operation[] },
     { id: "products", name: "products", operations: ["get", "post", "patch", "delete"] as Operation[] },
     { id: "construction-basket", name: "constructionBasket", operations: ["get", "post", "patch", "delete"] as Operation[] },
     { id: "reviews", name: "reviews", operations: ["get", "post", "patch", "delete"] as Operation[] },
@@ -123,12 +115,10 @@ export default function AddStaffDialog({ open, onOpenChange, staff }: AddStaffDi
             email: "",
             phone: "",
             password: "",
-            role: "staff",
             permissions: [],
         },
     });
 
-    const selectedRole = watch("role");
     const selectedPermissions = watch("permissions") as IPermission[] || [];
 
     useEffect(() => {
@@ -137,7 +127,6 @@ export default function AddStaffDialog({ open, onOpenChange, staff }: AddStaffDi
             setValue("lastName", staff.lastName || "");
             setValue("email", staff.email || "");
             setValue("phone", staff.phone || "");
-            setValue("role", staff.role);
             setValue("permissions", staff.permissions || []);
             // Clear password when editing to avoid validation errors
             setValue("password", "");
@@ -151,7 +140,6 @@ export default function AddStaffDialog({ open, onOpenChange, staff }: AddStaffDi
             firstName: data.firstName,
             lastName: data.lastName,
             email: data.email,
-            role: data.role,
             permissions: data.permissions || [],
         };
 
@@ -317,29 +305,6 @@ export default function AddStaffDialog({ open, onOpenChange, staff }: AddStaffDi
                                 </div>
                             </div>
                         )}
-
-                        {/* Role */}
-                        <div className="space-y-1.5">
-                            <Label>{t("role")}</Label>
-                            <Select
-                                value={selectedRole}
-                                onValueChange={(value: "staff") => setValue("role", value)}
-                            >
-                                <SelectTrigger className="rounded-md border border-gray-200">
-                                    <SelectValue placeholder={t("selectRole")} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {ROLES.map((role) => (
-                                        <SelectItem key={role.value} value={role.value}>
-                                            {role.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            {errors.role && (
-                                <p className="text-red-500 text-xs mt-1">{errors.role.message}</p>
-                            )}
-                        </div>
 
                         {/* Permissions */}
                         <div className="space-y-3">

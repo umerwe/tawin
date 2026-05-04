@@ -97,11 +97,14 @@ const UserTable = ({ data, pagination, isLoading, page, setPage }: UserTableProp
 
   // --- Permission checks ---
   const auth = useSelector((state: RootState) => state.auth.staff);
+  const isStaff = auth?.role === "staff";
+
   const usersPermissions: string[] =
     auth?.permissions?.find((p: any) => p.module === "users")?.operations ?? [];
 
-  const canDelete = usersPermissions.includes("delete");
-  const canPatch  = usersPermissions.includes("patch");
+  // Staff users follow the permissions array; everyone else (admin) has full access
+  const canDelete = isStaff ? usersPermissions.includes("delete") : true;
+  const canPatch = isStaff ? usersPermissions.includes("patch") : true;
   // -------------------------
 
   // Build columns based on permissions

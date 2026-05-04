@@ -530,6 +530,12 @@
     "minOrderAmount": "Min Order Amount",
     "usageLimit": "Usage Limit",
     "expiryDate": "Expiry Date",
+    "appliesTo": "Applies To",
+    "selectCategories": "Select Categories",
+    "selectProducts": "Select Products",
+    "noCategoriesFound": "No categories found",
+    "selectAtLeastOneCategory": "Please select at least one category",
+    "selectAtLeastOneProduct": "Please select at least one product",
     "coupon": "Coupon",
     "minOrder": "Min Order",
     "couponApplied": "Coupon Applied",
@@ -581,7 +587,8 @@
     "get": "Get",
     "post": "Post",
     "patch": "Patch",
-    "closed": "Closed"
+    "closed": "Closed",
+    "editCoupon": "Edit Coupon"
   },
   "confirm": {
     "logout": {

@@ -9,8 +9,8 @@ interface ProductParams {
   outOfStock?: boolean;
 }
 
-export const getProducts = async (params?: ProductParams) => {
-  const { data } = await api.get("/api/products", { params });
+export const getProducts = async (params?: ProductParams, options?: { page?: number; limit?: number }) => {
+  const { data } = await api.get("/api/products", { params, ...options });
   return data;
 };
 
@@ -19,8 +19,8 @@ export const getProductBySlug = async (slug: string): Promise<Product> => {
   return data.data;
 };
 
-export const getProductsByCategory = async (categoryId: string): Promise<ProductsResponse> => {
-  const { data } = await api.get(`/api/products/category/${categoryId}`);
+export const getProductsByCategory = async (categoryId: string, options?: { page?: number; limit?: number }): Promise<ProductsResponse> => {
+  const { data } = await api.get(`/api/products/category/${categoryId}`, { params: options });
   return data;
 };
 

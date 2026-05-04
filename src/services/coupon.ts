@@ -7,11 +7,14 @@ export interface Coupon {
   code: string;
   type: "percentage" | "fixed";
   value: number;
-  minOrderAmount: number;
+  minOrderAmount?: number;
   usageLimit: number;
   usedCount: number;
   expiryDate: string;
   isActive: boolean;
+  appliesTo: "all" | "category" | "product";
+  categories?: string[];
+  products?: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -20,9 +23,11 @@ export interface CouponFormData {
   code: string;
   type: "percentage" | "fixed";
   value: number;
-  minOrderAmount: number;
-  usageLimit: number;
   expiryDate: string;
+  usageLimit: number;
+  appliesTo: "all" | "category" | "product";
+  categories?: string[];
+  products?: string[];
 }
 
 export interface CouponStats {
@@ -57,7 +62,7 @@ export const getCouponStatsAdmin = async (): Promise<CouponStats> => {
 };
 
 export const updateCouponAdmin = async (id: string, formData: Partial<CouponFormData>): Promise<Coupon> => {
-  const { data } = await api.patch(`/api/coupon/admin/${id}`, formData);
+  const { data } = await api.patch(`/api/coupons/admin/${id}`, formData);
   return data;
 };
 
@@ -73,7 +78,6 @@ export const toggleCouponStatusAdmin = async (id: string): Promise<Coupon> => {
 // User Coupon APIs
 export interface ValidateCouponRequest {
   code: string;
-  amount: number;
 }
 
 export interface ValidateCouponResponse {

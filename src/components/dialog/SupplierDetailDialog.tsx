@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { Copy, Phone, MapPin, Hash } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useLocale, useTranslations } from "next-intl";
+import {useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -42,7 +42,7 @@ export default function SupplierDetailDialog({
       >
         {/* Header */}
         <DialogHeader className="relative">
-          <DialogTitle className="text-base font-bold text-gray-800 leading-snug">
+          <DialogTitle>
             {supplier.name}
           </DialogTitle>
           <div className="flex items-center gap-1.5 mt-1">
@@ -64,7 +64,7 @@ export default function SupplierDetailDialog({
             </p>
             <div className="space-y-2">
               {/* Phone */}
-              <div className="flex items-center gap-3 border border-gray-50 bg-gray-50/30 rounded-lg px-3 py-2.5">
+              <div className="flex items-center gap-3 border border-gray-50 bg-gray-50/30 rounded-lg py-2.5">
                 <Phone size={14} className="text-gray-400" />
                 <span className="text-sm text-gray-700 font-medium">
                   {supplier.phone}
@@ -72,7 +72,7 @@ export default function SupplierDetailDialog({
               </div>
 
               {/* Address */}
-              <div className="flex items-center gap-3 border border-gray-50 bg-gray-50/30 rounded-lg px-3 py-2.5">
+              <div className="flex items-center gap-3 border border-gray-50 bg-gray-50/30 rounded-lg py-2.5">
                 <MapPin size={14} className="text-gray-400" />
                 <span className="text-sm text-gray-700 font-medium line-clamp-1">
                   {supplier.address}
@@ -80,7 +80,7 @@ export default function SupplierDetailDialog({
               </div>
 
               {/* Code */}
-              <div className="flex items-center gap-3 border border-gray-50 bg-gray-50/30 rounded-lg px-3 py-2.5">
+              <div className="flex items-center gap-3 border border-gray-50 bg-gray-50/30 rounded-lg py-2.5">
                 <Hash size={14} className="text-gray-400" />
                 <span className="text-sm text-gray-700 font-medium">
                   {supplier.code}

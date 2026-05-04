@@ -9,6 +9,8 @@ import StatsCard from "@/components/card/StatsCard";
 import { useGetSuppliers, useDeleteSupplier, useSupplierStats } from "@/hooks/useSupplier";
 import { useDebounce } from "@/hooks/useDebounce";
 import DateRangeFilter, { FilterRange } from "@/components/DateRange"; // Added this back
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const Suppliers = () => {
     // 1. Period state for the API
@@ -34,8 +36,21 @@ const Suppliers = () => {
     const { data, isLoading, refetch, isFetching } = useGetSuppliers(queryParams);
     const { mutate: deleteSupplier, isPending: isDeleting } = useDeleteSupplier();
 
+
     const rawSuppliers = data?.data || [];
     const pagination = data?.meta || {};
+
+    const auth = useSelector((state: RootState) => state.auth.staff);
+    const isStaff = auth?.role === "staff";
+
+    const usersPermissions: string[] =
+        auth?.permissions?.find((p: any) => p.module === "suppliers")?.operations ?? [];
+
+    // Staff users follow the permissions array; everyone else (admin) has full access
+    const canDelete = isStaff ? usersPermissions.includes("delete") : true;
+    const canPatch = isStaff ? usersPermissions.includes("patch") : true;
+    const canPost = isStaff ? usersPermissions.includes("post") : true;
+    console.log(canPost)
 
     const displayedData = useMemo(() => {
         let filtered = [...rawSuppliers];
@@ -96,12 +111,12 @@ const Suppliers = () => {
                     data={tableStats}
                     title="supplierStatistics"
                     // Changed mockGraphData to your real API graph data
-                    chartData={supplierStats?.graphData || []} 
+                    chartData={supplierStats?.graphData || []}
                     dataKey="spend" // Set this to 'spend' as per your API
                     filter={
-                        <DateRangeFilter 
-                            value={period} 
-                            onChange={(val) => setPeriod(val)} 
+                        <DateRangeFilter
+                            value={period}
+                            onChange={(val) => setPeriod(val)}
                         />
                     }
                 />
@@ -127,6 +142,7 @@ const Suppliers = () => {
                         setIsReversed={setIsReversed}
                         onRefetch={refetch}
                         isFetching={isFetching}
+                        canPost={canPost}
                     />
                 </CardHeader>
                 <CardContent className="p-0 sm:p-6">
@@ -138,6 +154,7 @@ const Suppliers = () => {
                         setPage={setPage}
                         onDelete={handleDelete}
                         isDeleting={isDeleting}
+                        canDelete={canDelete}
                     />
                 </CardContent>
             </Card>

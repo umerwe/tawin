@@ -4,7 +4,7 @@ import { useState } from "react";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 import { cn } from "@/lib/utils";
-import { MessageSquare, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SupplierDetailDialog from "../dialog/SupplierDetailDialog";
 import ConfirmDialog from "@/components/dialog/ConfirmDialog";
@@ -18,23 +18,26 @@ interface SuppliersTableProps {
   setPage: (p: number) => void;
   onDelete: (id: string, close: () => void) => void;
   isDeleting: boolean;
+  canDelete: boolean;
 }
 
-const SuppliersTable = ({ 
-  data, 
-  isLoading, 
-  pagination, 
-  page, 
-  setPage, 
-  onDelete, 
-  isDeleting 
+const SuppliersTable = ({
+  data,
+  isLoading,
+  pagination,
+  page,
+  setPage,
+  onDelete,
+  isDeleting,
+  canDelete,
 }: SuppliersTableProps) => {
   const t = useTranslations("translation");
   const tConfirm = useTranslations("confirm");
   const [selectedSupplier, setSelectedSupplier] = useState<any | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const cols = ["supplierCode", "supplierName", "phone", "email", "status", "action"];
+  const baseCols = ["supplierCode", "supplierName", "phone", "email", "status"];
+  const cols = canDelete ? [...baseCols, "action"] : baseCols;
 
   const handleRowClick = (item: any) => {
     setSelectedSupplier(item);
@@ -63,26 +66,25 @@ const SuppliersTable = ({
           </span>
         </div>
       </TableCell>
-      <TableCell>
-        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-aqua">
-            <MessageSquare size={16} />
-          </Button>
-          
-          <ConfirmDialog
-            title={tConfirm("delete.title", { value: t("supplier") })}
-            description={tConfirm("delete.description", { value: t("supplier") })}
-            variant="destructive"
-            loading={isDeleting}
-            onConfirm={(close) => onDelete(item._id, close)}
-            asChild
-          >
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-red-500">
-              <Trash2 size={16} />
-            </Button>
-          </ConfirmDialog>
-        </div>
-      </TableCell>
+
+      {canDelete && (
+        <TableCell>
+          <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+            <ConfirmDialog
+              title={tConfirm("delete.title", { value: t("supplier") })}
+              description={tConfirm("delete.description", { value: t("supplier") })}
+              variant="destructive"
+              loading={isDeleting}
+              onConfirm={(close) => onDelete(item._id, close)}
+              asChild
+            >
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-red-500">
+                <Trash2 size={16} />
+              </Button>
+            </ConfirmDialog>
+          </div>
+        </TableCell>
+      )}
     </>
   );
 
@@ -96,7 +98,7 @@ const SuppliersTable = ({
         headerClassName="bg-aqua/5 border-none"
         pagination={{
           total: pagination?.totalDocs || data.length,
-          page : pagination?.page || 1,
+          page: pagination?.page || 1,
           limit: pagination?.limit || 10,
           setPage,
         }}

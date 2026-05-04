@@ -34,6 +34,7 @@ interface FilterSectionProps {
   ratingFilter?: number | null;
   setRatingFilter?: (val: number | null) => void;
   reviewsTotal?: number;
+  canPost?: boolean;
 }
 
 const FilterSection = ({
@@ -50,6 +51,7 @@ const FilterSection = ({
   ratingFilter,
   setRatingFilter,
   reviewsTotal = 0,
+  canPost = true,
 }: FilterSectionProps) => {
   const t = useTranslations("translation");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -100,10 +102,7 @@ const FilterSection = ({
 
   const isTitleType = type === "user" || type === "supplier" || type === "brand" || type === "constructionBasket" || type === "staff";
   const isTabType = type === "order" || type === "lowStock" || type === "coupon";
-  const hasAddButton = !["order", "lowStock", "review", "coupon", "constructionBasket"].includes(type);
-
-  const isAllTabId = (id: string) =>
-    id === "All Orders" || id === "All Products" || id === "All Coupons";
+  const hasAddButton = !["order", "lowStock", "review", "coupon", "constructionBasket"].includes(type)
 
   return (
     <>
@@ -200,7 +199,7 @@ const FilterSection = ({
             </div>
           </div>
 
-          {hasAddButton && (
+          {hasAddButton && canPost && (
             <Button
               variant="primary"
               size="sm"

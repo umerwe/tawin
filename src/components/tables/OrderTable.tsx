@@ -54,7 +54,6 @@ const getStatusIcon = (status: string) => {
   }
 };
 
-// Read-only badge (no patch permission)
 const OrderStatusBadge = ({ status }: { status: string }) => (
   <span
     className={cn(
@@ -135,14 +134,15 @@ const OrderTable = ({ data, pagination, isLoading, page, setPage, onDelete, isDe
 
   const { data: settings } = useSettings();
 
-  // --- Permission checks ---
   const auth = useSelector((state: RootState) => state.auth.staff);
+  const isStaff = auth?.role === "staff";
+
   const ordersPermissions: string[] =
     auth?.permissions?.find((p: any) => p.module === "orders")?.operations ?? [];
 
-  const canDelete = ordersPermissions.includes("delete");
-  const canPatch  = ordersPermissions.includes("patch");
-  // -------------------------
+  // Staff users follow the permissions array; everyone else (admin) has full access
+  const canDelete = isStaff ? ordersPermissions.includes("delete") : true;
+  const canPatch = isStaff ? ordersPermissions.includes("patch") : true;
 
   const baseCols = ["orderId", "customer", "product", "date", "price", "payment", "status"];
   const cols = canDelete ? [...baseCols, "action"] : baseCols;
@@ -195,7 +195,6 @@ const OrderTable = ({ data, pagination, isLoading, page, setPage, onDelete, isDe
           </div>
         </TableCell>
 
-        {/* Status: dropdown if patch allowed, badge if not */}
         <TableCell onClick={(e) => e.stopPropagation()}>
           {canPatch ? (
             <OrderStatusDropdown item={item} />
@@ -204,7 +203,6 @@ const OrderTable = ({ data, pagination, isLoading, page, setPage, onDelete, isDe
           )}
         </TableCell>
 
-        {/* Action column only when delete is allowed */}
         {canDelete && (
           <TableCell>
             <div onClick={(e) => e.stopPropagation()}>

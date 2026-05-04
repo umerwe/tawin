@@ -530,6 +530,12 @@
     "minOrderAmount": "الحد الأدنى للطلب",
     "usageLimit": "حد الاستخدام",
     "expiryDate": "تاريخ الانتهاء",
+    "appliesTo": "ينطبق على",
+    "selectCategories": "اختر الفئات",
+    "selectProducts": "اختر المنتجات",
+    "noCategoriesFound": "لم يتم العثور على فئات",
+    "selectAtLeastOneCategory": "يرجى اختيار فئة واحدة على الأقل",
+    "selectAtLeastOneProduct": "يرجى اختيار منتج واحد على الأقل",
     "coupon": "كوبون",
     "minOrder": "الحد الأدنى",
     "couponApplied": "تم تطبيق الكوبون",
@@ -581,7 +587,8 @@
     "get": "عرض",
     "post": "إضافة",
     "patch": "تعديل",
-    "closed": "مغلق"
+    "closed": "مغلق",
+    "editCoupon": "تعديل الكوبون"
   },
   "confirm": {
     "logout": {

@@ -5,13 +5,10 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import StatsCard from "@/components/card/StatsCard";
 import FilterSection from "@/components/FilterSection";
 import StaffTable from "@/components/tables/StaffTable";
-import { useLocale, useTranslations } from "next-intl";
 import { useStaff, useStaffStats } from "@/hooks/useStaff";
 import { useDebounce } from "@/hooks/useDebounce";
 
 const StaffAccountsPage = () => {
-    const locale = useLocale() as "en" | "ar";
-    const t = useTranslations("translation");
     const [activeTab, setActiveTab] = useState("All Accounts");
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");

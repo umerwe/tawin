@@ -64,8 +64,7 @@ const Step1 = ({ currencySymbol }: Step1Props) => {
         if (!couponCode.trim()) return
 
         validateCouponMutation.mutate({
-            code: couponCode.trim(),
-            amount: subtotal
+            code: couponCode.trim()
         }, {
             onSuccess: (response) => {
                 setAppliedCoupon(response.data.coupon)

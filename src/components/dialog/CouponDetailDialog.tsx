@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { useLocale, useTranslations } from "next-intl";
 import {
   Dialog,
@@ -26,30 +25,66 @@ export default function CouponDetailDialog({
 
   if (!coupon) return null;
 
-  // Consistency with CouponsTable logic
   const isActive = coupon.isActive;
+
+  // Resolve "Applies To" label
+  const appliesToLabel =
+    coupon.appliesTo === "category"
+      ? t("category")
+      : coupon.appliesTo === "product"
+      ? t("product")
+      : t("all");
+
+  // Resolve category names (handles both populated objects & plain IDs)
+  const categoryNames: string[] =
+    Array.isArray(coupon.categories) && coupon.categories.length > 0
+      ? coupon.categories.map((c: any) =>
+          typeof c === "string" ? c : c?.name?.[locale] || c?.name?.en || c?.slug || c?._id || "-"
+        )
+      : [];
+
+  // Resolve product names (handles both populated objects & plain IDs)
+  const productNames: string[] =
+    Array.isArray(coupon.products) && coupon.products.length > 0
+      ? coupon.products.map((p: any) =>
+          typeof p === "string" ? p : p?.title?.[locale] || p?.title?.en || p?.slug || p?._id || "-"
+        )
+      : [];
 
   const rows = [
     {
       label: t("status"),
-      value: isActive ? t('active') : t('cancelled'),
-      valueClass: isActive ? "text-aqua font-semibold" : "text-red-500 font-semibold"
+      value: isActive ? t("active") : t("cancelled"),
+      valueClass: isActive
+        ? "text-aqua font-semibold"
+        : "text-red-500 font-semibold",
     },
     { label: t("couponCode"), value: coupon.code },
     { label: t("type"), value: coupon.type || "-" },
     {
       label: t("discountRate"),
-      value: coupon.type === "percentage" ? `${coupon.value}%` : `${currencySymbol}${coupon.value}`
+      value:
+        coupon.type === "percentage"
+          ? `${coupon.value}%`
+          : `${currencySymbol}${coupon.value}`,
     },
-    { label: t("minOrder"), value: `${currencySymbol}${coupon.minOrderAmount || 0}` },
+    {
+      label: t("minOrder"),
+      value: `${currencySymbol}${coupon.minOrderAmount || 0}`,
+    },
     {
       label: t("usageLimit"),
-      value: `${coupon.usedCount || 0} / ${coupon.usageLimit || 0}`
+      value: `${coupon.usedCount || 0} / ${coupon.usageLimit || 0}`,
     },
     {
       label: t("expiryDate"),
-      value: coupon.expiryDate ? new Date(coupon.expiryDate).toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-GB') : '-'
+      value: coupon.expiryDate
+        ? new Date(coupon.expiryDate).toLocaleDateString(
+            locale === "ar" ? "ar-EG" : "en-GB"
+          )
+        : "-",
     },
+    { label: t("appliesTo"), value: appliesToLabel },
   ];
 
   return (
@@ -68,28 +103,55 @@ export default function CouponDetailDialog({
             {rows.map(({ label, value, valueClass }) => (
               <div key={label} className="flex items-center gap-1.5">
                 <span className="text-sm text-gray-500 shrink-0">{label}:</span>
-                <span className={cn("text-sm font-medium text-gray-700 capitalize", valueClass)}>
+                <span
+                  className={cn(
+                    "text-sm font-medium text-gray-700 capitalize",
+                    valueClass
+                  )}
+                >
                   {value}
                 </span>
               </div>
             ))}
-          </div>
 
-          {/* Action Buttons */}
-          {/* <div className="grid grid-cols-2 gap-3 pt-2">
-            <Button
-              variant="outline"
-              className="border-red-200 bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 rounded-md h-10 font-medium"
-            >
-              {t("cancelTransaction")}
-            </Button>
-            <Button
-              variant="primary"
-              className="bg-amber-50 border border-amber-400 hover:bg-amber-100 text-amber-500 rounded-md h-10 font-medium"
-            >
-              {t("suspendTemporarily")}
-            </Button>
-          </div> */}
+            {/* Categories chips — show whenever categories exist */}
+            {categoryNames.length > 0 && (
+              <div className="flex flex-col gap-1.5 pt-1">
+                <span className="text-sm text-gray-500 shrink-0">
+                  {t("selectCategories")}:
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {categoryNames.map((name, idx) => (
+                    <span
+                      key={`cat-${name}-${idx}`}
+                      className="inline-flex items-center bg-[#004d40]/10 text-[#004d40] text-xs font-medium rounded-full px-3 py-1"
+                    >
+                      {name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Products chips — show whenever products exist */}
+            {productNames.length > 0 && (
+              <div className="flex flex-col gap-1.5 pt-1">
+                <span className="text-sm text-gray-500 shrink-0">
+                  {t("selectProducts")}:
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {productNames.map((name, idx) => (
+                    <span
+                      key={`prod-${name}-${idx}`}
+                      className="inline-flex items-center bg-[#004d40]/10 text-[#004d40] text-xs font-medium rounded-full px-3 py-1"
+                    >
+                      {name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>

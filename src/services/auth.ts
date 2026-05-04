@@ -25,7 +25,9 @@ export const signUpUserByAdmin = async (credentials: Signup) => {
 
 export const getUserProfile = async (dispatch: AppDispatch) => {
   const { data } = await api.get("/api/users/me");
-  dispatch(setStaff(data.data));
+  if(data.data.role === 'staff') {
+    dispatch(setStaff(data.data));
+  }
   return data;
 };
 

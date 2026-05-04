@@ -138,7 +138,7 @@ const OrderSummary = ({ cartItems, discount, currencySymbol }: OrderSummaryProps
                         discount > 0 &&
                         <div className="flex justify-between items-center text-aqua">
                             <span className="text-base font-semibold">{t("discount")}</span>
-                            <span className="text-lg">{currencySymbol}-${discount.toFixed(2)}</span>
+                            <span className="text-lg">{currencySymbol}{discount.toFixed(2)}</span>
                         </div>
                     }
 

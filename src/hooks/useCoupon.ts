@@ -52,8 +52,8 @@ export const useUpdateCouponAdmin = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, formData }: { id: string; formData: Partial<CouponFormData> }) => 
-      updateCouponAdmin(id, formData),
+    mutationFn: ({ id, data }: { id: string; data: Partial<CouponFormData> }) => 
+      updateCouponAdmin(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["coupons", "admin"] });
       toast.success("Coupon updated successfully");

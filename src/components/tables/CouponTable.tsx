@@ -4,9 +4,10 @@ import { useState } from "react";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 import { cn } from "@/lib/utils";
-import { Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import CouponDetailDialog from "@/components/dialog/CouponDetailDialog";
+import AddCouponDialog from "@/components/dialog/AddCouponDialog";
 import { useDeleteCouponAdmin, useToggleCouponStatusAdmin } from "@/hooks/useCoupon";
 import ConfirmDialog from "../dialog/ConfirmDialog";
 import { useSettings } from "@/hooks/useSettings";
@@ -18,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CheckCircle, XCircle } from "lucide-react";
+import { Button } from "../ui/button";
 
 export const CouponStatusDropdown = ({ item, t }: any) => {
   const [currentStatus, setCurrentStatus] = useState(item.isActive ? "active" : "cancelled");
@@ -29,13 +31,10 @@ export const CouponStatusDropdown = ({ item, t }: any) => {
         setCurrentStatus(newStatus);
       },
     });
-  }
+  };
 
   return (
-    <Select
-      value={currentStatus}
-      onValueChange={handleStatusChange}
-    >
+    <Select value={currentStatus} onValueChange={handleStatusChange}>
       <SelectTrigger
         className={cn(
           "h-8 w-[120px] px-2 border rounded-md transition-all outline-none focus:ring-0 font-semibold text-xs",
@@ -79,20 +78,36 @@ const CouponsTable = ({
   setPage: (p: number) => void;
   activeTab: string;
 }) => {
-  const t = useTranslations('translation');
-  const tConfirm = useTranslations('confirm');
+  const t = useTranslations("translation");
+  const tConfirm = useTranslations("confirm");
 
   const { data: settings } = useSettings();
 
   const [selectedCoupon, setSelectedCoupon] = useState<any | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+
   const { mutate: deleteCoupon, isPending: isDeleting } = useDeleteCouponAdmin();
 
-  const cols = ["couponCode", "type", "discountRate", "minOrder", "usageLimit", "expiryDate", "status", "actions"];
+  const cols = [
+    "couponCode",
+    "type",
+    "discountRate",
+    "minOrder",
+    "usageLimit",
+    "expiryDate",
+    "status",
+    "actions",
+  ];
 
   const handleRowClick = (item: any) => {
     setSelectedCoupon(item);
-    setDialogOpen(true);
+    setDetailOpen(true);
+  };
+
+  const handleEditClick = (item: any) => {
+    setSelectedCoupon(item);
+    setEditOpen(true);
   };
 
   const row = (item: any) => (
@@ -104,30 +119,36 @@ const CouponsTable = ({
         {item.type || "-"}
       </TableCell>
       <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
-        {item.type === "percentage" ? `${item.value}%` : `${item.value} ${settings?.currencySymbol || '$'}`}
+        {item.type === "percentage"
+          ? `${item.value}%`
+          : `${item.value} ${settings?.currencySymbol || "$"}`}
       </TableCell>
       <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
-        {settings?.currencySymbol || '$'}{item.minOrderAmount || 0}
+        {settings?.currencySymbol || "$"}
+        {item.minOrderAmount || 0}
       </TableCell>
       <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
         <span className="text-gray-500">{item.usedCount || 0}</span> / {item.usageLimit || 0}
       </TableCell>
       <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
-        {item.expiryDate ? new Date(item.expiryDate).toLocaleDateString('en-GB') : '-'}
+        {item.expiryDate ? new Date(item.expiryDate).toLocaleDateString("en-GB") : "-"}
       </TableCell>
       <TableCell onClick={(e) => e.stopPropagation()}>
         <CouponStatusDropdown item={item} t={t} />
       </TableCell>
-      <TableCell>
+      <TableCell onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center gap-2">
-          {/* <Button
+          <Button
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-gray-400 hover:text-blue-500 transition-colors"
-            onClick={() => handleRowClick(item)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEditClick(item);
+            }}
           >
-            <MessageSquare size={16} />
-          </Button> */}
+            <Edit size={16} />
+          </Button>
 
           <ConfirmDialog
             title={tConfirm("delete.title", { value: t("coupon") })}
@@ -166,14 +187,26 @@ const CouponsTable = ({
           total: meta?.totalDocs || 0,
           page: meta?.page || 1,
           limit: meta?.limit || 10,
-          setPage
+          setPage,
         }}
       />
+
+      {/* View-only details dialog (opens on row click) */}
       <CouponDetailDialog
         coupon={selectedCoupon}
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        currencySymbol={settings?.currencySymbol || '$'}
+        open={detailOpen}
+        onClose={() => setDetailOpen(false)}
+        currencySymbol={settings?.currencySymbol || "$"}
+      />
+
+      {/* Edit dialog (opens on edit icon click, reuses AddCouponDialog) */}
+      <AddCouponDialog
+        open={editOpen}
+        onOpenChange={(val) => {
+          setEditOpen(val);
+          if (!val) setSelectedCoupon(null);
+        }}
+        coupon={selectedCoupon}
       />
     </>
   );

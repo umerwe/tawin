@@ -5,16 +5,18 @@ import { toast } from "sonner";
 
 interface ProductParams {
   category?: string;
+  page?: number;
+  limit?: number;
   allProducts?: boolean;
   featuredProducts?: boolean;
   reduced?: boolean;
   outOfStock?: boolean;
 }
 
-export const useProducts = (params?: ProductParams) => {
+export const useProducts = (params?: ProductParams, options?: { page?: number; limit?: number }) => {
   return useQuery({
-    queryKey: ["products", params],
-    queryFn: () => getProducts(params),
+    queryKey: ["products", params, options],
+    queryFn: () => getProducts(params, options),
     staleTime: 5 * 60 * 1000,
   });
 };
@@ -28,10 +30,10 @@ export const useProductBySlug = (slug: string) => {
   });
 };
 
-export const useProductsByCategory = (categoryId: string) => {
+export const useProductsByCategory = (categoryId: string, options?: { page?: number; limit?: number }) => {
   return useQuery({
-    queryKey: ["products", "category", categoryId],
-    queryFn: () => getProductsByCategory(categoryId),
+    queryKey: ["products", "category", categoryId, options],
+    queryFn: () => getProductsByCategory(categoryId, options),
     enabled: !!categoryId,
     staleTime: 5 * 60 * 1000,
   });
