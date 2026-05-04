@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "@/components/MyImage";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
@@ -23,16 +22,28 @@ interface ProductTableProps {
   };
   page: number;
   setPage: (p: number) => void;
+  canDelete?: boolean;
+  canPatch?: boolean;
+  canPost?: boolean;
 }
 
-
-const ProductTable = ({ activeTab, data, isLoading, pagination, page, setPage }: ProductTableProps) => {
-  const {data:settings} = useSettings();
+const ProductTable = ({
+  activeTab,
+  data,
+  isLoading,
+  pagination,
+  page,
+  setPage,
+  canDelete,
+  canPatch,
+  canPost,
+}: ProductTableProps) => {
+  const { data: settings } = useSettings();
   const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
 
   const router = useRouter();
 
-  const cols = ["no", "product", "price", "dateCreated", "operations"];
+  const cols = ["no", "product", "price", "dateCreated", "action"];
 
   const filteredData = data.filter((item) => {
     if (activeTab === "All Products") return true;
@@ -63,32 +74,36 @@ const ProductTable = ({ activeTab, data, isLoading, pagination, page, setPage }:
       <TableCell className="text-sm cursor-pointer" onClick={() => handleNavigate(locale, item.slug)}>{new Date(item.createdAt?.$date || item.createdAt).toLocaleDateString()}</TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-gray-400 hover:text-aqua"
-            onClick={() => router.push(`/${locale}/admin/low-stock/${item.slug}`)}
-          >
-            <Edit3 size={16} />
-          </Button>
-          <ConfirmDialog
-            title="Delete Product"
-            description={`Are you sure you want to delete ${item.title[locale]}?`}
-            variant="destructive"
-            loading={isDeleting}
-            onConfirm={(close) => {
-              deleteProduct(item._id);
-              close();
-            }}
-          >
+          {canPatch && (
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-gray-400 hover:text-red-500"
+              className="h-8 w-8 text-gray-400 hover:text-aqua"
+              onClick={() => router.push(`/${locale}/admin/low-stock/${item.slug}`)}
             >
-              <Trash2 size={16} />
+              <Edit3 size={16} />
             </Button>
-          </ConfirmDialog>
+          )}
+          {canDelete && (
+            <ConfirmDialog
+              title="Delete Product"
+              description={`Are you sure you want to delete ${item.title[locale]}?`}
+              variant="destructive"
+              loading={isDeleting}
+              onConfirm={(close) => {
+                deleteProduct(item._id);
+                close();
+              }}
+            >
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-gray-400 hover:text-red-500"
+              >
+                <Trash2 size={16} />
+              </Button>
+            </ConfirmDialog>
+          )}
         </div>
       </TableCell>
     </>

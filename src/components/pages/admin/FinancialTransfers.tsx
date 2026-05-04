@@ -6,17 +6,11 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import FinancialTable from "@/components/tables/FinancialTable";
 import { FinancialCard } from "@/components/card/FinancialCard";
 import StatsCard from "@/components/card/StatsCard";
-import { MoreVertical } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
-import { useFinancialTransfers, useDeleteFinancialTransfer, useGetFinancialStats } from "@/hooks/useFinancialTransfer";
+import { useFinancialTransfers, useGetFinancialStats } from "@/hooks/useFinancialTransfer";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useSettings } from "@/hooks/useSettings";
 
 const FinancialTransfers = () => {
-  const t = useTranslations("translation");
-
-  // Table States
   const [activeTab, setActiveTab] = useState("All Orders");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -81,16 +75,6 @@ const FinancialTransfers = () => {
 
   return (
     <div className="space-y-6 p-1">
-      {/* Top Action Bar */}
-      <div className="flex items-center justify-end gap-3">
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-32"
-        >
-          <MoreVertical className="h-4 w-4 mr-2" /> {t("more")}
-        </Button>
-      </div>
 
       {/* Statistics Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

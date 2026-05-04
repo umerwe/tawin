@@ -71,12 +71,16 @@ const CouponsTable = ({
   isLoading,
   meta,
   setPage,
+  canDelete,
+  canPatch
 }: {
   data: any[];
   isLoading: boolean;
   meta: any;
   setPage: (p: number) => void;
   activeTab: string;
+  canDelete: boolean;
+  canPatch: boolean;
 }) => {
   const t = useTranslations("translation");
   const tConfirm = useTranslations("confirm");
@@ -146,6 +150,7 @@ const CouponsTable = ({
               e.stopPropagation();
               handleEditClick(item);
             }}
+            disabled={!canPatch}
           >
             <Edit size={16} />
           </Button>
@@ -165,7 +170,7 @@ const CouponsTable = ({
             <button
               className="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-md hover:bg-red-50 cursor-pointer disabled:opacity-50"
               title={t("delete")}
-              disabled={isDeleting}
+              disabled={isDeleting || !canDelete}
             >
               <Trash2 size={18} />
             </button>

@@ -24,7 +24,7 @@ type Operation = 'get' | 'post' | 'patch' | 'put' | 'delete';
 type StaffModule =
     | 'dashboard' | 'orders' | 'users' | 'staff' | 'products'
     | 'construction-basket' | 'reviews' | 'suppliers' | 'coupon codes'
-    | 'financial transfers' | 'brand' | 'stock';
+    | 'financial transfers' | 'brand' | 'stock' | 'categories';
 
 interface IPermission {
     module: StaffModule;
@@ -65,7 +65,7 @@ const EditStaffSchema = z.object({
     phone: z.string().optional(),
     password: z.union([z.string().length(0), z.string().min(6, "Password must be at least 6 characters")]).optional(),
     permissions: z.array(z.object({
-        module: z.enum(["dashboard", "orders", "users", "staff", "products", "construction-basket", "reviews", "suppliers", "coupon codes", "financial transfers", "brand", "stock"]),
+        module: z.enum(["dashboard", "orders", "users", "staff", "products", "construction-basket", "categories", "reviews", "suppliers", "coupon codes", "financial transfers", "brand", "stock"]),
         operations: z.array(z.enum(["get", "post", "patch", "put", "delete"]))
     })).optional(),
 });
@@ -82,7 +82,7 @@ const PERMISSIONS = [
     { id: "dashboard", name: "dashboard", operations: ["get", "post", "patch", "delete"] as Operation[] },
     { id: "orders", name: "orders", operations: ["get", "post", "patch", "delete"] as Operation[] },
     { id: "users", name: "users", operations: ["get", "post", "patch", "delete"] as Operation[] },
-    // { id: "staff", name: "staff", operations: ["get", "post", "patch", "delete"] as Operation[] },
+    { id: "categories", name: "categories", operations: ["get", "post", "patch", "delete"] as Operation[] },
     { id: "products", name: "products", operations: ["get", "post", "patch", "delete"] as Operation[] },
     { id: "construction-basket", name: "constructionBasket", operations: ["get", "post", "patch", "delete"] as Operation[] },
     { id: "reviews", name: "reviews", operations: ["get", "post", "patch", "delete"] as Operation[] },

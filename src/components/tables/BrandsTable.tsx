@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 import { cn } from "@/lib/utils";
-import { MessageSquare, Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BrandDetailDialog from "../dialog/BrandDetailDialog";
 import ConfirmDialog from "../dialog/ConfirmDialog";
@@ -18,13 +18,17 @@ const BrandsTable = ({
   activeTab,
   isLoading,
   meta,
-  setPage
+  setPage,
+  canPatch,
+  canDelete,
 }: {
   data: any[];
   activeTab: string;
   isLoading: boolean;
   meta?: any;
   setPage: (p: number) => void;
+  canPatch?: boolean;
+  canDelete?: boolean;
 }) => {
   const locale = useLocale() as "en" | "ar";
   const t = useTranslations("translation");
@@ -37,7 +41,13 @@ const BrandsTable = ({
 
   const { mutate: deleteBrand, isPending: isDeleting } = useDeleteBrand();
 
-  const cols = ["brandCode", "brandName", "registrationDate", "brandLogo", "status", "process"];
+  const cols = useMemo(() => {
+    const baseCols = ["brandCode", "brandName", "registrationDate", "brandLogo", "status"];
+    if (canPatch || canDelete) {
+      baseCols.push("action");
+    }
+    return baseCols;
+  }, [canPatch, canDelete]);
 
   const filteredData = data.filter((item) => {
     const statusLabel = item.isActive ? "Active" : "Closed";
@@ -84,40 +94,45 @@ const BrandsTable = ({
             </span>
           </div>
         </TableCell>
-        <TableCell>
-          <div className="flex items-center gap-2">
+        {(canPatch || canDelete) && (
+          <TableCell>
+            <div className="flex items-center gap-2">
+              {canPatch && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-gray-400 hover:text-aqua"
+                  onClick={(e) => handleEditClick(e, item)}
+                >
+                  <Pencil size={16} />
+                </Button>
+              )}
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-gray-400 hover:text-aqua"
-              onClick={(e) => handleEditClick(e, item)}
-            >
-              <Pencil size={16} />
-            </Button>
-
-            <ConfirmDialog
-              title={tConfirm("delete.title", { value: t("brand") })}
-              description={tConfirm("delete.description", { value: t("brand") })}
-              variant="destructive"
-              loading={isDeleting}
-              onConfirm={(closeDialog) => {
-                deleteBrand(item._id, {
-                  onSuccess: () => closeDialog(),
-                });
-              }}
-              asChild
-            >
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-gray-400 hover:text-red-500"
-              >
-                <Trash2 size={16} />
-              </Button>
-            </ConfirmDialog>
-          </div>
-        </TableCell>
+              {canDelete && (
+                <ConfirmDialog
+                  title={tConfirm("delete.title", { value: t("brand") })}
+                  description={tConfirm("delete.description", { value: t("brand") })}
+                  variant="destructive"
+                  loading={isDeleting}
+                  onConfirm={(closeDialog) => {
+                    deleteBrand(item._id, {
+                      onSuccess: () => closeDialog(),
+                    });
+                  }}
+                  asChild
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-gray-400 hover:text-red-500"
+                  >
+                    <Trash2 size={16} />
+                  </Button>
+                </ConfirmDialog>
+              )}
+            </div>
+          </TableCell>
+        )}
       </>
     );
   };

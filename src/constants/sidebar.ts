@@ -53,7 +53,7 @@ export const sidebarMenu: MenuItem[] = [
     // Products
     { title: "addProduct", icon: Package, path: "/admin/products/add", label: "products" },
     { title: "productList", icon: List, path: "/admin/product-list", label: "products" },
-    { title: "lowStock", icon: AlertTriangle, path: "/admin/low-stock", label: "stock" },
+    { title: "lowStock", icon: AlertTriangle, path: "/admin/low-stock", label: "products" },
     { title: "customerReviews", icon: Star, path: "/admin/reviews", label: "reviews" },
 
     // Administration

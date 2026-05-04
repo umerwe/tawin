@@ -11,6 +11,8 @@ import { useTranslations } from "next-intl";
 import AddCouponDialog from "@/components/dialog/AddCouponDialog";
 import { useCouponsAdmin, useCouponStatsAdmin } from "@/hooks/useCoupon";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const Coupons = () => {
   const t = useTranslations("translation");
@@ -37,6 +39,17 @@ const Coupons = () => {
 
   const couponsData = data?.data || [];
   const meta = data?.meta;
+
+  const auth = useSelector((state: RootState) => state.auth.staff);
+  const isStaff = auth?.role === "staff";
+
+  const usersPermissions: string[] =
+    auth?.permissions?.find((p: any) => p.module === "coupon codes")?.operations ?? [];
+
+  // Staff users follow the permissions array; everyone else (admin) has full access
+  const canDelete = isStaff ? usersPermissions.includes("delete") : true;
+  const canPatch = isStaff ? usersPermissions.includes("patch") : true;
+  const canPost = isStaff ? usersPermissions.includes("post") : true;
 
   const displayedCoupons = useMemo(() => {
     if (!couponsData) return [];
@@ -77,12 +90,15 @@ const Coupons = () => {
   return (
     <div className="space-y-6 p-1">
       {/* Add Coupon Button */}
-      <div className="flex items-center justify-end gap-3">
-        <Button variant="primary" className="w-32" size="sm" onClick={() => setAddDialogOpen(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          {t("addCoupon")}
-        </Button>
-      </div>
+      {
+        canPost &&
+        <div className="flex items-center justify-end gap-3">
+          <Button variant="primary" className="w-32" size="sm" onClick={() => setAddDialogOpen(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            {t("addCoupon")}
+          </Button>
+        </div>
+      }
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -120,6 +136,8 @@ const Coupons = () => {
             meta={meta}
             setPage={setPage}
             activeTab={activeTab}
+            canDelete={canDelete}
+            canPatch={canPatch}
           />
         </CardContent>
       </Card>

@@ -2,13 +2,14 @@
 
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
-import { MessageSquare, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import ReviewDetailDialog from "@/components/dialog/ReviewDetailDialog";
 import ConfirmDialog from "@/components/dialog/ConfirmDialog";
 import { useLocale, useTranslations } from "next-intl";
 import { useDeleteReview } from "@/hooks/useReviews";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const ReviewsTable = ({
   data,
@@ -32,7 +33,16 @@ const ReviewsTable = ({
   const [dialogOpen, setDialogOpen] = useState(false);
   const { mutate: deleteReview, isPending: isDeleting } = useDeleteReview();
 
-  const cols = ["productCode", "product", "userName", "rating", "date", "actions"];
+  const auth = useSelector((state: RootState) => state.auth.staff);
+  const isStaff = auth?.role === "staff";
+
+  const reviewsPermissions: string[] =
+    auth?.permissions?.find((p: any) => p.module === "reviews")?.operations ?? [];
+
+  const canDelete = isStaff ? reviewsPermissions.includes("delete") : true;
+
+  const baseCols = ["productCode", "product", "userName", "rating", "date"];
+  const cols = canDelete ? [...baseCols, "actions"] : baseCols;
 
   const filteredData = (data || []).filter((item) => {
     if (ratingFilter !== null) return item.rating === ratingFilter;
@@ -72,16 +82,9 @@ const ReviewsTable = ({
       <TableCell className="cursor-pointer" onClick={() => handleRowClick(item)}>
         {item.comment}
       </TableCell>
-      <TableCell>
-        <div className="flex items-center gap-2">
-          {/* <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-gray-400 hover:text-blue-500 transition-colors"
-            onClick={() => handleRowClick(item)}
-          >
-            <MessageSquare size={16} />
-          </Button> */}
+
+      {canDelete && (
+        <TableCell>
           <div onClick={(e) => e.stopPropagation()}>
             <ConfirmDialog
               title={tConfirm("delete.title", { value: t("review") })}
@@ -101,8 +104,8 @@ const ReviewsTable = ({
               </button>
             </ConfirmDialog>
           </div>
-        </div>
-      </TableCell>
+        </TableCell>
+      )}
     </>
   );
 

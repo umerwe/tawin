@@ -17,8 +17,10 @@ import ConfirmDialog from "@/components/dialog/ConfirmDialog";
 import { useTranslations } from "next-intl";
 import getStatusColor from "@/utils/getStatusColor";
 import { useUpdateBasketRequestStatus, useDeleteBasketRequest } from "@/hooks/useBasket";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
-export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
+export const StatusDropdown = ({ item, t, getStatusColor, canPatch }: any) => {
   const [currentStatus, setCurrentStatus] = useState(item.constructionBasket.status);
   const { mutate: updateStatus } = useUpdateBasketRequestStatus();
 
@@ -37,6 +39,7 @@ export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
     <Select
       value={currentStatus}
       onValueChange={handleStatusChange}
+      disabled={!canPatch}
     >
       <SelectTrigger
         className={cn(
@@ -97,11 +100,21 @@ const ConstructionBasketTable = ({
   const [dialogOpen, setDialogOpen] = useState(false);
   const { mutate: deleteBasket } = useDeleteBasketRequest();
 
-  const cols = ["basketCode", "fullName", "phoneNumber", "occupation", "propertyType", "status", "process"];
+  const cols = ["basketCode", "fullName", "phoneNumber", "occupation", "propertyType", "status", "action"];
 
   const filteredData = data?.filter((item) => {
     return activeTab === "All Applications" || item.constructionBasket.status === activeTab;
   });
+
+  const auth = useSelector((state: RootState) => state.auth.staff);
+  const isStaff = auth?.role === "staff";
+
+  const basketPermissions: string[] =
+    auth?.permissions?.find((p: any) => p.module === "construction-basket")?.operations ?? [];
+
+  // Staff users follow the permissions array; everyone else (admin) has full access
+  const canDelete = isStaff ? basketPermissions.includes("delete") : true;
+  const canPatch = isStaff ? (basketPermissions.includes("update") || basketPermissions.includes("patch")) : true;
 
   const handleRowClick = (item: any) => {
     setSelectedBasket(item);
@@ -152,19 +165,16 @@ const ConstructionBasketTable = ({
       </TableCell>
 
       <TableCell onClick={(e) => e.stopPropagation()}>
-        <StatusDropdown item={item} t={t} getStatusColor={getStatusColor} />
+        <StatusDropdown 
+          item={item} 
+          t={t} 
+          getStatusColor={getStatusColor} 
+          canPatch={canPatch} 
+        />
       </TableCell>
 
       <TableCell>
         <div className="flex items-center gap-2">
-          {/* <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-gray-400 hover:text-aqua"
-            onClick={() => handleRowClick(item)}
-          >
-            <MessageSquare size={16} />
-          </Button> */}
           <div onClick={(e) => e.stopPropagation()}>
             <ConfirmDialog
               title={tConfirm("delete.title", { value: t("basket") })}
@@ -179,6 +189,7 @@ const ConstructionBasketTable = ({
               <button
                 className="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-md hover:bg-red-50 cursor-pointer disabled:opacity-50"
                 title={t("delete")}
+                disabled={isDeleting || !canDelete}
               >
                 <Trash2 size={16} />
               </button>

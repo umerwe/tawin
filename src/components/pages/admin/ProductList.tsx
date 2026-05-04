@@ -48,12 +48,19 @@ const ProductList = () => {
 
     // --- Permission checks ---
     const auth = useSelector((state: RootState) => state.auth.staff);
+    const isStaff = auth?.role === "staff";
+
     const productsPermissions: string[] =
         auth?.permissions?.find((p: any) => p.module === "products")?.operations ?? [];
+    const categoriesPermissions: string[] =
+        auth?.permissions?.find((p: any) => p.module === "categories")?.operations ?? [];
 
-    const canPost = productsPermissions.includes("post");
-    const canPatch = productsPermissions.includes("patch");
-    const canDelete = productsPermissions.includes("delete");
+    const canPost = isStaff ? productsPermissions.includes("post") : true;
+    const canPatch = isStaff ? productsPermissions.includes("patch") : true;
+    const canDelete = isStaff ? productsPermissions.includes("delete") : true;
+
+    const canCategoryGet = isStaff ? categoriesPermissions.includes("get") : true;
+    const canCategoryPost = isStaff ? categoriesPermissions.includes("post") : true;
     // -------------------------
 
     // Categories — fetch only current page of 8 from backend
@@ -103,14 +110,19 @@ const ProductList = () => {
     return (
         <div className="space-y-6 p-1">
             {/* Header — Add Category button only if post is allowed */}
-            <div className="flex items-center justify-end gap-3">
+           {
+            canCategoryPost && 
+             <div className="flex items-center justify-end gap-3">
                 <Button variant="primary" className="w-32" onClick={() => setIsAddDialogOpen(true)} size="sm">
                     <Plus className="h-4 w-4 mr-2" /> {t('addCategory')}
                 </Button>
             </div>
+           }
 
             {/* Category Grid with backend pagination */}
-            <div>
+           {
+            canCategoryGet && 
+             <div>
                 <div className="flex items-center justify-end mb-3">
                     <div className="flex items-center gap-1.5">
                         <Button
@@ -144,6 +156,7 @@ const ProductList = () => {
                     />
                 </div>
             </div>
+           }
 
             {/* Product Table Card */}
             <Card className="border shadow-none overflow-hidden">

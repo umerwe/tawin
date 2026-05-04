@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useSelector } from "react-redux";
 import {
     Plus,
     RefreshCcw,
@@ -24,6 +25,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import CategoryFormDialog from "@/components/dialog/CategoryFormDialog";
+import { RootState } from "@/store/store"; // adjust if needed
 
 const CATEGORY_PAGE_SIZE = 8;
 
@@ -40,6 +42,23 @@ const LowStock = () => {
     const [categoryPage, setCategoryPage] = useState(1);
 
     const debouncedSearch = useDebounce(search, 500);
+
+    // --- Permission checks ---
+    const auth = useSelector((state: RootState) => state.auth.staff);
+    const isStaff = auth?.role === "staff";
+
+    const productsPermissions: string[] =
+        auth?.permissions?.find((p: any) => p.module === "products")?.operations ?? [];
+    const categoriesPermissions: string[] =
+        auth?.permissions?.find((p: any) => p.module === "categories")?.operations ?? [];
+
+    const canPost = isStaff ? productsPermissions.includes("post") : true;
+    const canPatch = isStaff ? productsPermissions.includes("patch") : true;
+    const canDelete = isStaff ? productsPermissions.includes("delete") : true;
+
+    const canCategoryGet = isStaff ? categoriesPermissions.includes("get") : true;
+    const canCategoryPost = isStaff ? categoriesPermissions.includes("post") : true;
+    // -------------------------
 
     // Categories
     const { data: categoriesData, isLoading: categoriesLoading } = useGetCategories({
@@ -82,53 +101,55 @@ const LowStock = () => {
 
     const actions = [
         { icon: <RefreshCcw className={cn("h-4 w-4", isFetching && "animate-spin")} />, color: "text-gray-500", onClick: () => refetch() },
-        // { icon: <Filter className="h-4 w-4" />, color: "text-gray-500" },
         { icon: <ArrowUpDown className="h-4 w-4" />, color: isReversed ? "text-aqua font-bold" : "text-gray-500", onClick: () => setIsReversed(!isReversed) },
-        // { icon: <MoreHorizontal className="h-4 w-4" /> },
         { icon: <FileText className="h-4 w-4" />, color: "text-red-500" },
     ];
 
     return (
         <div className="space-y-6 p-1">
             {/* Header */}
-            <div className="flex items-center justify-end gap-3">
-                <Button variant="primary" className="w-32" onClick={() => setIsAddDialogOpen(true)} size="sm">
-                    <Plus className="h-4 w-4 mr-2" /> {t('addCategory')}
-                </Button>
-            </div>
+            {canCategoryPost && (
+                <div className="flex items-center justify-end gap-3">
+                    <Button variant="primary" className="w-32" onClick={() => setIsAddDialogOpen(true)} size="sm">
+                        <Plus className="h-4 w-4 mr-2" /> {t('addCategory')}
+                    </Button>
+                </div>
+            )}
 
             {/* Category Grid with backend pagination */}
-            <div>
-                <div className="flex items-center justify-end mb-3">
-                    <div className="flex items-center gap-1.5">
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => setCategoryPage(p => Math.max(1, p - 1))}
-                            disabled={categoryPage === 1 || categoriesLoading}
-                        >
-                            <ChevronLeft className="h-4 w-4" />
-                        </Button>
-                        <span className="text-xs text-muted-foreground min-w-[48px] text-center">
-                            {categoryPage} / {categoryTotalPages}
-                        </span>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => setCategoryPage(p => Math.min(categoryTotalPages, p + 1))}
-                            disabled={categoryPage >= categoryTotalPages || categoriesLoading}
-                        >
-                            <ChevronRight className="h-4 w-4" />
-                        </Button>
+            {canCategoryGet && (
+                <div>
+                    <div className="flex items-center justify-end mb-3">
+                        <div className="flex items-center gap-1.5">
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => setCategoryPage(p => Math.max(1, p - 1))}
+                                disabled={categoryPage === 1 || categoriesLoading}
+                            >
+                                <ChevronLeft className="h-4 w-4" />
+                            </Button>
+                            <span className="text-xs text-muted-foreground min-w-[48px] text-center">
+                                {categoryPage} / {categoryTotalPages}
+                            </span>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => setCategoryPage(p => Math.min(categoryTotalPages, p + 1))}
+                                disabled={categoryPage >= categoryTotalPages || categoriesLoading}
+                            >
+                                <ChevronRight className="h-4 w-4" />
+                            </Button>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <MiniCard data={categories} isLoading={categoriesLoading} />
                     </div>
                 </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <MiniCard data={categories} isLoading={categoriesLoading} />
-                </div>
-            </div>
+            )}
 
             {/* Low Stock Table Card */}
             <Card className="border shadow-none overflow-hidden">
@@ -178,15 +199,17 @@ const LowStock = () => {
                                 ))}
                             </div>
                         </div>
-                        <Button
-                            variant="primary"
-                            size="sm"
-                            className="w-full lg:w-auto gap-2 shrink-0 h-9"
-                            onClick={() => router.push("/admin/products/add")}
-                        >
-                            <span className="truncate">{t("addProduct")}</span>
-                            <CirclePlus className="h-3 w-3" />
-                        </Button>
+                        {canPost && (
+                            <Button
+                                variant="primary"
+                                size="sm"
+                                className="w-full lg:w-auto gap-2 shrink-0 h-9"
+                                onClick={() => router.push("/admin/products/add")}
+                            >
+                                <span className="truncate">{t("addProduct")}</span>
+                                <CirclePlus className="h-3 w-3" />
+                            </Button>
+                        )}
                     </div>
                 </CardHeader>
 
@@ -198,12 +221,14 @@ const LowStock = () => {
                         pagination={pagination}
                         page={page}
                         setPage={setPage}
+                        canDelete={canDelete}
+                        canPatch={canPatch}
+                        canPost={canPost}
                     />
                 </CardContent>
             </Card>
 
             <CategoryFormDialog open={isAddDialogOpen} onClose={() => setIsAddDialogOpen(false)} />
-
         </div>
     );
 };

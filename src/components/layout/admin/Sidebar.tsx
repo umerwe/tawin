@@ -60,7 +60,19 @@ export default function Sidebar({ className }: { className?: string }) {
       (profileData?.permissions ?? []).map((p: { module: string }) => p.module)
     );
 
-    return sidebarMenu.filter((item) => allowedModules.has(item.label));
+    return sidebarMenu.filter((item) => {
+      if (!allowedModules.has(item.label)) return false;
+
+      // Special check to hide addProduct if there is no 'post' permission
+      if (item.label === "products" && item.title === "addProduct") {
+        const productPerms =
+          profileData?.permissions?.find((p: any) => p.module === "products")
+            ?.operations ?? [];
+        return productPerms.includes("post");
+      }
+
+      return true;
+    });
   }, [profileData]);
 
   const mainMenuLabels = new Set([
