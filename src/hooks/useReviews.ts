@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getProductReviews, createReview, getReviews, deleteReview, getReviewStats } from "@/services/review";
 import { toast } from "sonner";
 
-export const useReviews = (params?: any) => {
+export const useReviews = (params?: PaginationParams) => {
   return useQuery({
     queryKey: ["reviews", params],
     queryFn: () => getReviews(params),

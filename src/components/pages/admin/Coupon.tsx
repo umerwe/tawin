@@ -16,6 +16,8 @@ import { RootState } from "@/store/store";
 
 const Coupons = () => {
   const t = useTranslations("translation");
+  const auth = useSelector((state: RootState) => state.auth.staff);
+
   const [page, setPage] = useState(1);
   const [activeTab, setActiveTab] = useState("All Coupons");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -40,13 +42,11 @@ const Coupons = () => {
   const couponsData = data?.data || [];
   const meta = data?.meta;
 
-  const auth = useSelector((state: RootState) => state.auth.staff);
   const isStaff = auth?.role === "staff";
 
   const usersPermissions: string[] =
     auth?.permissions?.find((p: any) => p.module === "coupon codes")?.operations ?? [];
 
-  // Staff users follow the permissions array; everyone else (admin) has full access
   const canDelete = isStaff ? usersPermissions.includes("delete") : true;
   const canPatch = isStaff ? usersPermissions.includes("patch") : true;
   const canPost = isStaff ? usersPermissions.includes("post") : true;
@@ -89,7 +89,6 @@ const Coupons = () => {
 
   return (
     <div className="space-y-6 p-1">
-      {/* Add Coupon Button */}
       {
         canPost &&
         <div className="flex items-center justify-end gap-3">
@@ -100,14 +99,12 @@ const Coupons = () => {
         </div>
       }
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {couponStats.map((stat, i) => (
           <StatsCard key={i} data={stat} isLoading={couponStatsLoading} />
         ))}
       </div>
 
-      {/* Table Card */}
       <Card className="border shadow-none overflow-hidden">
         <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between pb-6">
           <FilterSection

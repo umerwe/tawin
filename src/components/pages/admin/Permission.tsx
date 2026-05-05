@@ -16,25 +16,28 @@ const StaffAccountsPage = () => {
 
     const debouncedSearch = useDebounce(search, 500);
 
-    // Query parameters
     const queryParams = useMemo(() => ({
         page,
         search: debouncedSearch,
         status: activeTab === "All Accounts" ? undefined : activeTab.toLowerCase(),
     }), [page, debouncedSearch, activeTab]);
 
-    // Get both Stats and Data
     const { data: stats, isLoading: statsLoading, refetch: refetchStats } = useStaffStats();
     const { data: staffResponse, isLoading: staffLoading, refetch: refetchStaff, isFetching } = useStaff(queryParams);
 
     const staffData = staffResponse?.data || [];
     const pagination = staffResponse?.meta;
 
-    // Combined Refresh Function
     const handleRefresh = () => {
         refetchStats();
         refetchStaff();
     };
+
+    const displayedStaff = useMemo(() => {
+        if (!staffData) return [];
+        return isReversed ? [...staffData].reverse() : staffData;
+    }, [staffData, isReversed]);
+
 
     const staffStats = [
         {
@@ -57,11 +60,6 @@ const StaffAccountsPage = () => {
             isUp: false
         }
     ];
-
-    const displayedStaff = useMemo(() => {
-        if (!staffData) return [];
-        return isReversed ? [...staffData].reverse() : staffData;
-    }, [staffData, isReversed]);
 
     return (
         <div className="space-y-6 p-1">

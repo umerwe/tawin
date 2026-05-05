@@ -3,17 +3,7 @@ import { getProducts, getProductBySlug, getProductsByCategory, addProduct, updat
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-interface ProductParams {
-  category?: string;
-  page?: number;
-  limit?: number;
-  allProducts?: boolean;
-  featuredProducts?: boolean;
-  reduced?: boolean;
-  outOfStock?: boolean;
-}
-
-export const useProducts = (params?: ProductParams, options?: { page?: number; limit?: number }) => {
+export const useProducts = (params?: PaginationParams, options?: PaginationParams) => {
   return useQuery({
     queryKey: ["products", params, options],
     queryFn: () => getProducts(params, options),
@@ -30,7 +20,7 @@ export const useProductBySlug = (slug: string) => {
   });
 };
 
-export const useProductsByCategory = (categoryId: string, options?: { page?: number; limit?: number }) => {
+export const useProductsByCategory = (categoryId: string, options?: PaginationParams) => {
   return useQuery({
     queryKey: ["products", "category", categoryId, options],
     queryFn: () => getProductsByCategory(categoryId, options),
@@ -49,7 +39,7 @@ export const useAddProduct = () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       router.push("/admin/product-list");
     },
-     onError: (error: any) => {
+    onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to add product.");
     },
   });
@@ -86,10 +76,10 @@ export const useDeleteProduct = () => {
   });
 };
 
-export const useLowStockProducts = ({ allProducts, featuredProducts, reduced, outOfStock, page, search }: { allProducts?: boolean; featuredProducts?: boolean; reduced?: boolean; outOfStock?: boolean; page?: number; search?: string }) => {
+export const useLowStockProducts = (params?: PaginationParams) => {
   return useQuery({
-    queryKey: ["products", "low-stock", allProducts, featuredProducts, reduced, outOfStock, page, search],
-    queryFn: () => getLowStockProducts({ allProducts, featuredProducts, reduced, outOfStock, page, search }),
+    queryKey: ["products", "low-stock", params],
+    queryFn: () => getLowStockProducts(params),
     staleTime: 2 * 60 * 1000,
   });
 };

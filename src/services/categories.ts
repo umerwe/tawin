@@ -12,11 +12,6 @@ export const getCategories = async (params?: { page?: number; limit?: number; is
   return data;
 };
 
-export const getCategoryBySlug = async (slug: string): Promise<Category> => {
-  const { data } = await api.get(`/api/categories/slug/${slug}`);
-  return data.data;
-};
-
 export const getCategoryById = async (id: string): Promise<Category> => {
   const { data } = await api.get(`/api/categories/id/${id}`);
   return data.data;

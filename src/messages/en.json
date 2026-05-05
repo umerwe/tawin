@@ -588,7 +588,18 @@
     "post": "Post",
     "patch": "Patch",
     "closed": "Closed",
-    "editCoupon": "Edit Coupon"
+    "editCoupon": "Edit Coupon",
+    "notifications": "Notifications",
+    "totalCount": "{count} total",
+    "unreadCount": "{count} unread",
+    "markAllAsRead": "Mark all as read",
+    "noNotificationsYet": "No notifications yet",
+    "read": "Read",
+    "pageOf": "Page {page} of {totalPages}",
+    "justNow": "Just now",
+    "minutesAgo": "{count}m ago",
+    "hoursAgo": "{count}h ago",
+    "daysAgo": "{count}d ago"
   },
   "confirm": {
     "logout": {

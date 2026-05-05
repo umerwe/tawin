@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getCart, addToCart, updateCartQuantity, removeFromCart, clearCart } from "@/services/cart";
+import { getCart, addToCart, updateCartQuantity, removeFromCart } from "@/services/cart";
 import { toast } from "sonner";
 
 export const useCart = () => {
@@ -50,20 +50,6 @@ export const useRemoveFromCart = () => {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to remove item");
-    },
-  });
-};
-
-export const useClearCart = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: clearCart,
-    onSuccess: () => {
-      toast.success("Cart cleared");
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-    },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to clear cart");
     },
   });
 };

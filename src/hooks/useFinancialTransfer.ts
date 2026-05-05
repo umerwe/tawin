@@ -8,13 +8,7 @@ import {
   getFinancialStats
 } from "@/services/financialtransfer";
 
-// Get all financial transfers with pagination/search
-export const useFinancialTransfers = (params?: { 
-  page?: number; 
-  limit?: number;
-  status?: string;
-  search?: string;
-}) => {
+export const useFinancialTransfers = (params?: PaginationParams) => {
   return useQuery({
     queryKey: ["financial-transfers", params],
     queryFn: () => getFinancialTransfers(params),
@@ -22,7 +16,6 @@ export const useFinancialTransfers = (params?: {
   });
 };
 
-// Get single financial transfer
 export const useFinancialTransfer = (id: string) => {
   return useQuery({
     queryKey: ["financial-transfer", id],
@@ -39,7 +32,6 @@ export const useGetFinancialStats = () => {
   });
 };
 
-// Update financial transfer status (Admin Only)
 export const useUpdateFinancialTransferStatus = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -54,7 +46,6 @@ export const useUpdateFinancialTransferStatus = () => {
   });
 };
 
-// Delete financial transfer (Admin Only)
 export const useDeleteFinancialTransfer = () => {
   const queryClient = useQueryClient();
   return useMutation({

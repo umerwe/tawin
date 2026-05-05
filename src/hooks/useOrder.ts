@@ -1,9 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createOrder, getOrderById, updateOrderStatus, deleteOrder, OrderFormData, getOrders, getOrderStats } from "@/services/order";
+import { createOrder, getOrderById, updateOrderStatus, deleteOrder, getOrders, getOrderStats } from "@/services/order";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-// User Order Hooks
 export const useCreateOrder = () => {
   const router = useRouter();
 
@@ -24,15 +23,14 @@ export const useOrderById = (id: string) => {
     queryKey: ["order", id],
     queryFn: () => getOrderById(id),
     enabled: !!id,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 };
 
-// Admin Order Hooks
-export const useGetOrders = (queryParams?: { status?: string; page?: number; search?: string }) => {
+export const useGetOrders = (params?: PaginationParams) => {
   return useQuery({
-    queryKey: ["orders", queryParams],
-    queryFn: () => getOrders(queryParams),
+    queryKey: ["orders", params],
+    queryFn: () => getOrders(params),
     staleTime: 5 * 60 * 1000,
   });
 };

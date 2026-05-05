@@ -209,7 +209,6 @@ export const useSigninStaff = () => {
       toast.success("Staff logged in successfully!");
     },
     onError: (error: any) => {
-      console.log(error)
       toast.error(error.response?.data?.message || "Staff login failed. Please check your credentials.");
     },
   });

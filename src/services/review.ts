@@ -1,6 +1,6 @@
 import api from "@/lib/axios";
 
-export const getReviews = async (params?: any) => {
+export const getReviews = async (params?: PaginationParams) => {
   const { data } = await api.get(`/api/reviews`, { params });
   return data;
 };

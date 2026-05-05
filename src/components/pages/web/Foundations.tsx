@@ -1,9 +1,9 @@
 "use client"
 
 import { useLocale, useTranslations } from "next-intl"
-import { foundations } from "@/constants/products"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Image from "@/components/MyImage"
+import { foundations } from "@/constants/foundations"
 
 const Foundations = () => {
     const locale = useLocale() as "en" | "ar";

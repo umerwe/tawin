@@ -7,10 +7,16 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useUserProfile } from "@/hooks/useAuth";
 import MyImage from "@/components/MyImage";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 export default function Navbar() {
   const t = useTranslations("translation");
+  const auth = useSelector((state: RootState) => state.auth.staff);
+
   const { data, isLoading } = useUserProfile();
+
+  const isStaff = auth?.role === "staff";
 
   return (
     <nav className="w-full bg-white border-b border-gray-50 sticky top-0 z-50 mb-2">
@@ -28,10 +34,14 @@ export default function Navbar() {
             <LanguageSwitcher />
 
             {/* Notification */}
-            <Link href="/admin/notification" className="relative cursor-pointer shrink-0">
-              <AiOutlineBell size={24} className="text-gray-700" />
-              <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-            </Link>
+            {
+              !isStaff && (
+                <Link href="/admin/notification" className="relative cursor-pointer shrink-0">
+                  <AiOutlineBell size={24} className="text-gray-700" />
+                  {/* <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span> */}
+                </Link>
+              )
+            }
 
             {/* Profile Image / Skeleton Wrapper */}
             <div className="cursor-pointer shrink-0">
@@ -39,11 +49,11 @@ export default function Navbar() {
                 {isLoading ? (
                   <div className="absolute inset-0 bg-gray-200 animate-pulse" />
                 ) : data?.data?.profileImage ? (
-                  <MyImage 
-                    src={data?.data?.profileImage} 
-                    width={256} 
-                    height={256} 
-                    alt="User" 
+                  <MyImage
+                    src={data?.data?.profileImage}
+                    width={256}
+                    height={256}
+                    alt="User"
                     className="object-cover h-full w-full"
                   />
                 ) : (

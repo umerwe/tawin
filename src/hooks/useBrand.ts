@@ -8,7 +8,6 @@ import {
   deleteBrand 
 } from "@/services/brand";
 
-// Get all brands with pagination/search
 export const useBrands = (params?: { page?: number; search?: string }) => {
   return useQuery({
     queryKey: ["brands", params],
@@ -17,7 +16,6 @@ export const useBrands = (params?: { page?: number; search?: string }) => {
   });
 };
 
-// Get single brand
 export const useBrand = (id: string) => {
   return useQuery({
     queryKey: ["brand", id],
@@ -26,7 +24,6 @@ export const useBrand = (id: string) => {
   });
 };
 
-// Create brand (Admin Only)
 export const useCreateBrand = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -41,7 +38,6 @@ export const useCreateBrand = () => {
   });
 };
 
-// Update brand (Admin Only)
 export const useUpdateBrand = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -57,7 +53,6 @@ export const useUpdateBrand = () => {
   });
 };
 
-// Delete brand (Admin Only)
 export const useDeleteBrand = () => {
   const queryClient = useQueryClient();
   return useMutation({

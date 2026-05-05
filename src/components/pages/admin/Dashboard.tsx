@@ -14,6 +14,7 @@ import { useTranslations } from "next-intl";
 
 const Dashboard = () => {
   const t = useTranslations("translation");
+  
   const [filter, setFilter] = useState<FilterRange>("daily");
 
   const { data: settings } = useSettings();
@@ -36,8 +37,6 @@ const Dashboard = () => {
       change: (stats?.totalUsers?.growth || "0") + "%",
       changeLabel: { en: "Users", ar: "المستخدمين" },
       changeType: "increase" as const,
-      // footerValue: "($235)",
-      // footerLabel: { en: `${filter === "daily" ? "Today" : filter === "weekly" ? "This Week" : "This Month"}`, ar: "آخر 7 أيام" },
     },
     {
       title: { en: "Total Orders", ar: "إجمالي الطلبات" },
@@ -46,8 +45,6 @@ const Dashboard = () => {
       change: (stats?.totalOrders?.growth || "0") + "%",
       changeLabel: { en: "Order", ar: "طلب" },
       changeType: "increase" as const,
-      // footerValue: "(7.6k)",
-      // footerLabel: { en: `${filter === "daily" ? "Today" : filter === "weekly" ? "This Week" : "This Month"}`, ar: "آخر 7 أيام" },
     },
     {
       title: { en: "Total Sales", ar: "إجمالي المبيعات" },
@@ -56,8 +53,6 @@ const Dashboard = () => {
       change: (stats?.totalSales?.growth || "0") + "%",
       changeLabel: { en: "Sales", ar: "المبيعات" },
       changeType: "increase" as const,
-      // footerValue: "($235)",
-      // footerLabel: { en: `${filter === "daily" ? "Today" : filter === "weekly" ? "This Week" : "This Month"}`, ar: "آخر 7 أيام" },
     },
   ];
 

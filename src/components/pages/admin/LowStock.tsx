@@ -5,9 +5,7 @@ import { useSelector } from "react-redux";
 import {
     Plus,
     RefreshCcw,
-    Filter,
     ArrowUpDown,
-    MoreHorizontal,
     FileText,
     CirclePlus,
     ChevronLeft,
@@ -25,17 +23,17 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import CategoryFormDialog from "@/components/dialog/CategoryFormDialog";
-import { RootState } from "@/store/store"; // adjust if needed
+import { RootState } from "@/store/store";
 
 const CATEGORY_PAGE_SIZE = 8;
 
 const LowStock = () => {
     const router = useRouter();
     const t = useTranslations("translation");
+    const auth = useSelector((state: RootState) => state.auth.staff);
 
     const [activeTab, setActiveTab] = useState("All Products");
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [isReversed, setIsReversed] = useState(false);
@@ -43,24 +41,8 @@ const LowStock = () => {
 
     const debouncedSearch = useDebounce(search, 500);
 
-    // --- Permission checks ---
-    const auth = useSelector((state: RootState) => state.auth.staff);
     const isStaff = auth?.role === "staff";
 
-    const productsPermissions: string[] =
-        auth?.permissions?.find((p: any) => p.module === "products")?.operations ?? [];
-    const categoriesPermissions: string[] =
-        auth?.permissions?.find((p: any) => p.module === "categories")?.operations ?? [];
-
-    const canPost = isStaff ? productsPermissions.includes("post") : true;
-    const canPatch = isStaff ? productsPermissions.includes("patch") : true;
-    const canDelete = isStaff ? productsPermissions.includes("delete") : true;
-
-    const canCategoryGet = isStaff ? categoriesPermissions.includes("get") : true;
-    const canCategoryPost = isStaff ? categoriesPermissions.includes("post") : true;
-    // -------------------------
-
-    // Categories
     const { data: categoriesData, isLoading: categoriesLoading } = useGetCategories({
         limit: CATEGORY_PAGE_SIZE,
         page: categoryPage,
@@ -70,7 +52,6 @@ const LowStock = () => {
     const categories = categoriesData?.data || [];
     const categoryTotalPages = categoriesData?.meta?.totalPages ?? 1;
 
-    // Low Stock Products
     const queryParams = useMemo(() => {
         const rawParams = {
             featuredProducts: activeTab === "Featured Products" || undefined,
@@ -87,10 +68,24 @@ const LowStock = () => {
     const products = productsData?.data || [];
     const pagination = productsData?.meta || {};
 
+    const productsPermissions: string[] =
+        auth?.permissions?.find((p: any) => p.module === "products")?.operations ?? [];
+
+    const categoriesPermissions: string[] =
+        auth?.permissions?.find((p: any) => p.module === "categories")?.operations ?? [];
+
+    const canPost = isStaff ? productsPermissions.includes("post") : true;
+    const canPatch = isStaff ? productsPermissions.includes("patch") : true;
+    const canDelete = isStaff ? productsPermissions.includes("delete") : true;
+
+    const canCategoryGet = isStaff ? categoriesPermissions.includes("get") : true;
+    const canCategoryPost = isStaff ? categoriesPermissions.includes("post") : true;
+
     const displayedProducts = useMemo(() => {
         if (!products) return [];
         return isReversed ? [...products].reverse() : products;
     }, [products, isReversed]);
+
 
     const tabs = [
         { id: "All Products", label: t("allProducts") },
@@ -107,7 +102,6 @@ const LowStock = () => {
 
     return (
         <div className="space-y-6 p-1">
-            {/* Header */}
             {canCategoryPost && (
                 <div className="flex items-center justify-end gap-3">
                     <Button variant="primary" className="w-32" onClick={() => setIsAddDialogOpen(true)} size="sm">
@@ -116,7 +110,6 @@ const LowStock = () => {
                 </div>
             )}
 
-            {/* Category Grid with backend pagination */}
             {canCategoryGet && (
                 <div>
                     <div className="flex items-center justify-end mb-3">
@@ -151,7 +144,6 @@ const LowStock = () => {
                 </div>
             )}
 
-            {/* Low Stock Table Card */}
             <Card className="border shadow-none overflow-hidden">
                 <CardHeader className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-2">
                     <div className="w-full xl:w-auto overflow-x-auto">
@@ -168,15 +160,11 @@ const LowStock = () => {
                                     )}
                                 >
                                     {tab.label}
-                                    {tab.id === "All Products" && (
-                                        <span className="ml-1 text-aqua font-bold">({pagination?.totalDocs || 0})</span>
-                                    )}
                                 </Button>
                             ))}
                         </div>
                     </div>
 
-                    {/* Search & Actions */}
                     <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 w-full xl:w-auto">
                         <div className="flex items-center gap-2 flex-1">
                             <SearchInput

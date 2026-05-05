@@ -1,8 +1,6 @@
 import { z } from "zod";
 
 const objectIdRegex = /^[0-9a-fA-F]{24}$/;
-const units = ["g", "kg", "ml", "l"] as const;
-const sizes = ["XS", "S", "M", "L", "XL", "XXL"] as const;
 
 export const productFormSchema = z.object({
   title: z.object({
@@ -21,3 +19,5 @@ export const productFormSchema = z.object({
   photo: z.any().refine((file) => file !== null, "Main photo is required"),
   images: z.array(z.any()).optional(),
 });
+
+export type ProductFormValues = z.infer<typeof productFormSchema>;

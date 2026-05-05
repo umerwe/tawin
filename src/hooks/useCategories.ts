@@ -1,20 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getCategories, getCategoryBySlug, createCategory, updateCategory, deleteCategory, getCategoryById } from "@/services/categories";
+import { getCategories, createCategory, updateCategory, deleteCategory, getCategoryById } from "@/services/categories";
 import { toast } from "sonner";
 
 export const useGetCategories = (params?: { page?: number; limit?: number; isAdmin?: boolean }) => {
   return useQuery({
     queryKey: ["categories", params],
     queryFn: () => getCategories(params),
-    staleTime: 5 * 60 * 1000,
-  });
-};
-
-export const useGetCategoryBySlug = (slug: string) => {
-  return useQuery({
-    queryKey: ["category", slug],
-    queryFn: () => getCategoryBySlug(slug),
-    enabled: !!slug,
     staleTime: 5 * 60 * 1000,
   });
 };

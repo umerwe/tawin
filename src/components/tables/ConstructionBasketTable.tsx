@@ -4,7 +4,7 @@ import { useState } from "react";
 import { TableCell } from "@/components/ui/table";
 import { DataTable } from "@/components/DataTable";
 import { cn } from "@/lib/utils";
-import { Trash2, CheckCircle, XCircle, Clock, Package, Truck } from "lucide-react";
+import { Trash2, CheckCircle, XCircle, Clock } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -20,7 +20,28 @@ import { useUpdateBasketRequestStatus, useDeleteBasketRequest } from "@/hooks/us
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
-export const StatusDropdown = ({ item, t, getStatusColor, canPatch }: any) => {
+const getStatusIcon = (status: string) => {
+  switch (status) {
+    case "pending":  return <Clock size={14} className="text-orange-500" />;
+    case "approved": return <CheckCircle size={14} className="text-green-500" />;
+    case "rejected": return <XCircle size={14} className="text-red-500" />;
+    default:         return null;
+  }
+};
+
+const StatusBadge = ({ status, t, getStatusColor }: any) => (
+  <span
+    className={cn(
+      "inline-flex items-center gap-1.5 h-8 px-3 border rounded-md font-semibold text-xs capitalize",
+      getStatusColor(status)
+    )}
+  >
+    {getStatusIcon(status)}
+    {t(status)}
+  </span>
+);
+
+export const StatusDropdown = ({ item, t, getStatusColor }: any) => {
   const [currentStatus, setCurrentStatus] = useState(item.constructionBasket.status);
   const { mutate: updateStatus } = useUpdateBasketRequestStatus();
 
@@ -33,14 +54,10 @@ export const StatusDropdown = ({ item, t, getStatusColor, canPatch }: any) => {
         },
       }
     );
-  }
+  };
 
   return (
-    <Select
-      value={currentStatus}
-      onValueChange={handleStatusChange}
-      disabled={!canPatch}
-    >
+    <Select value={currentStatus} onValueChange={handleStatusChange}>
       <SelectTrigger
         className={cn(
           "h-8 w-[140px] px-2 border rounded-md transition-all outline-none focus:ring-0 font-semibold text-xs",
@@ -100,21 +117,23 @@ const ConstructionBasketTable = ({
   const [dialogOpen, setDialogOpen] = useState(false);
   const { mutate: deleteBasket } = useDeleteBasketRequest();
 
-  const cols = ["basketCode", "fullName", "phoneNumber", "occupation", "propertyType", "status", "action"];
-
-  const filteredData = data?.filter((item) => {
-    return activeTab === "All Applications" || item.constructionBasket.status === activeTab;
-  });
-
   const auth = useSelector((state: RootState) => state.auth.staff);
   const isStaff = auth?.role === "staff";
 
   const basketPermissions: string[] =
     auth?.permissions?.find((p: any) => p.module === "construction-basket")?.operations ?? [];
 
-  // Staff users follow the permissions array; everyone else (admin) has full access
   const canDelete = isStaff ? basketPermissions.includes("delete") : true;
-  const canPatch = isStaff ? (basketPermissions.includes("update") || basketPermissions.includes("patch")) : true;
+  const canPatch = isStaff
+    ? (basketPermissions.includes("update") || basketPermissions.includes("patch"))
+    : true;
+
+  const baseCols = ["basketCode", "fullName", "phoneNumber", "occupation", "propertyType", "status"];
+  const cols = canDelete ? [...baseCols, "action"] : baseCols;
+
+  const filteredData = data?.filter((item) => {
+    return activeTab === "All Applications" || item.constructionBasket.status === activeTab;
+  });
 
   const handleRowClick = (item: any) => {
     setSelectedBasket(item);
@@ -165,38 +184,43 @@ const ConstructionBasketTable = ({
       </TableCell>
 
       <TableCell onClick={(e) => e.stopPropagation()}>
-        <StatusDropdown 
-          item={item} 
-          t={t} 
-          getStatusColor={getStatusColor} 
-          canPatch={canPatch} 
-        />
+        {canPatch ? (
+          <StatusDropdown item={item} t={t} getStatusColor={getStatusColor} />
+        ) : (
+          <StatusBadge
+            status={item.constructionBasket.status}
+            t={t}
+            getStatusColor={getStatusColor}
+          />
+        )}
       </TableCell>
 
-      <TableCell>
-        <div className="flex items-center gap-2">
-          <div onClick={(e) => e.stopPropagation()}>
-            <ConfirmDialog
-              title={tConfirm("delete.title", { value: t("basket") })}
-              description={tConfirm("delete.description", { value: t("basket") })}
-              variant="destructive"
-              loading={isDeleting}
-              onConfirm={(closeDialog) => {
-                handleDelete(item._id, closeDialog);
-              }}
-              asChild
-            >
-              <button
-                className="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-md hover:bg-red-50 cursor-pointer disabled:opacity-50"
-                title={t("delete")}
-                disabled={isDeleting || !canDelete}
+      {canDelete && (
+        <TableCell>
+          <div className="flex items-center gap-2">
+            <div onClick={(e) => e.stopPropagation()}>
+              <ConfirmDialog
+                title={tConfirm("delete.title", { value: t("basket") })}
+                description={tConfirm("delete.description", { value: t("basket") })}
+                variant="destructive"
+                loading={isDeleting}
+                onConfirm={(closeDialog) => {
+                  handleDelete(item._id, closeDialog);
+                }}
+                asChild
               >
-                <Trash2 size={16} />
-              </button>
-            </ConfirmDialog>
+                <button
+                  className="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-md hover:bg-red-50 cursor-pointer disabled:opacity-50"
+                  title={t("delete")}
+                  disabled={isDeleting}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </ConfirmDialog>
+            </div>
           </div>
-        </div>
-      </TableCell>
+        </TableCell>
+      )}
     </>
   );
 

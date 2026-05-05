@@ -1,32 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getSuppliers,
-  getSupplierById,
   createSupplier,
   updateSupplier,
   deleteSupplier,
-  getSupplierHistory,
-  addStock,
   getSupplierStats,
-  AddStockFormData
 } from "@/services/supplier";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { SupplierFormValues } from "@/validations/supplier";
 
-export const useGetSuppliers = (queryParams?: { search?: string; page?: number }) => {
+export const useGetSuppliers = (params?: PaginationParams) => {
   return useQuery({
-    queryKey: ["suppliers", queryParams],
-    queryFn: () => getSuppliers(queryParams),
-    staleTime: 5 * 60 * 1000,
-  });
-};
-
-export const useSupplierById = (id: string) => {
-  return useQuery({
-    queryKey: ["supplier", id],
-    queryFn: () => getSupplierById(id),
-    enabled: !!id,
+    queryKey: ["suppliers", params],
+    queryFn: () => getSuppliers(params),
     staleTime: 5 * 60 * 1000,
   });
 };
@@ -76,31 +63,6 @@ export const useDeleteSupplier = () => {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to delete supplier.");
-    },
-  });
-};
-
-export const useSupplierHistory = (id: string) => {
-  return useQuery({
-    queryKey: ["supplier-history", id],
-    queryFn: () => getSupplierHistory(id),
-    enabled: !!id,
-    staleTime: 5 * 60 * 1000,
-  });
-};
-
-export const useAddStock = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (formData: AddStockFormData) => addStock(formData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["suppliers"] });
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-      toast.success("Stock added successfully");
-    },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || "Failed to add stock.");
     },
   });
 };

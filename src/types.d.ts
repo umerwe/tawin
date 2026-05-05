@@ -1,3 +1,15 @@
+interface PaginationParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+  category?: string;
+  allProducts?: boolean;
+  featuredProducts?: boolean;
+  reduced?: boolean;
+  outOfStock?: boolean;
+}
+
 interface CardProps {
   title: LocalizedString;
   subtitle: LocalizedString;
@@ -28,12 +40,6 @@ interface Category {
   subcategories: Subcategory[];
 }
 
-interface Color {
-  name: string
-  image: string
-  value: string
-}
-
 interface Review {
   id: number
   name: string
@@ -41,5 +47,25 @@ interface Review {
   date: string
   comment: string
   avatar: string
+}
+
+interface OrderFormData {
+  addressId: string;
+  paymentMethod: string;
+  couponCode?: string;
+  phone: string;
+}
+
+interface AddStockFormData {
+  supplierId: string;
+  products: Array<{
+    productId: string;
+    quantity: number;
+    batchNumber?: string;
+    expiryDate?: string;
+  }>;
+  deliveryDate: string;
+  invoiceNumber?: string;
+  notes?: string;
 }
 

@@ -14,11 +14,14 @@ import { useGetCategories } from "@/hooks/useCategories";
 import { useBrands } from "@/hooks/useBrand";
 import { useDebounce } from "@/hooks/useDebounce";
 import CategoryFormDialog from "@/components/dialog/CategoryFormDialog";
-import { RootState } from "@/store/store"; // adjust if needed
+import { RootState } from "@/store/store";
 
 const CATEGORY_PAGE_SIZE = 8;
 
 const Brand = () => {
+    const t = useTranslations("translation");
+    const auth = useSelector((state: RootState) => state.auth.staff);
+
     const [activeTab, setActiveTab] = useState("All Brands");
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [categoryPage, setCategoryPage] = useState(1);
@@ -26,12 +29,29 @@ const Brand = () => {
     const [search, setSearch] = useState("");
     const [isReversed, setIsReversed] = useState(false);
 
-    const t = useTranslations("translation");
     const debouncedSearch = useDebounce(search, 500);
 
-    // --- Permission checks ---
-    const auth = useSelector((state: RootState) => state.auth.staff);
+    const queryParams = useMemo(() => ({
+        page: brandPage,
+        search: debouncedSearch,
+        status: activeTab === "All Brands" ? undefined : activeTab.toLowerCase(),
+    }), [brandPage, debouncedSearch, activeTab]);
+
+    const { data: brandsResponse, isLoading: brandsLoading, refetch, isFetching } = useBrands(queryParams);
+
+    const { data: categoriesData, isLoading: categoriesLoading } = useGetCategories({
+        limit: CATEGORY_PAGE_SIZE,
+        page: categoryPage,
+        isAdmin: true,
+    });
+
     const isStaff = auth?.role === "staff";
+
+    const brandsList = brandsResponse?.data || [];
+    const brandsMeta = brandsResponse?.meta;
+
+    const categories = categoriesData?.data || [];
+    const categoryTotalPages = categoriesData?.meta?.totalPages ?? 1;
 
     const brandPermissions: string[] =
         auth?.permissions?.find((p: any) => p.module === "brand")?.operations ?? [];
@@ -44,34 +64,12 @@ const Brand = () => {
 
     const canCategoryGet = isStaff ? categoriesPermissions.includes("get") : true;
     const canCategoryPost = isStaff ? categoriesPermissions.includes("post") : true;
-    // -------------------------
-
-    // Fetch Brands Data
-    const queryParams = useMemo(() => ({
-        page: brandPage,
-        search: debouncedSearch,
-        status: activeTab === "All Brands" ? undefined : activeTab.toLowerCase(),
-    }), [brandPage, debouncedSearch, activeTab]);
-
-    const { data: brandsResponse, isLoading: brandsLoading, refetch, isFetching } = useBrands(queryParams);
-
-    // Fetch Categories Data
-    const { data: categoriesData, isLoading: categoriesLoading } = useGetCategories({
-        limit: CATEGORY_PAGE_SIZE,
-        page: categoryPage,
-        isAdmin: true,
-    });
-
-    const brandsList = brandsResponse?.data || [];
-    const brandsMeta = brandsResponse?.meta;
-
-    const categories = categoriesData?.data || [];
-    const categoryTotalPages = categoriesData?.meta?.totalPages ?? 1;
 
     const displayedBrands = useMemo(() => {
         if (!brandsList) return [];
         return isReversed ? [...brandsList].reverse() : brandsList;
     }, [brandsList, isReversed]);
+
 
     return (
         <div className="space-y-6 p-1">

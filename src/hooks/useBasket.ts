@@ -3,7 +3,6 @@ import { applyForBasket, getAdminBasketRequests, updateBasketRequestStatus, dele
 import { toast } from "sonner";
 
 export const useApplyForBasket = () => {
-
   return useMutation({
     mutationFn: (data: BasketApplicationData) => applyForBasket(data),
     onSuccess: () => {

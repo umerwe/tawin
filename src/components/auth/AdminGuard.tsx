@@ -33,7 +33,7 @@ export default function AdminGuard({ children }: AdminGuardProps) {
                 return;
             }
 
-            if (userProfile.role !== "admin") {
+            if (userProfile.role !== "admin" && userProfile.role !== "staff") {
                 localStorage.removeItem("admin_token");
                 localStorage.removeItem("token");
                 router.replace("/auth/admin");

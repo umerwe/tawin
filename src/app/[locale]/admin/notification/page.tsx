@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 const TYPE_CONFIG: Record<string, { color: string; bg: string; icon: React.ReactNode }> = {
   order: {
@@ -21,17 +22,24 @@ const TYPE_CONFIG: Record<string, { color: string; bg: string; icon: React.React
   },
 };
 
-function timeAgo(dateStr: string) {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "Just now";
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  return `${Math.floor(hrs / 24)}d ago`;
+function useTimeAgo() {
+  const t = useTranslations("translation");
+
+  return (dateStr: string) => {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return t("justNow");
+    if (mins < 60) return t("minutesAgo", { count: mins });
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return t("hoursAgo", { count: hrs });
+    return t("daysAgo", { count: Math.floor(hrs / 24) });
+  };
 }
 
 export default function NotificationsPage() {
+  const t = useTranslations("translation");
+  const timeAgo = useTimeAgo();
+
   const [page, setPage] = useState(1);
   const limit = 15;
 
@@ -54,9 +62,10 @@ export default function NotificationsPage() {
             <Bell size={18} className="text-gray-700" />
           </div>
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">Notifications</h1>
+            <h1 className="text-xl font-semibold text-gray-900">{t("notifications")}</h1>
             <p className="text-sm text-gray-400">
-              {total} total{unreadCount > 0 && `, ${unreadCount} unread`}
+              {t("totalCount", { count: total })}
+              {unreadCount > 0 && `, ${t("unreadCount", { count: unreadCount })}`}
             </p>
           </div>
         </div>
@@ -69,7 +78,7 @@ export default function NotificationsPage() {
           onClick={() => markAll()}
         >
           <CheckCheck size={15} />
-          Mark all as read
+          {t("markAllAsRead")}
         </Button>
       </div>
 
@@ -93,7 +102,7 @@ export default function NotificationsPage() {
             <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100">
               <BellOff size={22} className="text-gray-400" />
             </div>
-            <p className="text-sm font-medium text-gray-500">No notifications yet</p>
+            <p className="text-sm font-medium text-gray-500">{t("noNotificationsYet")}</p>
           </div>
         ) : (
           <div className="divide-y divide-gray-100">
@@ -148,7 +157,7 @@ export default function NotificationsPage() {
                         onClick={() => markOne(notification._id)}
                         className="flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] text-blue-500 hover:bg-blue-50 transition-colors opacity-0 group-hover:opacity-100"
                       >
-                        <Check size={10} /> Read
+                        <Check size={10} /> {t("read")}
                       </button>
                     )}
                   </div>
@@ -162,7 +171,7 @@ export default function NotificationsPage() {
         {totalPages > 1 && (
           <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
             <p className="text-xs text-gray-400">
-              Page {page} of {totalPages}
+              {t("pageOf", { page, totalPages })}
             </p>
             <div className="flex gap-2">
               <Button
@@ -172,7 +181,7 @@ export default function NotificationsPage() {
                 disabled={page <= 1 || isFetching}
                 onClick={() => setPage((p) => p - 1)}
               >
-                Previous
+                {t("previous")}
               </Button>
               <Button
                 variant="outline"
@@ -181,7 +190,7 @@ export default function NotificationsPage() {
                 disabled={page >= totalPages || isFetching}
                 onClick={() => setPage((p) => p + 1)}
               >
-                Next
+                {t("next")}
               </Button>
             </div>
           </div>

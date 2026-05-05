@@ -11,24 +11,20 @@ import { useDebounce } from "@/hooks/useDebounce";
 import DateRangeFilter, { FilterRange } from "@/components/DateRange";
 
 const Reviews = () => {
-  // --- 1. Filter & Tab State ---
   const [period, setPeriod] = useState<FilterRange>("daily");
-  // Added the missing activeTab state here
-  const [activeTab, setActiveTab] = useState("All Reviews"); 
-
-  // --- 2. Fetching Dynamic Stats ---
-  const { data: reviewStatsResponse, isLoading : reviewsLoading } = useReviewStats({ period });
-  const statsData = reviewStatsResponse || {};
-  const starStats = statsData?.starStats || {};
-  const graphData = statsData?.graphData || [];
-
-  // --- 3. Table Logic ---
+  const [activeTab, setActiveTab] = useState("All Reviews");
   const [ratingFilter, setRatingFilter] = useState<number | null>(null);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [isReversed, setIsReversed] = useState(false);
 
   const debouncedSearch = useDebounce(search, 500);
+
+  const { data: reviewStatsResponse, isLoading: reviewsLoading } = useReviewStats({ period });
+  
+  const statsData = reviewStatsResponse || {};
+  const starStats = statsData?.starStats || {};
+  const graphData = statsData?.graphData || [];
 
   const queryParams = useMemo(() => ({
     page,
@@ -45,8 +41,6 @@ const Reviews = () => {
   const reviewsData = useMemo(() => {
     return isReversed ? [...rawData].reverse() : rawData;
   }, [rawData, isReversed]);
-
-  // --- 4. Data Mapping ---
 
   const tableStats = [
     {
@@ -131,7 +125,6 @@ const Reviews = () => {
           <FilterSection
             data={rawData}
             type="review"
-            // Now these variables exist!
             activeTab={activeTab}
             setActiveTab={(tab) => {
               setActiveTab(tab);

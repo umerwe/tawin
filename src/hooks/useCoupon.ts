@@ -1,26 +1,22 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { 
-  getCouponsAdmin, 
-  createCouponAdmin, 
+import {
+  getCouponsAdmin,
+  createCouponAdmin,
   getCouponStatsAdmin,
   updateCouponAdmin,
   deleteCouponAdmin,
   toggleCouponStatusAdmin,
   validateCoupon,
-  Coupon,
-  CouponFormData,
-  CouponStats,
-  PaginationParams,
   ValidateCouponRequest
 } from "@/services/coupon";
 import { toast } from "sonner";
+import { CouponFormData } from "@/types/coupon";
 
-// Admin Coupon Hooks
 export const useCouponsAdmin = (params?: PaginationParams) => {
   return useQuery({
     queryKey: ["coupons", "admin", params],
     queryFn: () => getCouponsAdmin(params),
-    staleTime: 3 * 60 * 1000, // 3 minutes
+    staleTime: 3 * 60 * 1000,
   });
 };
 
@@ -28,7 +24,7 @@ export const useCouponStatsAdmin = () => {
   return useQuery({
     queryKey: ["coupons", "admin", "stats"],
     queryFn: getCouponStatsAdmin,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 };
 
@@ -52,7 +48,7 @@ export const useUpdateCouponAdmin = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<CouponFormData> }) => 
+    mutationFn: ({ id, data }: { id: string; data: Partial<CouponFormData> }) =>
       updateCouponAdmin(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["coupons", "admin"] });
@@ -96,7 +92,6 @@ export const useToggleCouponStatusAdmin = () => {
   });
 };
 
-// User Coupon Hooks
 export const useValidateCoupon = () => {
   return useMutation({
     mutationFn: (request: ValidateCouponRequest) => validateCoupon(request),

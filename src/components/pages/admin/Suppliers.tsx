@@ -13,18 +13,18 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
 const Suppliers = () => {
-    // 1. Period state for the API
-    const [period, setPeriod] = useState<FilterRange>("daily");
+    const auth = useSelector((state: RootState) => state.auth.staff);
 
+    const [period, setPeriod] = useState<FilterRange>("daily");
     const [activeTab, setActiveTab] = useState("All Suppliers");
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [isReversed, setIsReversed] = useState(false);
 
-    // 2. Using your variable name: supplierStats
-    const { data: supplierStats, isLoading: supplierStatsLoading } = useSupplierStats({ period });
-
     const debouncedSearch = useDebounce(search, 500);
+
+    const { data: supplierStats, isLoading: supplierStatsLoading } = useSupplierStats({ period });
+    const { mutate: deleteSupplier, isPending: isDeleting } = useDeleteSupplier();
 
     const queryParams = useMemo(() => ({
         page,
@@ -34,23 +34,18 @@ const Suppliers = () => {
     }), [page, debouncedSearch, activeTab]);
 
     const { data, isLoading, refetch, isFetching } = useGetSuppliers(queryParams);
-    const { mutate: deleteSupplier, isPending: isDeleting } = useDeleteSupplier();
-
 
     const rawSuppliers = data?.data || [];
     const pagination = data?.meta || {};
 
-    const auth = useSelector((state: RootState) => state.auth.staff);
+
     const isStaff = auth?.role === "staff";
 
     const usersPermissions: string[] =
         auth?.permissions?.find((p: any) => p.module === "suppliers")?.operations ?? [];
 
-    // Staff users follow the permissions array; everyone else (admin) has full access
     const canDelete = isStaff ? usersPermissions.includes("delete") : true;
-    const canPatch = isStaff ? usersPermissions.includes("patch") : true;
     const canPost = isStaff ? usersPermissions.includes("post") : true;
-    console.log(canPost)
 
     const displayedData = useMemo(() => {
         let filtered = [...rawSuppliers];
@@ -66,7 +61,6 @@ const Suppliers = () => {
         });
     };
 
-    // 3. Keeping your exact structure: supplierStats?.suppliers...
     const stats = [
         {
             title: { en: "Total Suppliers", ar: "إجمالي الموردين" },

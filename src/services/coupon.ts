@@ -1,51 +1,6 @@
 import api from "@/lib/axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { Coupon, CouponFormData, CouponStats } from "@/types/coupon";
 
-export interface Coupon {
-  id: string;
-  code: string;
-  type: "percentage" | "fixed";
-  value: number;
-  minOrderAmount?: number;
-  usageLimit: number;
-  usedCount: number;
-  expiryDate: string;
-  isActive: boolean;
-  appliesTo: "all" | "category" | "product";
-  categories?: string[];
-  products?: string[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface CouponFormData {
-  code: string;
-  type: "percentage" | "fixed";
-  value: number;
-  expiryDate: string;
-  usageLimit: number;
-  appliesTo: "all" | "category" | "product";
-  categories?: string[];
-  products?: string[];
-}
-
-export interface CouponStats {
-  totalCoupons: number;
-  activeCoupons: number;
-  totalUsageCount: number;
-  expiredCoupons: number;
-}
-
-export interface PaginationParams {
-  page?: number;
-  limit?: number;
-  search?: string;
-  status?: string;
-}
-
-
-// Admin Coupon APIs
 export const getCouponsAdmin = async (params?: PaginationParams) => {
   const { data } = await api.get("/api/coupons/admin", { params });
   return data;

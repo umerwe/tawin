@@ -8,13 +8,12 @@ import ProductForm from "@/components/form/ProductForm";
 import ProductImageForm from "@/components/form/ProductImageForm";
 import { SpinnerLoader } from "@/components/common/SpinnerLoader";
 import { useTranslations } from "next-intl";
-import { productFormSchema } from "@/validations/product";
-import { z } from "zod";
-
-type ProductFormValues = z.infer<typeof productFormSchema>;
+import { productFormSchema, ProductFormValues } from "@/validations/product";
 
 export default function AddProductPage() {
     const t = useTranslations("translation");
+    
+    const { mutate: addProduct, isPending } = useAddProduct();
 
     const methods = useForm<ProductFormValues>({
         resolver: zodResolver(productFormSchema),
@@ -31,8 +30,6 @@ export default function AddProductPage() {
         },
     });
 
-    const { mutate: addProduct, isPending } = useAddProduct();
-
     const onSubmit = (values: ProductFormValues) => {
         const fd = new FormData();
 
@@ -45,14 +42,6 @@ export default function AddProductPage() {
         fd.append("variant", values.variant || "");
         fd.append("remainingPieces", String(values.remainingPieces));
         fd.append("isNewArrival", String(values.isNewArrival));
-
-        // values.colors?.forEach((c) => fd.append("colors", c));
-        // values.sizes?.forEach((s) => fd.append("sizes", s));
-
-        // if (values.weights && values.weights[0]?.unit && values.weights[0]?.value) {
-        //     fd.append("weights[0][unit]", values.weights[0].unit);
-        //     fd.append("weights[0][value]", values.weights[0].value);
-        // }
 
         if (values.photo) {
             fd.append("photo", values.photo);

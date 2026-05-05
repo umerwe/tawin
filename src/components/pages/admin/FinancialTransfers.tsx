@@ -15,12 +15,30 @@ const FinancialTransfers = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [isReversed, setIsReversed] = useState(false);
-  
-  const {data: settings} = useSettings();
-  const { data: financialStats, isLoading : financialStatsLoading } = useGetFinancialStats();
+
+  const { data: settings } = useSettings();
+  const { data: financialStats, isLoading: financialStatsLoading } = useGetFinancialStats();
+
+  const debouncedSearch = useDebounce(search, 500);
 
   const statsData = financialStats?.data?.summary?.cards || [];
   const revenue = financialStats?.data?.Revenue || 0;
+
+  const queryParams = useMemo(() => ({
+    status: activeTab === "All Orders" ? undefined : activeTab.toLowerCase(),
+    page,
+    search: debouncedSearch,
+  }), [activeTab, page, debouncedSearch]);
+
+  const { data, isLoading, refetch, isFetching } = useFinancialTransfers(queryParams);
+
+  const rawTransfers = data?.data || [];
+  const pagination = data?.meta || {};
+
+  const displayedTransfers = useMemo(() => {
+    if (!rawTransfers) return [];
+    return isReversed ? [...rawTransfers].reverse() : rawTransfers;
+  }, [rawTransfers, isReversed]);
 
   const transferStats = [
     {
@@ -53,34 +71,12 @@ const FinancialTransfers = () => {
     },
   ];
 
-  // Debounce search to prevent excessive API calls
-  const debouncedSearch = useDebounce(search, 500);
-
-  // Fetch Financial Transfers with Query Params
-  const queryParams = useMemo(() => ({
-    status: activeTab === "All Orders" ? undefined : activeTab.toLowerCase(),
-    page,
-    search: debouncedSearch,
-  }), [activeTab, page, debouncedSearch]);
-
-  const { data, isLoading, refetch, isFetching } = useFinancialTransfers(queryParams);
-
-  const rawTransfers = data?.data || [];
-  const pagination = data?.meta || {};
-
-  const displayedTransfers = useMemo(() => {
-    if (!rawTransfers) return [];
-    return isReversed ? [...rawTransfers].reverse() : rawTransfers;
-  }, [rawTransfers, isReversed]);
-
   return (
     <div className="space-y-6 p-1">
-
-      {/* Statistics Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
           {transferStats.map((stat, i) => (
-            <StatsCard key={i} data={stat} isTrendingAllowed={true}  isLoading={financialStatsLoading} />
+            <StatsCard key={i} data={stat} isTrendingAllowed={true} isLoading={financialStatsLoading} />
           ))}
         </div>
 
@@ -89,7 +85,6 @@ const FinancialTransfers = () => {
         </div>
       </div>
 
-      {/* Financial Transfers Table Card */}
       <Card className="border shadow-none overflow-hidden">
         <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <FilterSection

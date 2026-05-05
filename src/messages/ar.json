@@ -588,7 +588,18 @@
     "post": "إضافة",
     "patch": "تعديل",
     "closed": "مغلق",
-    "editCoupon": "تعديل الكوبون"
+    "editCoupon": "تعديل الكوبون",
+    "notifications": "الإشعارات",
+    "totalCount": "{count} إجمالي",
+    "unreadCount": "{count} غير مقروء",
+    "markAllAsRead": "تحديد الكل كمقروء",
+    "noNotificationsYet": "لا توجد إشعارات بعد",
+    "read": "قراءة",
+    "pageOf": "صفحة {page} من {totalPages}",
+    "justNow": "الآن",
+    "minutesAgo": "منذ {count} د",
+    "hoursAgo": "منذ {count} س",
+    "daysAgo": "منذ {count} ي"
   },
   "confirm": {
     "logout": {

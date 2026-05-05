@@ -12,20 +12,35 @@ import { useUserStats } from "@/hooks/useUser";
 import DateRangeFilter, { FilterRange } from "@/components/DateRange";
 
 const Users = () => {
-
-  // --- 1. State for Period Filter ---
   const [period, setPeriod] = useState<FilterRange>("daily");
+  const [activeTab, setActiveTab] = useState("All Users");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [isReversed, setIsReversed] = useState(false);
 
-  // --- 2. Fetching Statistics Data ---
-  const { data: userStatsData,isLoading } = useUserStats({ period });
+  const debouncedSearch = useDebounce(search, 500);
 
-  // Extract API Data safely
+  const { data: userStatsData, isLoading } = useUserStats({ period });
+
+  const queryParams = useMemo(() => ({
+    status: activeTab === "All Users" ? undefined : activeTab.toLowerCase(),
+    page,
+    search: debouncedSearch,
+  }), [activeTab, page, debouncedSearch]);
+
+  const { data: usersData, isLoading: usersLoading, refetch, isFetching: usersFetching } = useAdminUsers(queryParams);
+
   const summaryCards = userStatsData?.data?.summary?.cards || [];
   const graphData = userStatsData?.data?.graph || [];
 
-  // --- 3. Data Mapping ---
+  const rawUsers = usersData?.data || [];
+  const pagination = usersData?.meta || {};
 
-  // Top Summary Row (Inside the Chart Component)
+  const displayedUsers = useMemo(() => {
+    if (!rawUsers) return [];
+    return isReversed ? [...rawUsers].reverse() : rawUsers;
+  }, [rawUsers, isReversed]);
+
   const chartSummaryStats = [
     {
       label: { en: "Total Customers", ar: "إجمالي العملاء" },
@@ -70,30 +85,6 @@ const Users = () => {
     },
   ];
 
-  // --- 4. Table Logic ---
-  const [activeTab, setActiveTab] = useState("All Users");
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [isReversed, setIsReversed] = useState(false);
-
-  const debouncedSearch = useDebounce(search, 500);
-
-  const queryParams = useMemo(() => ({
-    status: activeTab === "All Users" ? undefined : activeTab.toLowerCase(),
-    page,
-    search: debouncedSearch,
-  }), [activeTab, page, debouncedSearch]);
-
-  const { data: usersData, isLoading: usersLoading, refetch, isFetching: usersFetching } = useAdminUsers(queryParams);
-
-  const rawUsers = usersData?.data || [];
-  const pagination = usersData?.meta || {};
-
-  const displayedUsers = useMemo(() => {
-    if (!rawUsers) return [];
-    return isReversed ? [...rawUsers].reverse() : rawUsers;
-  }, [rawUsers, isReversed]);
-
   return (
     <div className="space-y-6 p-1">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -104,9 +95,9 @@ const Users = () => {
             chartData={graphData}
             isLoading={isLoading}
             filter={
-              <DateRangeFilter 
-                value={period} 
-                onChange={(val) => setPeriod(val)} 
+              <DateRangeFilter
+                value={period}
+                onChange={(val) => setPeriod(val)}
               />
             }
           />
@@ -119,7 +110,6 @@ const Users = () => {
         </div>
       </div>
 
-      {/* Main Users Table Card */}
       <Card className="border shadow-none overflow-hidden">
         <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <FilterSection

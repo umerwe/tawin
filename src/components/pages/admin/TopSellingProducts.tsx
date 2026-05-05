@@ -12,6 +12,7 @@ import Link from "next/link";
 
 const TopSellingProducts = ({ data, currencySymbol }: { data: any[], currencySymbol?: string }) => {
   const t = useTranslations("translation");
+
   const cols = ["product", "totalOrders", "price"];
 
   const row = (item: any, index: number, locale: "en" | "ar") => (
@@ -36,9 +37,6 @@ const TopSellingProducts = ({ data, currencySymbol }: { data: any[], currencySym
     <Card className="h-full border shadow-none">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle>{t("topSellingProducts")}</CardTitle>
-        {/* <Button variant="primary" size="sm" className="w-24">
-          <ListFilter className="h-4 w-4" /> {t("filter")}
-        </Button> */}
       </CardHeader>
 
       <CardContent>

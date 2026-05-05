@@ -10,6 +10,7 @@ import Link from "next/link";
 const TopCategories = ({data, currencySymbol}: {data: any, currencySymbol?: string}) => {
   const t = useTranslations("translation");
   const locale = useLocale() as "en" | "ar";
+  
   const [searchTerm, setSearchTerm] = useState("");
 
   return (
@@ -51,7 +52,6 @@ const TopCategories = ({data, currencySymbol}: {data: any, currencySymbol?: stri
 
                   <div className="flex flex-1 flex-col">
                     <span className="text-sm font-semibold">{item.name[locale]}</span>
-                    {/* <span className="text-xs text-muted-foreground">{t("productCode")}: {item.id}</span> */}
                   </div>
 
                   <span className="font-bold text-sm shrink-0">{currencySymbol}{item.value}</span>

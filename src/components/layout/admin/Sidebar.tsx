@@ -20,10 +20,13 @@ import { useEffect, useMemo } from "react";
 import { sidebarMenu } from "@/constants/sidebar";
 import ConfirmDialog from "@/components/dialog/ConfirmDialog";
 import { useUserProfile } from "@/hooks/useAuth";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Sidebar({ className }: { className?: string }) {
   const t = useTranslations("translation");
   const t2 = useTranslations("confirm");
+  const queryClient = useQueryClient();
+
   const { data } = useUserProfile();
   const profileData = data?.data;
 
@@ -48,6 +51,9 @@ export default function Sidebar({ className }: { className?: string }) {
   }, [pathname]);
 
   const handleConfirm = () => {
+    localStorage.clear();
+    queryClient.clear();
+
     router.push("/auth/admin");
   };
 
@@ -79,7 +85,7 @@ export default function Sidebar({ className }: { className?: string }) {
     "dashboard", "orders", "users", "suppliers",
     "coupon codes", "financial transfers", "brand", "construction-basket",
   ]);
-  
+
   const productsMenuLabels = new Set(["products", "stock", "reviews"]);
   const adminMenuLabels = new Set(["staff"]);
 

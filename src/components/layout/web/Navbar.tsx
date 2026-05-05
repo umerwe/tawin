@@ -16,12 +16,14 @@ import Image from "@/components/MyImage"
 import { ShopDropdown } from "@/components/ShopDropdown"
 import { useCart } from "@/hooks/useCart"
 import { useSettings } from "@/hooks/useSettings"
+import { useQueryClient } from "@tanstack/react-query"
 
 export default function Navbar() {
   const t = useTranslations("translation");
   const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale();
+  const queryClient = useQueryClient();
 
   const { data: settings, isLoading: settingsLoading } = useSettings();
 
@@ -49,6 +51,8 @@ export default function Navbar() {
 
   const handleLogout = () => {
     localStorage.clear();
+    queryClient.clear();
+
     router.replace("/auth/signin");
   };
 

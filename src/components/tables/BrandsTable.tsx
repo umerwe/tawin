@@ -65,7 +65,7 @@ const BrandsTable = ({
     setEditDialogOpen(true);
   };
 
-  const row = (item: any, index: number) => {
+  const row = (item: any) => {
     const isActive = item.isActive;
     const statusText = isActive ? t("active") : t("closed");
     const regDate = new Date(item.createdAt).toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-US');

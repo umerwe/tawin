@@ -10,7 +10,7 @@ import {
 } from "@/services/staff";
 import { toast } from "sonner";
 
-export const useStaff = (params?: any) => {
+export const useStaff = (params?: PaginationParams) => {
   return useQuery({
     queryKey: ["staff", params],
     queryFn: () => getStaff(params),

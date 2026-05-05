@@ -1,11 +1,15 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { steps } from "@/constants/cart"
 import Step1 from "@/components/pages/web/cart/Step1"
 import Step2 from "@/components/pages/web/cart/Step2"
 import { useTranslations } from "next-intl"
 import { useSettings } from "@/hooks/useSettings"
+
+const steps = [
+    { id: "1", label: "Cart" },
+    { id: "2", label: "Checkout" },
+]
 
 export default function Cart() {
     const t = useTranslations("translation");

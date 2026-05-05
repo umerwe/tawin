@@ -13,22 +13,47 @@ import { toast } from "sonner";
 const Orders = () => {
     const t = useTranslations("translation");
 
-    // Fetch Real-time Stats
-    const { data: orderStatsData, isLoading: isStatsLoading } = useOrderStats();
-    const statsFromApi = orderStatsData?.data;
-
-    // Table States
     const [activeTab, setActiveTab] = useState("All Orders");
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [isReversed, setIsReversed] = useState(false);
 
-    // Dynamic Stats Mapping
+    const debouncedSearch = useDebounce(search, 500);
+
+    const { data: orderStatsData, isLoading: isStatsLoading } = useOrderStats();
+    const { mutate: deleteOrder, isPending: isDeleting } = useDeleteOrder();
+
+    const statsFromApi = orderStatsData?.data;
+
+    const queryParams = useMemo(() => ({
+        status: activeTab === "All Orders" ? undefined : activeTab.toLowerCase(),
+        page,
+        search: debouncedSearch,
+    }), [activeTab, page, debouncedSearch]);
+
+    const { data, isLoading, refetch, isFetching } = useGetOrders(queryParams);
+
+    const rawOrders = data?.data || [];
+    const pagination = data?.meta || {};
+
+    const handleDelete = (id: string, closeDialog: () => void) => {
+        deleteOrder(id, {
+            onSuccess: () => {
+                toast.success(t("orderDeletedSuccess"));
+                closeDialog();
+                refetch();
+            },
+            onError: (error: any) => {
+                toast.error(error?.message || "Failed to delete order");
+            }
+        });
+    };
+
     const stats = [
         {
             title: { en: "Total Orders", ar: "إجمالي الطلبات" },
             value: statsFromApi?.total || 0,
-            trend: "+0%", // Trend logic can be added if backend provides it
+            trend: "+0%",
             isUp: true,
             footerLabel: { en: "All time", ar: "كل الوقت" }
         },
@@ -52,53 +77,8 @@ const Orders = () => {
             trend: "0%",
             isUp: false,
             footerLabel: { en: "All time", ar: "كل الوقت" }
-        },
-        // {
-        //     title: { en: "Processing Orders", ar: "طلبات قيد التنفيذ" },
-        //     value: statsFromApi?.processing || 0,
-        //     trend: "0%",
-        //     isUp: true,
-        //     footerLabel: { en: "All time", ar: "كل الوقت" }
-        // },
-        // {
-        //     title: { en: "Shipped Orders", ar: "طلبات تم شحنها" },
-        //     value: statsFromApi?.shipped || 0,
-        //     trend: "0%",
-        //     isUp: true,
-        //     footerLabel: { en: "All time", ar: "كل الوقت" }
-        // },
+        }
     ];
-
-    // Debounce search to prevent excessive API calls
-    const debouncedSearch = useDebounce(search, 500);
-
-    // Fetch Orders with Query Params
-    const queryParams = useMemo(() => ({
-        status: activeTab === "All Orders" ? undefined : activeTab.toLowerCase(),
-        page,
-        search: debouncedSearch,
-    }), [activeTab, page, debouncedSearch]);
-
-    const { data, isLoading, refetch, isFetching } = useGetOrders(queryParams);
-
-    const rawOrders = data?.data || [];
-    const pagination = data?.meta || {};
-
-    // Delete Mutation
-    const { mutate: deleteOrder, isPending: isDeleting } = useDeleteOrder();
-
-    const handleDelete = (id: string, closeDialog: () => void) => {
-        deleteOrder(id, {
-            onSuccess: () => {
-                toast.success(t("orderDeletedSuccess"));
-                closeDialog();
-                refetch();
-            },
-            onError: (error: any) => {
-                toast.error(error?.message || "Failed to delete order");
-            }
-        });
-    };
 
     return (
         <div className="space-y-6 p-1">

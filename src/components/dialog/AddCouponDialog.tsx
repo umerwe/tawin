@@ -20,12 +20,12 @@ import {
 } from "@/components/ui/dialog";
 import { SpinnerLoader } from "../common/SpinnerLoader";
 import { useCreateCouponAdmin, useUpdateCouponAdmin } from "@/hooks/useCoupon";
-import { CouponFormData } from "@/services/coupon";
 import { useGetCategories } from "@/hooks/useCategories";
 import { useProducts } from "@/hooks/useProducts";
 import { Category } from "@/types/category";
 import { Product } from "@/types/product";
 import { X } from "lucide-react";
+import { CouponFormData } from "@/types/coupon";
 
 const initialFormData: CouponFormData = {
   code: "",

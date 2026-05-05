@@ -1,11 +1,6 @@
 import api from "@/lib/axios";
 
-export const getFinancialTransfers = async (params?: { 
-  page?: number; 
-  limit?: number;
-  status?: string;
-  search?: string;
-}) => {
+export const getFinancialTransfers = async (params?: PaginationParams) => {
   const { data } = await api.get("/api/admin/financials", { params });
   return data;
 };

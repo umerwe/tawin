@@ -21,8 +21,3 @@ export const removeFromCart = async (productId: string) => {
   });
   return data;
 };
-
-export const clearCart = async () => {
-  const { data } = await api.delete("/api/cart/clear");
-  return data;
-};

@@ -6,7 +6,7 @@ import {
 } from "@/services/notifications";
 import { toast } from "sonner";
 
-export const useNotifications = (params?: { page?: number; limit?: number }) => {
+export const useNotifications = (params?: PaginationParams) => {
   return useQuery({
     queryKey: ["notifications", params],
     queryFn: () => getNotifications(params),

@@ -1,12 +1,5 @@
 import api from "@/lib/axios";
 
-export interface OrderFormData {
-  addressId: string;
-  paymentMethod: string;
-  couponCode?: string;
-  phone: string;
-}
-
 export const createOrder = async (formData: OrderFormData) => {
   const { data } = await api.post("/api/orders", formData);
   return data;
@@ -17,8 +10,8 @@ export const getOrderById = async (id: string) => {
   return data;
 };
 
-export const getOrders = async (queryParams?: { status?: string; page?: number; search?: string }) => {
-  const { data } = await api.get(`/api/orders`, { params: queryParams });
+export const getOrders = async (params?: { status?: string; page?: number; search?: string }) => {
+  const { data } = await api.get(`/api/orders`, { params });
   return data;
 };
 
