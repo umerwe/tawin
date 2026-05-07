@@ -113,7 +113,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       {product.variant && (
         <div className="flex flex-col gap-2">
           <span className="text-xs text-muted-foreground">{t("variant")}</span>
-          <span className="text-sm text-foreground">{product.variant}</span>
+          <span className="text-sm text-foreground capitalize">{product.variant}</span>
         </div>
       )}
 

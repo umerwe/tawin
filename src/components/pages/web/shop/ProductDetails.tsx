@@ -55,7 +55,7 @@ const ProductDetails = ({ params }: ProductDetailsProps) => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 <ProductImageGallery
-                    images={product?.images || []}
+                    images={[product.photo, ...(product.images || [])]}
                     isNew={product.isNewArrival || false}
                     discount={product.discount}
                 />
