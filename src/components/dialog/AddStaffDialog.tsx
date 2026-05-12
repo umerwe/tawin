@@ -53,7 +53,7 @@ const CreateStaffSchema = z.object({
     phone: z.string().optional(),
     password: z.string().min(8, "Password must be at least 8 characters"),
     permissions: z.array(z.object({
-        module: z.enum(["dashboard", "orders", "users", "staff", "products", "construction-basket", "reviews", "suppliers", "coupon codes", "financial transfers", "brand", "stock"]),
+        module: z.enum(["dashboard", "orders", "users", "staff", "products", "construction-basket", "categories", "reviews", "suppliers", "coupon codes", "financial transfers", "brand", "stock"]),
         operations: z.array(z.enum(["get", "post", "patch", "put", "delete"]))
     })).optional(),
 });

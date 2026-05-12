@@ -6,16 +6,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 interface StatCardProps {
   data?: any;
   isHome?: boolean;
   isTrendingAllowed?: boolean;
   isLoading?: boolean;
+  link?: string;
 }
 
-const StatsCard = ({ data, isHome = false, isTrendingAllowed = false, isLoading = false }: StatCardProps) => {
+const StatsCard = ({ data, isHome = false, isTrendingAllowed = false, isLoading = false, link }: StatCardProps) => {
   const locale = useLocale() as "en" | "ar";
+  const router = useRouter();
 
   // --- 1:1 SKELETON LOADER ---
   if (isLoading) {
@@ -122,7 +125,7 @@ const StatsCard = ({ data, isHome = false, isTrendingAllowed = false, isLoading 
         </CardContent>
 
         <CardFooter className="flex justify-end">
-          <Button variant="default" size="xs">Details</Button>
+          <Button variant="default" size="xs" onClick={() => router.push(link || "/admin")}>Details</Button>
         </CardFooter>
       </Card>
     );

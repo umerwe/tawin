@@ -4,11 +4,26 @@ import Image from "@/components/MyImage"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useTranslations } from "next-intl"
+import { useTranslations, useLocale } from "next-intl"
+import { useSubmitAdminReport } from "@/hooks/useContact"
 
 export default function ContactSection() {
     const t = useTranslations("translation");
+    const locale = useLocale() as "en" | "ar";
     const [message, setMessage] = useState("")
+    const { mutate: submitReport, isPending } = useSubmitAdminReport();
+
+ const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+
+    submitReport({
+        "message[en]": locale === "en" ? message : undefined,
+        "message[ar]": locale === "ar" ? message : undefined,
+    });
+
+    setMessage("");
+};
 
     return (
         <section className="relative w-full overflow-hidden">
@@ -26,7 +41,7 @@ export default function ContactSection() {
                     {t("unavailableContactText")}
                 </p>
 
-                <form onSubmit={(e) => e.preventDefault()} className="mt-10 w-full">
+                <form onSubmit={handleSubmit} className="mt-10 w-full">
                     <div className="flex items-center border-b border-border pb-1">
                         <Input
                             placeholder={t("requestPlaceholder")}
@@ -38,10 +53,11 @@ export default function ContactSection() {
 
                         <Button
                             type="submit"
+                            disabled={isPending}
                             variant="ghost"
                             className="h-auto p-0 text-sm font-normal text-foreground hover:bg-transparent hover:text-foreground"
                         >
-                            {t("send")}
+                            {isPending ? "..." : t("send")}
                         </Button>
                     </div>
                 </form>

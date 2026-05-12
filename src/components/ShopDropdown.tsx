@@ -42,39 +42,42 @@ export function ShopDropdown({ isMain }: { isMain: boolean }) {
         align={locale === "ar" ? "end" : "start"}
         className="w-56"
       >
-        {categories.map((category: any) => {
-          const hasSubcategories = category.subcategories && category.subcategories.length > 0;
+        {categories
+          .filter((category: any) => category?.name?.[locale])
+          .map((category: any) => {
+            const hasSubcategories = category.subcategories && category.subcategories.length > 0;
 
-          if (hasSubcategories) {
+            if (hasSubcategories) {
+              return (
+                <DropdownMenuSub key={category._id}>
+                  <DropdownMenuSubTrigger className="cursor-pointer">
+                    <span>{category.name[locale]}</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent className="w-48">
+                      {category.subcategories
+                        .filter((sub: any) => sub?.name?.[locale]) // ← same filter for subcategories
+                        .map((sub: any) => (
+                          <DropdownMenuItem key={sub._id} asChild>
+                            <Link href={`/shop?category=${sub._id}`} className="cursor-pointer">
+                              {sub?.name?.[locale]}
+                            </Link>
+                          </DropdownMenuItem>
+                        ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              );
+            }
+
             return (
-              <DropdownMenuSub key={category._id}>
-                <DropdownMenuSubTrigger className="cursor-pointer">
-                  <span>{category.name[locale]}</span>
-                </DropdownMenuSubTrigger>
-                <DropdownMenuPortal>
-                  <DropdownMenuSubContent className="w-48">
-                    {category.subcategories.map((sub: any) => (
-                      <DropdownMenuItem key={sub._id} asChild>
-                        <Link href={`/shop?category=${sub._id}`} className="cursor-pointer">
-                          {sub?.name?.[locale]}
-                        </Link>
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuSubContent>
-                </DropdownMenuPortal>
-              </DropdownMenuSub>
+              <DropdownMenuItem key={category._id} asChild>
+                <Link href={`/shop?category=${category._id}`} className="cursor-pointer w-full">
+                  {category?.name?.[locale]}
+                </Link>
+              </DropdownMenuItem>
             );
-          }
-
-          // If no subcategories, render as a direct navigation link to category
-          return (
-            <DropdownMenuItem key={category._id} asChild>
-              <Link href={`/shop?category=${category._id}`} className="cursor-pointer w-full">
-                {category?.name?.[locale]}
-              </Link>
-            </DropdownMenuItem>
-          );
-        })}
+          })}
       </DropdownMenuContent>
     </DropdownMenu>
   );

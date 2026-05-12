@@ -74,7 +74,7 @@ export default function PromotionSection() {
                     <div className="w-full md:w-1/2 hidden sm:flex justify-end">
                         <div className="relative w-64 h-[350px]">
                             <Image
-                                src="/mob.jpg"
+                                src="/mobe.jpg"
                                 alt="App Mockup"
                                 fill
                                 className="object-contain"
