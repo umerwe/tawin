@@ -15,10 +15,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useGetCategories } from "@/hooks/useCategories"
+import { getLocalizedText } from "@/utils/getLocalizedText"
 
 export function ShopDropdown({ isMain }: { isMain: boolean }) {
   const locale = useLocale() as "en" | "ar"
   const t = useTranslations("translation")
+
   const { data: categoriesData } = useGetCategories()
   const categories = categoriesData?.data || []
 
@@ -42,43 +44,56 @@ export function ShopDropdown({ isMain }: { isMain: boolean }) {
         align={locale === "ar" ? "end" : "start"}
         className="w-56"
       >
-        {categories
-          .filter((category: any) => category?.name?.[locale])
-          .map((category: any) => {
-            const hasSubcategories = category.subcategories && category.subcategories.length > 0;
+        {categories.map((category: any) => {
+          const categoryName = getLocalizedText(category?.name, locale)
 
-            if (hasSubcategories) {
-              return (
-                <DropdownMenuSub key={category._id}>
-                  <DropdownMenuSubTrigger className="cursor-pointer">
-                    <span>{category.name[locale]}</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent className="w-48">
-                      {category.subcategories
-                        .filter((sub: any) => sub?.name?.[locale]) // ← same filter for subcategories
-                        .map((sub: any) => (
-                          <DropdownMenuItem key={sub._id} asChild>
-                            <Link href={`/shop?category=${sub._id}`} className="cursor-pointer">
-                              {sub?.name?.[locale]}
-                            </Link>
-                          </DropdownMenuItem>
-                        ))}
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
-              );
-            }
+          // hide if no translation exists at all
+          if (!categoryName) return null
 
+          const validSubcategories =
+            category?.subcategories?.filter((sub: any) =>
+              getLocalizedText(sub?.name, locale)
+            ) || []
+
+          const hasSubcategories = validSubcategories.length > 0
+
+          if (hasSubcategories) {
             return (
-              <DropdownMenuItem key={category._id} asChild>
-                <Link href={`/shop?category=${category._id}`} className="cursor-pointer w-full">
-                  {category?.name?.[locale]}
-                </Link>
-              </DropdownMenuItem>
-            );
-          })}
+              <DropdownMenuSub key={category._id}>
+                <DropdownMenuSubTrigger className="cursor-pointer">
+                  <span>{categoryName}</span>
+                </DropdownMenuSubTrigger>
+
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent className="w-48">
+                    {validSubcategories.map((sub: any) => (
+                      <DropdownMenuItem key={sub._id} asChild>
+                        <Link
+                          href={`/shop?category=${sub._id}`}
+                          className="cursor-pointer"
+                        >
+                          {getLocalizedText(sub?.name, locale)}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
+            )
+          }
+
+          return (
+            <DropdownMenuItem key={category._id} asChild>
+              <Link
+                href={`/shop?category=${category._id}`}
+                className="cursor-pointer w-full"
+              >
+                {categoryName}
+              </Link>
+            </DropdownMenuItem>
+          )
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

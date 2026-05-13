@@ -7,6 +7,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { getLocalizedText } from '@/utils/getLocalizedText';
 
 interface StatCardProps {
   data?: any;
@@ -85,11 +86,11 @@ const StatsCard = ({ data, isHome = false, isTrendingAllowed = false, isLoading 
   }
 
   // --- ACTUAL DATA DESIGN ---
-  const title = data?.title?.[locale];
+  const title = getLocalizedText(data?.title, locale);
   const value = data?.value;
   const trend = data?.trend || data?.change;
   const isUp = data?.isUp ?? (data?.changeType === 'increase');
-  const subtitle = data?.subtitle?.[locale] || data?.footerLabel?.[locale];
+  const subtitle = getLocalizedText(data?.subtitle, locale) || getLocalizedText(data?.footerLabel, locale);
 
   if (isHome) {
     return (
@@ -112,13 +113,13 @@ const StatsCard = ({ data, isHome = false, isTrendingAllowed = false, isLoading 
               </div>
               <span>{trend}</span>
               {data.changeLabel && (
-                <span className="text-black mx-1 font-normal">{data.changeLabel[locale]}</span>
+                <span className="text-black mx-1 font-normal">{getLocalizedText(data.changeLabel, locale)}</span>
               )}
             </div>
           </div>
           {data.footerLabel && (
             <div className="text-xs text-gray-400 font-medium mt-1">
-              {data.footerLabel[locale]}
+              {getLocalizedText(data.footerLabel, locale)}
               <span className="mx-1 text-purple font-bold">{data.footerValue}</span>
             </div>
           )}
@@ -158,12 +159,12 @@ const StatsCard = ({ data, isHome = false, isTrendingAllowed = false, isLoading 
             <div className="flex items-center gap-4 mt-2">
               {data.label1 && (
                 <span className="text-xs text-muted-foreground">
-                  {data.label1[locale]}: <span className="font-semibold text-black">{data.label1Value}</span>
+                  {getLocalizedText(data.label1, locale)}: <span className="font-semibold text-black">{data.label1Value}</span>
                 </span>
               )}
               {data.label2 && (
                 <span className="text-xs text-muted-foreground">
-                  {data.label2[locale]}: <span className="font-semibold text-black">{data.label2Value}</span>
+                  {getLocalizedText(data.label2, locale)}: <span className="font-semibold text-black">{data.label2Value}</span>
                 </span>
               )}
             </div>

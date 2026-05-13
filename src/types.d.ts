@@ -20,9 +20,11 @@ interface CardProps {
   footerValue?: string;
   footerLabel?: LocalizedString;
 }
+
 interface LocalizedString {
-  en: string;
-  ar: string;
+  en?: string;
+  ar?: string;
+  [key: string]: string | undefined;
 }
 interface Subcategory {
   _id: string | number;
