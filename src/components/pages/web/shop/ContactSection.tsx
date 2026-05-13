@@ -4,12 +4,11 @@ import Image from "@/components/MyImage"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useTranslations, useLocale } from "next-intl"
+import { useTranslations } from "next-intl"
 import { useSubmitAdminReport } from "@/hooks/useContact"
 
 export default function ContactSection() {
     const t = useTranslations("translation");
-    const locale = useLocale() as "en" | "ar";
     const [message, setMessage] = useState("")
     const { mutate: submitReport, isPending } = useSubmitAdminReport();
 
@@ -17,10 +16,7 @@ export default function ContactSection() {
     e.preventDefault();
     if (!message.trim()) return;
 
-    submitReport({
-        "message[en]": locale === "en" ? message : undefined,
-        "message[ar]": locale === "ar" ? message : undefined,
-    });
+    submitReport({message});
 
     setMessage("");
 };

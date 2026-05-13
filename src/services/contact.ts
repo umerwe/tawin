@@ -7,8 +7,7 @@ export interface ContactFormData {
 }
 
 export interface AdminReportData {
-  "message[en]": string | undefined;
-  "message[ar]": string | undefined;
+  message: string;
 }
 export const submitContactForm = async (formData: ContactFormData): Promise<any> => {
   const { data } = await api.post("/api/contact", formData);
@@ -16,11 +15,11 @@ export const submitContactForm = async (formData: ContactFormData): Promise<any>
 };
 
 export const submitAdminReport = async (formData: AdminReportData): Promise<any> => {
-  const { data } = await api.post("/api/admin/report", formData);
+  const { data } = await api.post("/api/reports", formData);
   return data;
 };
 
 export const getAdminReport = async (): Promise<any> => {
-  const { data } = await api.get("/api/admin/report");
+  const { data } = await api.get("/api/reports");
   return data;
 };

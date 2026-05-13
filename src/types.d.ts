@@ -69,3 +69,12 @@ interface AddStockFormData {
   notes?: string;
 }
 
+interface UserData {
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  email?: string;
+  role?: string;
+  profileImage?: string;
+}
+
